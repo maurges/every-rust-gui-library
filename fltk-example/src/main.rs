@@ -1,4 +1,8 @@
-use fltk::{app, button::Button, frame::Frame, prelude::*, window::Window, enums::Color};
+mod flat_button;
+
+use fltk::prelude::{WidgetExt, WindowExt, GroupExt};
+use fltk::{app, frame::Frame, window::Window, enums::Color};
+
 
 #[derive(Clone)]
 pub enum ButtonMessage {
@@ -16,16 +20,16 @@ fn main() {
         .center_screen()
         .with_label("Counter");
     wind.set_color(Color::White);
+
     let mut frame = Frame::default()
         .with_size(100, 40)
         .center_of(&wind)
         .with_label("0");
-    let mut but_inc = Button::default()
+    let mut but_inc = flat_button::FlatButton::default()
         .size_of(&frame)
         .above_of(&frame, 0)
         .with_label("+");
-    but_inc.set_color(Color::White.darker());
-    let mut but_dec = Button::default()
+    let mut but_dec = flat_button::FlatButton::default()
         .size_of(&frame)
         .below_of(&frame, 0)
         .with_label("-");

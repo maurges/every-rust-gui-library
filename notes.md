@@ -215,9 +215,12 @@ Overall download size: 554,8 KiB. Already cached: 0 B. After the operation, addi
 
 And, success!
 
-Alright, I'm trying an example with buttons, and state management sucks. Also it's ugly as death. Should explore how to make my own widgets.
+Alright, I'm trying an example with buttons, and state management sucks. Also
+it's ugly as death. Should explore how to make my own widgets.
 
-Setting colors to buttons doesn't work. Ok, in some other frameworks I would have to make buttons from scratch, so I'm glad I have buttons at least. Now to check if I can make them from scratch also.
+Setting colors to buttons doesn't work. Ok, in some other frameworks I would
+have to make buttons from scratch, so I'm glad I have buttons at least. Now to
+check if I can make them from scratch also.
 
 Here's a problem of several parts.
 1. set_label takes a reference to a string
@@ -230,3 +233,13 @@ So at this point I have read only the first example and the api docs. Let's read
 There's an example with message passing. It works and it's neat how typesafe it
 is. Buuut it's absolutely not composable. A widget cannot have its internal
 state, because all events are processed in one place.
+
+Actually that's not true. If I'm the one to create the widget, I can put its state inside. Ok.
+
+There are layouting types, but using them requires implementing all of
+WidgetExt for your widget, which is 96 methods. There is widget_extends macro
+which implements some methods, but not as part of the trait. Fuuck, no
+layouting it is then.  
+Well I mean, I could implement my own macro, it's a thing you do once.  
+Wait, I can't at all. Because it's an unsafe trait with potential future
+breakage.
