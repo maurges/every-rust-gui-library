@@ -1,9 +1,14 @@
 use fltk::{app, button::Button, frame::Frame, prelude::*, window::Window, enums::Color};
-use std::{rc::Rc, cell::Cell};
+
+#[derive(Clone)]
+pub enum ButtonMessage {
+    Inc,
+    Dec,
+}
 
 fn main() {
-    let state = Rc::new(Cell::new(0_i64));
-    let state_rendered = Rc::new(Cell::new("0".to_owned()));
+    let mut state = 0_i64;
+    let mut state_rendered;
 
     let app = app::App::default();
     let mut wind = Window::default()
@@ -29,12 +34,20 @@ fn main() {
     wind.end();
     wind.show();
 
-    /* Event handling */
-    let mut set_state = |x| {
-        state.set(x);
-        state_rendered.set(format!("{}", x));
-        frame.set_label(todo!());
-    };
+    let (s, r) = app::channel::<ButtonMessage>();
 
-    app.run().unwrap();
+    but_inc.emit(s.clone(), ButtonMessage::Inc);
+    but_dec.emit(s, ButtonMessage::Dec);
+
+    /* Event handling */
+    while app.wait() {
+        if let Some(msg) = r.recv() {
+            match msg {
+                ButtonMessage::Inc => { state += 1; },
+                ButtonMessage::Dec => { state -= 1; }
+            }
+            state_rendered = format!("{}", state);
+            frame.set_label(&state_rendered);
+        }
+    }
 }

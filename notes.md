@@ -226,3 +226,7 @@ Here's a problem of several parts.
 4. You can't obtain a reference to a value in RefCell
 
 So at this point I have read only the first example and the api docs. Let's read the "tutorial" some more.
+
+There's an example with message passing. It works and it's neat how typesafe it
+is. Buuut it's absolutely not composable. A widget cannot have its internal
+state, because all events are processed in one place.
