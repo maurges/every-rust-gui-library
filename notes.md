@@ -249,4 +249,12 @@ you can't for example make a button that looks different after each press.
 Well, you can't make it from raw boxes and stuff, you can still bullshit your
 way with changing the default button backgrounds. Or something.
 
-Oh no, actually you can! You just need to put your widget state in a separate value, embed it into the widget, and clone that into the handlers. It needs to be shared, so wrap everything into rc, et voila.
+Oh no, actually you can! You just need to put your widget state in a separate
+value, embed it into the widget, and clone that into the handlers. It needs to
+be shared, so wrap everything into rc, et voila.
+
+I had a lot of problems dynamically adding stuff to a layout. This library is
+veery low level, so you need to call redraws on your own. But still, the
+biggest problem is the lack of layouting for non-standard widgets. I could
+write my own ones though. Ok, it seems it's an ok library, let's move to the
+real thing.
