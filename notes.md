@@ -122,3 +122,95 @@ Ughhh ok? Is there any way to use qt web view?
 Nope.
 
 A shame, but I expected to dislike the approach, again.
+
+## Dominator
+
+What a name.
+
+DOM? Really, again? Is it because rust gui programmers are former servo
+engineers?
+
+```
+Running the examples
+
+Just do yarn and then yarn start (it will take a while to compile the dependencies, please be patient)
+```
+
+Ughhhhhhhhhh  
+That's a no from me, dawg.
+
+Yeah, even hello world is yarn. Ok. I hope this becomes a good web browser, but
+I don't want to develop for fucking web again.
+
+## druid
+
+The one everyone knows about.
+
+Oh no, I see gtk in deps.
+
+FUCK
+
+So do I install gtk for this, and also go back to dioxus? I'm willing to do it
+for druid as people've been saying it's alright, but fuck dioxus with it's web,
+honestly.
+
+Ok, it's note the whole of gtk
+```
+The following 5 NEW packages are going to be installed:
+  gdk-pixbuf-devel libjpeg62 libjpeg62-devel libtiff-devel typelib-1_0-GdkPixdata-2_0
+
+5 new packages to install.
+Overall download size: 495,8 KiB. Already cached: 0 B. After the operation, additional 1,5 MiB will be used.
+
+The following 6 NEW packages are going to be installed:
+  fribidi-devel graphite2-devel harfbuzz-devel libdatrie-devel libthai-devel pango-devel
+
+2 packages to upgrade, 6 new.
+Overall download size: 898,3 KiB. Already cached: 0 B. After the operation, additional 3,7 MiB will be used.
+```
+
+Oh no, it is all of gtk, as I now see while looking how to get atk. Shit.
+Opensuse doesn't pack atk, so I'm boned. Why the hell does gtk require it
+/in rust/ anyway?
+
+Kind of weird. Opensuse has a gnome variant as well, with the same repos, but no atk-devel.
+
+## egui
+Immediate mode, skip.
+
+## fltk
+
+I can build the c++ library from source, or download a tarball. Well, I have
+the compiler, why the hell not build it.
+
+X11 and opengl, lol. What is this, 2018?
+
+The author also provides all linux libraries, even a nixos shell, impure
+though. Nice.
+
+fltk-sys compilation is silent. What I like about haskell build systems is that
+compilation of libraries is shown as well.
+
+Still pretty fast:
+    Finished dev [unoptimized + debuginfo] target(s) in 1m 29s
+
+Ah fuck:
+```
+= note: /usr/lib64/gcc/x86_64-suse-linux/12/../../../../x86_64-suse-linux/bin/ld: cannot find -lpango-1.0: No such file or directory
+        /usr/lib64/gcc/x86_64-suse-linux/12/../../../../x86_64-suse-linux/bin/ld: cannot find -lpangoxft-1.0: No such file or directory
+        /usr/lib64/gcc/x86_64-suse-linux/12/../../../../x86_64-suse-linux/bin/ld: cannot find -lpangocairo-1.0: No such file or directory
+        collect2: error: ld returned 1 exit status
+
+error: could not compile `fltk-example` due to previous error
+```
+Because I removed pango after druid. Ok, this one is mentioned in the repo, let's bring it.
+
+```
+The following 6 NEW packages are going to be installed:
+  fribidi-devel graphite2-devel harfbuzz-devel libdatrie-devel libthai-devel pango-devel
+
+6 new packages to install.
+Overall download size: 554,8 KiB. Already cached: 0 B. After the operation, additional 3,7 MiB will be used.
+```
+
+And, success!
