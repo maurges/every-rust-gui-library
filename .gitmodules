@@ -1,0 +1,3 @@
+[submodule "azul-example/lib/azul"]
+	path = azul-example/lib/azul
+	url = https://github.com/fschutt/azul
