@@ -47,4 +47,21 @@ Missing separate debuginfos, use: zypper install Mesa-dri-debuginfo-22.2.4-333.2
 #2  0x0000000000000118 in ?? ()
 #3  0x0000000000000000 in ?? ()
 ```
-Ugh, mesa again? I've recently been having problems with steam segfaulting either in mesa, or in pulseaudio, and with telegram segfaulting in mesa. Fucking linux.
+Ugh, mesa again? I've recently been having problems with steam segfaulting
+either in mesa, or in pulseaudio, and with telegram segfaulting in mesa.
+Fucking linux.
+
+Ok, so the button doesn't work. Fuck.
+
+Hidpi?
+
+The examples on the website are in C and python, lol.
+
+Why are there both inline styles and CSS? I mean, I thought it was only
+historical coincidence in web, but here it's used as well.
+
+Let's try adding a press handler to the whole body, like in the tutorial.
+
+Welp, it doesn't work as well. It seems input handling is broken on linux. Oh that linux with weird IO again.
+
+A shame, but I expected to dislike the approach, so.

@@ -3,6 +3,7 @@
 use azul::prelude::*;
 use azul::widgets::Button;
 
+#[derive(Debug)]
 struct DataModel {
     counter: usize,
 }
@@ -11,6 +12,7 @@ extern "C" fn myLayoutFunc(
     data: &mut RefAny,
     _: &mut LayoutCallbackInfo
 ) -> StyledDom {
+    let event = EventFilter::Hover(HoverEventFilter::MouseUp);
 
     let counter = match data.downcast_ref::<DataModel>() {
         Some(d) => format!("{}", d.counter),
@@ -26,9 +28,10 @@ extern "C" fn myLayoutFunc(
     button.set_inline_style("flex-grow: 1".into());
 
     Dom::body()
-    .with_child(label)
-    .with_child(button)
-    .style(Css::empty())
+        .with_callback(event, data.clone(), myOnClick)
+        .with_child(label)
+        .with_child(button)
+        .style(Css::empty())
 }
 
 extern "C"
@@ -39,6 +42,7 @@ fn myOnClick(data: &mut RefAny, _:  &mut CallbackInfo) -> Update {
     };
 
     data.counter += 1;
+    eprintln!("updated data to: {:?}", data);
 
     Update::RefreshDom
 }
