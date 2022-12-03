@@ -243,3 +243,10 @@ layouting it is then.
 Well I mean, I could implement my own macro, it's a thing you do once.  
 Wait, I can't at all. Because it's an unsafe trait with potential future
 breakage.
+
+Ok, here's another problem: handle and redraw can't depend on data in self. So
+you can't for example make a button that looks different after each press.
+Well, you can't make it from raw boxes and stuff, you can still bullshit your
+way with changing the default button backgrounds. Or something.
+
+Oh no, actually you can! You just need to put your widget state in a separate value, embed it into the widget, and clone that into the handlers. It needs to be shared, so wrap everything into rc, et voila.
