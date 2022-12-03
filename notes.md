@@ -11,6 +11,9 @@ What do I try it on? Let's do the same as
 article and do a to-do list. We'll decompose an entry into it's own widget.
 We'll add ability to save and load.
 
+Let's go through all the libraries in https://www.areweguiyet.com/#ecosystem
+on 2022-12-03 and test them.
+
 ## Azul
 
 Oh no, CSS, that's a bad sign.
@@ -65,3 +68,57 @@ Let's try adding a press handler to the whole body, like in the tutorial.
 Welp, it doesn't work as well. It seems input handling is broken on linux. Oh that linux with weird IO again.
 
 A shame, but I expected to dislike the approach, so.
+
+```
+morj@blackflame:~/projects/gui/azul-example> du -h -d0 .
+797M    .
+```
+DAYUM BOI, chonki librari
+
+## cacao
+Macos. I do have a mac, but nah. And it doesn't align with my future goals.
+
+## conrod-core
+Unmaintained. Also it's immediate mode.
+
+## core-foundation
+Macos again. And the previous one is supposed to worn on GNUStep, what's that?
+
+Ho-ho, gnustep is a reimplementation of nextstep environment for other OS-s. It
+uses objective C though and I don't want to set all of this bullshit up right
+now, but it might just be an option maybe if I'm bothered.
+
+## CXX-Qt
+I like qt, but I remember last time I tried it failed in a lot of ways. I'll
+try it later and assess on the ease of setting up the developer environment,
+not as a GUI framework.
+
+## Dioxus
+
+Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
+
+НУ ЧТО ПОГНАЛИ НАХУЙ, ЁбАНЫЙ В РОТ
+
+This is why people complain about rust builds maybe, crates.io refresh takes so
+fucking long. And why does it need to refresh, azul was 10 minutes ago.  
+Oh god, my memes are done and it's still resolving deltas.  
+    error: no matching package named `dioxius` found
+????
+
+Ah lol, extra i.
+
+```
+Compiling webkit2gtk-sys v0.17.0
+error: failed to run custom build command for `gdk-sys v0.15.1`
+
+Caused by:
+--- stderr
+`"pkg-config" "--libs" "--cflags" "gdk-3.0" "gdk-3.0 >= 3.22"` did not exit successfully: exit status: 1
+error: could not find system library 'gdk-3.0' required by the 'gdk-sys' crate
+```
+
+Ughhh ok? Is there any way to use qt web view?
+
+Nope.
+
+A shame, but I expected to dislike the approach, again.
