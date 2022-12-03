@@ -214,3 +214,15 @@ Overall download size: 554,8 KiB. Already cached: 0 B. After the operation, addi
 ```
 
 And, success!
+
+Alright, I'm trying an example with buttons, and state management sucks. Also it's ugly as death. Should explore how to make my own widgets.
+
+Setting colors to buttons doesn't work. Ok, in some other frameworks I would have to make buttons from scratch, so I'm glad I have buttons at least. Now to check if I can make them from scratch also.
+
+Here's a problem of several parts.
+1. set_label takes a reference to a string
+2. Callbacks are moved into set_callback and borrow checker thinks they outlive the current function
+3. Ergo you need to keep state in `Rc<RefCell<State>>`, and render it to some string stored in `Rc<RefCell<String>>`
+4. You can't obtain a reference to a value in RefCell
+
+So at this point I have read only the first example and the api docs. Let's read the "tutorial" some more.
