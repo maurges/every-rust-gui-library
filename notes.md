@@ -386,3 +386,48 @@ One advantage is great input support, and it seems to support accessibility.
 - Tutorial: present, I didn't need it much
 - Diving into source: possible and not bad
 - Overall: approve, a very viable option to use now
+
+## flutter_rust_bridge
+
+Do I want to do this? How many people would have a flutter toolchain ready, how
+many know how to do it? Let's look at the tutorial and examples and see how
+much dart code there is.
+
+    This library is nothing but a code generator that helps your Flutter/Dart
+    functions call Rust functions
+
+So it's not a graphics framework, flutter is a graphics framework, and this
+only allows you to call rust functions from it. Not sure this is what I want.  
+On the other hand, with cxx-qt it was the exact same: you describe your
+graphics in another language, and you call rust functions from it. I guess the
+only difference is that I have qt toolchain already, and that I knew it would
+take me an hour max.  
+But I remember being very interested in flutter myself, kind of liking it's
+approach when it came out. It's only recently that people discovered that it's
+very easy to make slow apps with it.  
+Maybe I'll go back to it later, when/if I'm more interested to try flutter
+again.
+
+## fui
+
+A library by a single person. 40 stars on github. Last commit in august.
+Alrighty, let's see. It's not like you can't /finish/ making a graphics
+library, especiallly if all system stuff is done by libs you depend on.
+
+0 issues, 0 pull requests `>_>`
+
+```
+error: failed to run custom build command for `fui_system v0.11.0`
+--- stderr
+thread 'main' panicked at 'failed to execute 'qmake' process: Os { code: 2, kind: NotFound, message: "No such file or directory" }', /home/morj/.local/share/cargo/registry/src/github.com-1ecc6299db9ec823/fui_system-0.11.0/build.rs:47:10
+```
+
+Hah, shit. So it's qt, which is cool, but opensuse uses qmake-qt5 instead of
+just qmake. Who the hell uses qmake anymore anyway. Yes, I agree it's 1000
+times better than cmake, but still.
+
+HOLY SHIT IT'S SO UGLY, what the hell
+
+Well, the api docs don't exist, and there's no tutorial. Alrighty.
+
+Let's not forget, aside from the qmake thing, building it was very easy.
