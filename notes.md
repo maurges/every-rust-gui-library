@@ -282,3 +282,35 @@ I'm trying to create the todo app, and suddenly nothing my new widget doesn't
 fucking draw. Even if I create it statically, it's gone!
 
 Fuck, now it magically works. This piece of shit is very brittle.
+
+After I managed it to show, adding new functionality to the widget is really
+not bad. Adding editing capability was very easy.
+
+Oh shit, weird effects when resizing the window. Everything suddenly squishes.
+I thought it would stay the same and start scrolling instead.
+
+And it's done. Dialogue interface is nice. Or at least it would be, if there
+was an option to check if the file dialogue has completed successfuly. Maybe
+that's done with the get_files, but ehhhhh I'm tired of this.
+
+Initially I wanted the save and load buttons to be below, but that would be
+suuuuuuuch a huge pain to layout, so I didn't do it. Points taken from fltk,
+although I knew it yesterday already.
+
+Overall, this is an ok library. Really good for small visualizations, but not
+really good for big apps, unless you want to roll out your own layouting, which
+is not as simple as I'd thought initially. But here it would compete with
+immediate mode libraries, and I don't know if it would win there. In terms of
+design it's ugly as 1998, and even gtk style doesn't help. Is it gtk1 or what?
+One advantage is great input support, and it seems to support accessibility.
+
+- Default widgets: enough, ugly
+- Creating simple widgets: simple
+- Creating compound widgets: medium, unintuitive
+- Layouting: easy for built-in widgets, very hard for custom
+- Custom layouts: very hard
+- Setting up: very easy
+- Documentation: good
+- Tutorial: present, I didn't need it much
+- Diving into source: possible and not bad
+- Overall: approve, a very viable option to use now
