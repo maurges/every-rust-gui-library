@@ -274,3 +274,9 @@ positioning by anchoring instead for the todo example?
 
 Layouting by anchoring works pretty well. Also you can use derived widgets as
 their parent via Deref, so not all is lost!
+
+It's hard to understand when you need to call redraw explicitly, and when
+resized and other stuff will handle it for you.
+
+I'm trying to create the todo app, and suddenly nothing my new widget doesn't
+fucking draw. Even if I create it statically, it's gone!

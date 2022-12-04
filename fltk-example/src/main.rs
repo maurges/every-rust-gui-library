@@ -1,49 +1,35 @@
 mod flat_button;
-
-use std::ops::Deref;
+mod todo_item;
 
 use fltk::prelude::{WidgetExt, WindowExt, GroupExt};
-use fltk::{app, frame::Frame, window::Window, enums::Color};
+use fltk::{app, window::Window, enums::Color};
 
 
 #[derive(Clone)]
 pub enum ButtonMessage {
-    Inc,
-    Dec,
     Add,
 }
 
 fn main() {
-    let mut state = 0_i64;
-    let mut state_rendered;
-
     let app = app::App::default();
     let mut wind = Window::default()
-        .with_size(160, 200)
+        .with_size(500, 800)
         .center_screen()
         .with_label("Counter");
     wind.set_color(Color::White);
 
     let mut scroll = fltk::group::Scroll::default()
         .size_of(&wind);
-    scroll.set_color(Color::White);
 
-    let mut frame = Frame::default()
-        .with_size(100, 40)
-        .center_of(&wind)
-        .with_label("0");
-    let mut but_inc = flat_button::FlatButton::default()
-        .size_of(&frame)
-        .above_of(&frame, 0)
-        .with_label("+");
-    let mut but_dec = flat_button::FlatButton::default()
-        .size_of(&frame)
-        .below_of(&frame, 0)
-        .with_label("-");
-    let mut but_add = flat_button::FlatButton::default()
-        .size_of(&frame)
-        .below_of(but_dec.deref(), 0)
+    let new_input = fltk::input::Input::default()
+        .with_pos(0, 0)
+        .with_size(400, 30)
+        .with_label("new task here");
+    let mut new_button = fltk::button::Button::default()
+        .with_size(40, 30)
+        .right_of(&new_input, 5)
         .with_label("add");
+
     scroll.end();
 
     let mut col_children = Vec::new();
@@ -53,34 +39,33 @@ fn main() {
     wind.show();
 
     let (s, r) = app::channel::<ButtonMessage>();
+    new_button.emit(s, ButtonMessage::Add);
 
-    but_inc.emit(s.clone(), ButtonMessage::Inc);
-    but_dec.emit(s.clone(), ButtonMessage::Dec);
-    but_add.emit(s, ButtonMessage::Add);
-
-    let dummy_frame = Frame::default()
-        .with_size(1, 1)
-        .below_of(&*but_add, 0);
+    let dummy_widget = todo_item::TodoItem::new(
+        0, new_input.height(),
+        450, 30,
+        "test".to_owned(), false,
+    );
     /* Event handling */
-    let mut prev_child = &dummy_frame;
+    let mut prev_child = &dummy_widget;
     while app.wait() {
         if let Some(msg) = r.recv() {
             match msg {
-                ButtonMessage::Inc => { state += 1; },
-                ButtonMessage::Dec => { state -= 1; }
                 ButtonMessage::Add => {
-                    let new_child = Frame::default()
-                        .size_of(&frame)
-                        .below_of(prev_child, 0)
-                        .with_label("chlen");
-                    scroll.add(&new_child);
+                    let new_child = todo_item::TodoItem::new(
+                        prev_child.x(),
+                        prev_child.y() + prev_child.height() + 5,
+                        450,
+                        30,
+                        new_input.label().to_owned(),
+                        false,
+                    );
+                    scroll.add(&*new_child);
                     wind.redraw();
                     col_children.push(new_child);
                     prev_child = col_children.last().unwrap();
                 }
             }
-            state_rendered = format!("{}", state);
-            frame.set_label(&state_rendered);
         }
     }
 }
