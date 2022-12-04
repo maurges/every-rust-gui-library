@@ -261,4 +261,16 @@ real thing.
 
 I tried to implement my own column layout, and i didn't work. It has size, but
 it's invisible.  
-Oh wait, it did, but I fucked up! There's a weird interaction with scroll.
+Oh wait, it did, but I fucked up! There's a weird interaction with scroll.  
+And not just scroll, the positioning is very fucked. Let's go and read the docs
+instead.
+
+There is a whole book turns our. Written pretty well. The documentation for
+this is pretty good honestly, it's the code quality and weird limitations for
+non-default widgets that are the problem. Plus layouting being shit and no easy
+way to make custom layouts. So yeah, in the book the process of creating custom
+widgets is described, but not custom layouts. Here's a thought: why not do
+positioning by anchoring instead for the todo example?
+
+Layouting by anchoring works pretty well. Also you can use derived widgets as
+their parent via Deref, so not all is lost!

@@ -1,5 +1,6 @@
 mod flat_button;
-mod column_layout;
+
+use std::ops::Deref;
 
 use fltk::prelude::{WidgetExt, WindowExt, GroupExt};
 use fltk::{app, frame::Frame, window::Window, enums::Color};
@@ -26,27 +27,24 @@ fn main() {
     let mut scroll = fltk::group::Scroll::default()
         .size_of(&wind);
     scroll.set_color(Color::White);
-    let mut col = column_layout::ColumnLayout::default();
-    scroll.end();
 
     let mut frame = Frame::default()
         .with_size(100, 40)
+        .center_of(&wind)
         .with_label("0");
     let mut but_inc = flat_button::FlatButton::default()
         .size_of(&frame)
+        .above_of(&frame, 0)
         .with_label("+");
     let mut but_dec = flat_button::FlatButton::default()
         .size_of(&frame)
+        .below_of(&frame, 0)
         .with_label("-");
-
     let mut but_add = flat_button::FlatButton::default()
         .size_of(&frame)
+        .below_of(but_dec.deref(), 0)
         .with_label("add");
-
-    col.add(&mut but_inc);
-    col.add(&mut &mut frame); // lol
-    col.add(&mut but_dec);
-    col.add(&mut but_add);
+    scroll.end();
 
     let mut col_children = Vec::new();
 
@@ -54,29 +52,31 @@ fn main() {
     wind.end();
     wind.show();
 
-    eprintln!("scroll children: {}", scroll.children());
-    eprintln!("window children: {}", wind.children());
-
     let (s, r) = app::channel::<ButtonMessage>();
 
     but_inc.emit(s.clone(), ButtonMessage::Inc);
     but_dec.emit(s.clone(), ButtonMessage::Dec);
     but_add.emit(s, ButtonMessage::Add);
 
+    let dummy_frame = Frame::default()
+        .with_size(1, 1)
+        .below_of(&*but_add, 0);
     /* Event handling */
+    let mut prev_child = &dummy_frame;
     while app.wait() {
         if let Some(msg) = r.recv() {
             match msg {
                 ButtonMessage::Inc => { state += 1; },
                 ButtonMessage::Dec => { state -= 1; }
                 ButtonMessage::Add => {
-                    let mut new_child = Frame::default()
+                    let new_child = Frame::default()
                         .size_of(&frame)
+                        .below_of(prev_child, 0)
                         .with_label("chlen");
-                    col.add(&mut &mut new_child);
+                    scroll.add(&new_child);
                     wind.redraw();
-                    eprintln!("child is at: {} x {}", new_child.x(), new_child.y());
                     col_children.push(new_child);
+                    prev_child = col_children.last().unwrap();
                 }
             }
             state_rendered = format!("{}", state);
