@@ -1,0 +1,6 @@
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>TodoItem.qml</file>
+    </qresource>
+</RCC>

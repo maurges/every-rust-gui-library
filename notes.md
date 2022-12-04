@@ -89,15 +89,40 @@ uses objective C though and I don't want to set all of this bullshit up right
 now, but it might just be an option maybe if I'm bothered.
 
 ## CXX-Qt
-I like qt, but I remember last time I tried it failed in a lot of ways. I'll
-try it later and assess on the ease of setting up the developer environment,
-not as a GUI framework.
+I like qt, but I remember last time I tried it failed in a lot of ways. Let's
+see how this one fares today.
+
+Ok the tutorial fucking skipped setting up the build process. Thankfully there
+is a minimal example to copy from. So alright, at least the rust part builds
+now.
+
+Pinning self, whoa. This is rare.
+
+I need to register everything from c++. That's not ideal, but not that bad, not
+a lot of code to write. The example uses qml, I wonder if it's possible to use
+qwidgets instead. But even just qml is pretty good, I myself like qml more.
+
+Oh ok, build is explained in the tutorial, but very late. Alright.
+
+    sudo zypper in libQt5QuickControls2-devel
+
+Only 150 KB, very nice.
+
+Fuck yeah! This was not bad.
+
+So this means I can provide models from rust and use them from qml. Reactivity
+and the whole shebang coming for cheap.
+
+Oh yiss, qml is nice. I's so easy to create a simple interface with, with
+states, reactivity, layouts. All the basic controls are there, and while they
+look weird, they are not that ugly, just very basic.  
+Now that layout is done, let's do this with a proper model.
 
 ## Dioxus
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
-НУ ЧТО ПОГНАЛИ НАХУЙ, ЁбАНЫЙ В РОТ
+НУ ЧТО НАРОД ПОГНАЛИ НАХУЙ, ЁбАНЫЙ В РОТ
 
 This is why people complain about rust builds maybe, crates.io refresh takes so
 fucking long. And why does it need to refresh, azul was 10 minutes ago.  
@@ -309,6 +334,7 @@ One advantage is great input support, and it seems to support accessibility.
 - Creating compound widgets: medium, unintuitive
 - Layouting: easy for built-in widgets, very hard for custom
 - Custom layouts: very hard
+- Reactivity: not present
 - Setting up: very easy
 - Documentation: good
 - Tutorial: present, I didn't need it much
