@@ -143,6 +143,11 @@ is that it Just Works. Setting up was very easy, and because it builds a rust
 library and links it all with c++ toolchain, I can apply qt's c++ guides to
 build it to other platforms.
 
+    576M    build/
+
+Ahh what? Didn't expect it to be that big. Still better than azul's hello world
+though
+
 - Default widgets: enough, alright-ish looking
 - Creating simple widgets: simple
 - Creating compound widgets: simple
@@ -163,7 +168,7 @@ Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
 This is why people complain about rust builds maybe, crates.io refresh takes so
 fucking long. And why does it need to refresh, azul was 10 minutes ago.  
-Oh god, my memes are done and it's still resolving deltas.  
+Oh god, my meme scrolling are done and it's still resolving deltas.  
     error: no matching package named `dioxius` found
 ????
 
@@ -216,7 +221,7 @@ So do I install gtk for this, and also go back to dioxus? I'm willing to do it
 for druid as people've been saying it's alright, but fuck dioxus with it's web,
 honestly.
 
-Ok, it's note the whole of gtk
+Ok, it's not the whole of gtk it seems
 ```
 The following 5 NEW packages are going to be installed:
   gdk-pixbuf-devel libjpeg62 libjpeg62-devel libtiff-devel typelib-1_0-GdkPixdata-2_0
@@ -247,8 +252,8 @@ the compiler, why the hell not build it.
 
 X11 and opengl, lol. What is this, 2018?
 
-The author also provides all linux libraries, even a nixos shell, impure
-though. Nice.
+The author also provides all linux libraries this depends on in a list, and
+also a nixos shell, impure though. Nice.
 
 fltk-sys compilation is silent. What I like about haskell build systems is that
 compilation of libraries is shown as well.
@@ -286,17 +291,21 @@ check if I can make them from scratch also.
 
 Here's a problem of several parts.
 1. set_label takes a reference to a string
-2. Callbacks are moved into set_callback and borrow checker thinks they outlive the current function
-3. Ergo you need to keep state in `Rc<RefCell<State>>`, and render it to some string stored in `Rc<RefCell<String>>`
+2. Callbacks are moved into set_callback and borrow checker thinks they outlive
+   the current function
+3. Ergo you need to keep state in `Rc<RefCell<State>>`, and render it to some
+   string stored in `Rc<RefCell<String>>`
 4. You can't obtain a reference to a value in RefCell
 
-So at this point I have read only the first example and the api docs. Let's read the "tutorial" some more.
+So at this point I have read only the first example and the api docs. Let's
+read the "tutorial" some more.
 
 There's an example with message passing. It works and it's neat how typesafe it
 is. Buuut it's absolutely not composable. A widget cannot have its internal
 state, because all events are processed in one place.
 
-Actually that's not true. If I'm the one to create the widget, I can put its state inside. Ok.
+Actually that's not true. If I'm the one to create the widget, I can put its
+state inside. Ok.
 
 There are layouting types, but using them requires implementing all of
 WidgetExt for your widget, which is 96 methods. There is widget_extends macro
@@ -321,7 +330,7 @@ biggest problem is the lack of layouting for non-standard widgets. I could
 write my own ones though. Ok, it seems it's an ok library, let's move to the
 real thing.
 
-I tried to implement my own column layout, and i didn't work. It has size, but
+I tried to implement my own column layout, and it didn't work. It has size, but
 it's invisible.  
 Oh wait, it did, but I fucked up! There's a weird interaction with scroll.  
 And not just scroll, the positioning is very fucked. Let's go and read the docs
