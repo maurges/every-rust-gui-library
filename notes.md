@@ -118,6 +118,43 @@ states, reactivity, layouts. All the basic controls are there, and while they
 look weird, they are not that ugly, just very basic.  
 Now that layout is done, let's do this with a proper model.
 
+Oh crap, there is no AbstractItemModel. Well, I have a shitty idea to bypass
+it. I can keep the model in qml with ListModel, and on button press send it to
+rust via a series of scalar sends.
+
+And now I'm suddenly hit with a cryptic error. I think it's caused by me using
+QUrl without the necessary qualifications of a nuclear physicist. Argh, typical
+c++ bindings.
+
+Oh right, it's because rust-analyzer fucked up my file. This is inconvenient,
+so I can't use rust-analyzer anymore?
+
+Oh, a problem with pins. Projecting to a mutable pin consumes the whole self.
+So you can't modify multiple fields in one method. This is stupid.  
+I think this can be bypassed by storing all data inside a separate struct, and
+keeping it as a separate field. For now I'm bypassing it in a different way.
+
+In the end I had to bypass it with the separate state, yes.
+
+Alright, the example is working and it wasn't that painful. Then again, I am
+pretty familiar with qml and what to expect. Now the biggest problem with this
+library is the lack of AbstractItemModel. The biggest upside with this library
+is that it Just Works. Setting up was very easy, and because it builds a rust
+library and links it all with c++ toolchain, I can apply qt's c++ guides to
+build it to other platforms.
+
+- Default widgets: enough, alright-ish looking
+- Creating simple widgets: simple
+- Creating compound widgets: simple
+- Layouting: simple
+- Custom layouts: never tried actually, the default ones are great
+- Reactivity: simple
+- Setting up: easy
+- Documentation: great for qt, ok for library
+- Tutorial: present, assumes familiarity with qt
+- Diving into source: didn't have to
+- Overall: approve. You'll need some creativity to bypass the limitations
+
 ## Dioxus
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
