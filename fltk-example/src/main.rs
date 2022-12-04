@@ -1,7 +1,7 @@
 mod flat_button;
 mod todo_item;
 
-use fltk::prelude::{WidgetExt, WindowExt, GroupExt};
+use fltk::prelude::{WidgetExt, WindowExt, GroupExt, InputExt};
 use fltk::{app, window::Window, enums::Color};
 
 
@@ -30,7 +30,6 @@ fn main() {
         .right_of(&new_input, 5)
         .with_label("add");
 
-    scroll.end();
 
     let mut col_children = Vec::new();
 
@@ -46,6 +45,7 @@ fn main() {
         450, 30,
         "test".to_owned(), false,
     );
+    scroll.end();
     /* Event handling */
     let mut prev_child = &dummy_widget;
     while app.wait() {
@@ -57,7 +57,7 @@ fn main() {
                         prev_child.y() + prev_child.height() + 5,
                         450,
                         30,
-                        new_input.label().to_owned(),
+                        new_input.value(),
                         false,
                     );
                     scroll.add(&*new_child);

@@ -280,3 +280,5 @@ resized and other stuff will handle it for you.
 
 I'm trying to create the todo app, and suddenly nothing my new widget doesn't
 fucking draw. Even if I create it statically, it's gone!
+
+Fuck, now it magically works. This piece of shit is very brittle.
