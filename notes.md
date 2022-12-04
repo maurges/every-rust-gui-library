@@ -258,3 +258,7 @@ veery low level, so you need to call redraws on your own. But still, the
 biggest problem is the lack of layouting for non-standard widgets. I could
 write my own ones though. Ok, it seems it's an ok library, let's move to the
 real thing.
+
+I tried to implement my own column layout, and i didn't work. It has size, but
+it's invisible.  
+Oh wait, it did, but I fucked up! There's a weird interaction with scroll.

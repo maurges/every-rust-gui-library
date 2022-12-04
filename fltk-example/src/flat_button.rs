@@ -3,11 +3,11 @@ use std::{cell::Cell, rc::Rc};
 use fltk::{widget::Widget, draw, enums::{FrameType, Color, Font, Align, Event}, prelude::{WidgetBase, WidgetExt}};
 
 pub struct FlatButton {
-    wid: Widget,
+    parent: Widget,
     pressed: Rc<Cell<bool>>,
 }
 
-fltk::widget_extends!(FlatButton, Widget, wid);
+fltk::widget_extends!(FlatButton, Widget, parent);
 
 impl Default for FlatButton {
     fn default() -> Self {
@@ -18,7 +18,7 @@ impl Default for FlatButton {
 impl FlatButton {
     pub fn new(x: i32, y: i32, w: i32, h: i32, label: &str) -> FlatButton {
         let mut x = FlatButton {
-            wid: Widget::new(x, y, w, h, None).with_label(label),
+            parent: Widget::new(x, y, w, h, None).with_label(label),
             pressed: Rc::new(Cell::new(false)),
         };
         x.draw();
@@ -29,7 +29,7 @@ impl FlatButton {
     // Overrides the draw function
     fn draw(&mut self) {
         let pressed = self.pressed.clone();
-        self.wid.draw(move |b| {
+        self.parent.draw(move |b| {
             let pressed = pressed.get();
             let color = if pressed {
                 Color::from_u32(0x7421fa)
@@ -60,18 +60,18 @@ impl FlatButton {
     // Overrides the handle function.
     // Notice the do_callback which allows the set_callback method to work
     fn handle(&mut self) {
-        let mut wid = self.wid.clone();
+        let mut parent = self.parent.clone();
         let pressed = self.pressed.clone();
-        self.wid.handle(move |_, ev| match ev {
+        self.parent.handle(move |_, ev| match ev {
             Event::Push => {
                 pressed.set(true);
-                wid.redraw();
-                wid.do_callback();
+                parent.redraw();
+                parent.do_callback();
                 true
             }
             Event::Released => {
                 pressed.set(false);
-                wid.redraw();
+                parent.redraw();
                 true
             }
             _ => false,

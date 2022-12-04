@@ -1,4 +1,5 @@
 mod flat_button;
+mod column_layout;
 
 use fltk::prelude::{WidgetExt, WindowExt, GroupExt};
 use fltk::{app, frame::Frame, window::Window, enums::Color};
@@ -25,31 +26,30 @@ fn main() {
     let mut scroll = fltk::group::Scroll::default()
         .size_of(&wind);
     scroll.set_color(Color::White);
+    let mut col = column_layout::ColumnLayout::default();
+    scroll.end();
 
     let mut frame = Frame::default()
         .with_size(100, 40)
-        .center_of(&wind)
         .with_label("0");
     let mut but_inc = flat_button::FlatButton::default()
         .size_of(&frame)
-        .above_of(&frame, 0)
         .with_label("+");
     let mut but_dec = flat_button::FlatButton::default()
         .size_of(&frame)
-        .below_of(&frame, 0)
         .with_label("-");
 
     let mut but_add = flat_button::FlatButton::default()
         .size_of(&frame)
-        .below_of(&frame, 80)
         .with_label("add");
 
-    let mut col = fltk::group::Column::default_fill()
-        .with_pos(0, but_add.y() + 80)
-        .with_size(100, 0);
+    col.add(&mut but_inc);
+    col.add(&mut &mut frame); // lol
+    col.add(&mut but_dec);
+    col.add(&mut but_add);
+
     let mut col_children = Vec::new();
 
-    scroll.end();
     wind.make_resizable(true);
     wind.end();
     wind.show();
@@ -70,16 +70,13 @@ fn main() {
                 ButtonMessage::Inc => { state += 1; },
                 ButtonMessage::Dec => { state -= 1; }
                 ButtonMessage::Add => {
-                    col_children.push(
-                        Frame::default()
-                            .size_of(&frame)
-                            .with_label("chlen")
-                    );
-                    let w = col.width();
-                    let h = col.height();
-                    col = col.with_size(w, h + 80);
-                    col.add(col_children.last().unwrap());
+                    let mut new_child = Frame::default()
+                        .size_of(&frame)
+                        .with_label("chlen");
+                    col.add(&mut &mut new_child);
                     wind.redraw();
+                    eprintln!("child is at: {} x {}", new_child.x(), new_child.y());
+                    col_children.push(new_child);
                 }
             }
             state_rendered = format!("{}", state);
