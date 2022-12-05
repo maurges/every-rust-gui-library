@@ -300,6 +300,35 @@ by hand: the turorial lists so many ways to make hooks slow.
 
 Let's try to do it with hooks/models at first.
 
+Why do I need to provide context in the initialization of the hook? Can't it be
+a method that is used standalone?  
+Also with how often this library changes, makes it very easy to believe that
+something is an oversight or bad design.
+
+Whoa, this is even worse than qt-cxx's macros, because now I can't use
+autocompletion inside them. This sucks so much.
+
+A million krona question: how do you access an element's internal data? I can't
+name an element at all. Fuuuuck. I see a couple of ways: on content change I
+update some state, or write some javascript.
+
+Hah, did you think I would write javascript? The approach with content change
+is not that bad code-wise. It just doesn't work: I call needs_update, and the
+view doesn't get updated. What the fltking fuck is this?
+
+While washing the dishes I had a thought. The only way to add dynamicity to
+your app is state, and working with state is a pain. Furthermore, once a
+component is created you can't access it, get its internal state, so you have
+to pass Rc-s everywhere - dependency injection of sorts? This means that your
+component can't react to each other, and this means that you can't layout your
+components in relation to other components. Not just layout! In qml it's
+trivial for one component to have the same color as another, the same content,
+and they will be updated automatically. Here, you need to pass it through
+hooks. And then you get a problem with components not fucking redrawing.
+
+Well, I tried several options and it still doesn't redraw. Let's call Arkadii
+and see his opinion.
+
 ## Dominator
 
 What a name.

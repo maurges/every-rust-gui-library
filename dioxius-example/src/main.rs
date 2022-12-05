@@ -1,4 +1,6 @@
 #![allow(non_snake_case)]
+use std::{cell::RefCell, rc::Rc};
+
 use dioxus::prelude::{Scope, Element};
 
 fn main() {
@@ -8,35 +10,69 @@ fn main() {
 fn app(cx: Scope<i32>) -> Element {
     use dioxus::prelude::*;
 
-    let is_done_source = true;
-    let is_done = use_state(&cx, || is_done_source);
+    let make_shared_state = || Rc::new(RefCell::new(vec![
+        TodoState { text: "example".into(), done: true },
+    ]));
+    let shared_state = use_state(&cx, || {
+        let state = make_shared_state();
+        cx.provide_context(SharedTodoState(state.clone()));
+        state
+    });
+
+    let input_state = cx.use_hook(|_| Rc::new(RefCell::new(String::new())));
+    let input_state_b = input_state.clone();
 
     cx.render(rsx! (
-        div { "Hello, world!" }
+        input {
+            r#type: "text",
+            onchange: move |ev| { *input_state.borrow_mut() = ev.data.value.clone() }
+        }
+        button {
+            onclick: move |_| {
+                shared_state.borrow_mut().push(TodoState {
+                    text: input_state_b.borrow().clone(),
+                    done: false,
+                });
+                eprintln!("handling update");
+                shared_state.needs_update();
+            },
+            "add"
+        }
         TodoItem {
-            text: "test".to_owned(),
-            done: **is_done,
+            index: 0,
         }
     ))
 }
 
-#[derive(PartialEq, dioxus::prelude::Props)]
-struct TodoItemProps {
+#[derive(Clone)]
+struct SharedTodoState(Rc<RefCell<Vec<TodoState>>>);
+struct TodoState {
     text: String,
     done: bool,
 }
 
+#[derive(PartialEq, dioxus::prelude::Props)]
+struct TodoItemProps {
+    index: usize,
+}
+
 fn TodoItem(cx: Scope<TodoItemProps>) -> Element {
     use dioxus::prelude::*;
+    eprintln!("todo item");
 
     let times = cx.use_hook(|_| 0_i64);
+    let state = cx.consume_context::<SharedTodoState>().unwrap();
+    let my_state = state.0.borrow();
+    let done = my_state[cx.props.index].done;
+    let text = &my_state[my_state.len() - 1 - cx.props.index].text;
+
     cx.render(rsx!(
         div {
             input {
                 r#type: "checkbox",
-                checked: "{cx.props.done}",
+                checked: "{done}",
             }
-            "{cx.props.text}"
+            "{text}"
             button {
                 onclick: move |_| {
                     *times += 1;
