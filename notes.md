@@ -75,6 +75,26 @@ morj@blackflame:~/projects/gui/azul-example> du -h -d0 .
 ```
 DAYUM BOI, chonki librari
 
+A couple of days later I decided to give this a second chance and try it on my
+mac. You know, since linux versions are hard to make for people regularly,
+let's give them some slack.  
+The first thing is that I forgot how to build this thing, and had to look it up
+again. Minus point.  
+The second thing is that it doesn't even run:
+
+    morj@mac:~/Projects/every-rust-gui-library/azul-example> ./azul_run.sh cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/azul-example`
+    azul.App.run(x11)
+
+What the hell is this? The mac support is mentioned on the website, and people
+would expect it to just work.
+
+But to cut the author some slack again, mac is even worse than linux, because
+to do anything you have to buy a special expensive laptop, and because
+everything breaks between versions so easily. If I didn't have my work macbook,
+I would be hating on mac as much as on windows.
+
 ## cacao
 Macos. I do have a mac, but nah. And it doesn't align with my future goals.
 
@@ -159,6 +179,11 @@ though
 - Tutorial: present, assumes familiarity with qt
 - Diving into source: didn't have to
 - Overall: approve. You'll need some creativity to bypass the limitations
+
+Now I try to run it on mac again, and I can't build it with nix, because
+corrosion doesn't work with it. I could explore the options for offline
+corrosion, but nah. I also tried building it with nix-shell, but this thing
+requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
 
 ## Dioxus
 
