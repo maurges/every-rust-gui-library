@@ -215,6 +215,91 @@ Nope.
 
 A shame, but I expected to dislike the approach, again.
 
+Alright, round two after dealing with qt. I'm trying this on mac, the hello world is very easy to set up.
+
+> Coming from React, the Scope object might be confusing
+Ha-ha, react. Who do you think I am.
+
+God damn it, rust-analyzer doesn't work through macros. I guess every library
+that relies on them gets minus points for that. Buut, with qml I also don't get
+rust-analyzer, because it's not even rust, so.
+
+Hah. I tried an example from the book, and it didn't run. Then I noticed that
+the book page has a "run" button near all the examples. So I press it, and I
+doesn't run as well.
+
+You can splice data into strings. How safe is that? Can you XSS the desktop
+apps as well now? Let's see.  
+Not terrible, the tag control characters are escaped.
+
+Well, the tutorial is outdated. I can't find the standalone render function
+anywhere in the docs.
+
+You can embed NodeList inside rsx, convenient. I guess that's how you make
+widgets. Now I wonder if you can do it dynamically.
+
+You can't clone nodelist. This is stupid.
+
+You can use a lot of regular rust in rsx. Space separates node expansions, so I
+wonder how bad they parse this thing.
+
+What I really don't like about CSS is that it has zero discoverability. How do
+I know which styles I can add to a button? How do I make text field take all
+the available space? I just need to google it or ask Dima.
+
+The parser only recognizes elements starting from upcase letter. This is
+counterintuitive, since elements are regular rust functions, so you need to
+disable wrong casing warning.
+
+Some of the default elements have the attribute types confused. My own element
+has a bool prop, and I pass a bool, but when "input" has a bool prop, I need to
+pass a string.
+
+What's the difference between hook and state? I see that hooks don't tell the
+component that it needs to redraw, so why would you use hooks at all?
+
+> A single component will be called multiple times
+Sounds like immediate-mode with fewer updates.
+
+Ah ok. It seems that hooks can be easily updated, but state needs a ceremony to
+update, and updating state will redraw.
+
+The tutorial is out of date again on `use_state`. It doesn't return a tuple
+anymore.
+
+Why is it called hook? Makes no sense.
+
+"Rules of hooks". Well ok, qml state management also has its rules, but this
+sounds silly, like go's rules of channels.
+
+use_state is a kind of a hook, not like they are unrelated concepts. Alright. I
+fell like learning quantum physics, while working with fltk felt like doing
+fucking gui programming. The two are not that different, in both cases you have
+to bend backwards to persist state, and you can forget to redraw stuff.
+
+There's one way to pass a component to a child: create a new type for the
+child. So this doesn't work if you have dynamic children. And I immediately
+thought of a way to make it work: provide both a vector and an index.
+
+> calling "consume" state can be a rather expensive operation to perform during
+> each render
+Ok, then what do I do?
+
+It recommends use_read for lifting state to pure components. This doesn't exist
+anymore.
+> This is the beauty of dioxus
+
+So I'm mostly done with the tutorial, the remaining chapters seem irrelevant.
+Well, it seems I do need to use those workarounds I thought of before. I got to
+say, this seems somewhere in the middle between qml and fltk: not very
+declarative and reactive and automatic, but not absolutely stateful. For
+example, there are no simple views into model, you need to explicitly pack your
+model into hooks and view into them. But at least there are hooks. Although I
+wonder if it's even better than just passing Rc around and calling needs_update
+by hand: the turorial lists so many ways to make hooks slow.
+
+Let's try to do it with hooks/models at first.
+
 ## Dominator
 
 What a name.
