@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, rc::Rc, ops::Deref};
 
-use dioxus::prelude::{Scope, Element};
+use dioxus::prelude::{Scope, Element, EventHandler};
 
 fn main() {
     dioxus::desktop::launch_with_props(app, 0, |x| x);
@@ -14,21 +14,14 @@ fn app(cx: Scope<i32>) -> Element {
         TodoState { text: "example".into(), done: true },
         TodoState { text: "example2".into(), done: false },
     ]));
-    let shared_state = use_state(&cx, || {
-        let state = make_shared_state();
-        cx.provide_context(SharedTodoState(state.clone()));
-        state
-    });
+    let shared_state = use_state(&cx, make_shared_state);
+    cx.use_hook(|_| cx.provide_context(SharedTodoState(shared_state.deref().clone())));
 
     let input_state = cx.use_hook(|_| Rc::new(RefCell::new(String::new())));
     let input_state_b = input_state.clone();
 
     let shared_state_len = shared_state.borrow().len();
-    let rendered_items = (0..shared_state_len).map(|i|
-        rsx!(TodoItem {
-            index: i,
-        })
-    );
+    let on_text_changed = |_: &str| {};
 
     cx.render(rsx! (
         input {
@@ -45,7 +38,11 @@ fn app(cx: Scope<i32>) -> Element {
             },
             "add"
         }
-        rendered_items
+        shared_state.borrow().iter().map(|item| rsx!( TodoItem {
+            text: &item.text,
+            done: item.done,
+            on_text_changed: &mut on_text_changed,
+        } ))
     ))
 }
 
@@ -58,27 +55,26 @@ struct TodoState {
 }
 
 #[derive(PartialEq, dioxus::prelude::Props)]
-struct TodoItemProps {
-    index: usize,
+struct TodoItemProps<'a, 'c> {
+    text: &'a str,
+    done: bool,
+    on_text_changed: EventHandler<'c, &'c str>,
 }
 
-fn TodoItem(cx: Scope<TodoItemProps>) -> Element {
+fn TodoItem<'a, 'c>(cx: Scope<TodoItemProps<'a, 'c>>) -> Element<'a> {
     use dioxus::prelude::*;
     eprintln!("todo item");
 
     let times = cx.use_hook(|_| 0_i64);
     let state = cx.consume_context::<SharedTodoState>().unwrap();
-    let my_state = state.0.borrow();
-    let done = my_state[cx.props.index].done;
-    let text = &my_state[my_state.len() - 1 - cx.props.index].text;
 
     cx.render(rsx!(
         div {
             input {
                 r#type: "checkbox",
-                checked: "{done}",
+                checked: "{cx.props.done}",
             }
-            "{text}"
+            "{cx.props.text}"
             button {
                 onclick: move |_| {
                     *times += 1;

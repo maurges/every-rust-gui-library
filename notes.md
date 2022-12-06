@@ -352,6 +352,14 @@ lot worse in terms of performance, since I need to update every child it seems.
 Also both those approaches don't solve the redraw problem, it seems. If they
 do, it's a very brittle problem that you could break by accident.
 
+It seems I can't add event handlers to my own widgets. This is because I need
+to pass it in props, and Props need to be PartialEq, and EventHandler is not
+Eq. I also can't pass just functions, because the macro automatically converts
+them into EventHandler-s.
+
+"When working with large sets of inputs, you might be quickly tired of creating
+use_state for each value" they say, and then provide no solution. Lol.
+
 ## Dominator
 
 What a name.
