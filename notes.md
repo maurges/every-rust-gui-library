@@ -360,6 +360,11 @@ them into EventHandler-s.
 "When working with large sets of inputs, you might be quickly tired of creating
 use_state for each value" they say, and then provide no solution. Lol.
 
+Alright, I rewrote to rc-s. It didn't help, obvously. Then I added another call
+to needs_update in the same place I tried before, and now it fucking works. Ok.
+
+Top kek: in checkbox update event the data is not bool, but string.
+
 ## Dominator
 
 What a name.
