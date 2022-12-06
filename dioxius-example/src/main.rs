@@ -15,46 +15,72 @@ fn app(cx: Scope<i32>) -> Element {
     let input_state_b = input_state.clone();
 
     cx.render(rsx! (
-        input {
-            r#type: "text",
-            onchange: move |ev| { *input_state.borrow_mut() = ev.data.value.clone() }
+        div {
+            input {
+                r#type: "text",
+                onchange: move |ev| { *input_state.borrow_mut() = ev.data.value.clone() }
+            }
+            button {
+                onclick: move |_| {
+                    shared_state.borrow_mut().push(TodoItemProps {
+                        text: Rc::new(RefCell::new(input_state_b.borrow().clone())),
+                        done: Rc::new(RefCell::new(false)),
+                    });
+                    cx.needs_update();
+                },
+                "add"
+            }
         }
-        button {
-            onclick: move |_| {
-                shared_state.borrow_mut().push(TodoItemProps {
-                    text: Rc::new(RefCell::new(input_state_b.borrow().clone())),
-                    done: Rc::new(RefCell::new(false)),
-                });
-                cx.needs_update();
-            },
-            "add"
-        }
+
         shared_state.borrow().iter().map(|item| rsx!( TodoItem {
             text: item.text.clone(),
             done: item.done.clone(),
         } ))
-        button {
-            onclick: move |_| {
-                for item in shared_state.borrow().iter() {
-                    eprintln!("item: text = {}, done = {}", item.text.borrow(), item.done.borrow());
-                }
-            },
-            "save"
+
+        div {
+            button {
+                onclick: move |_| { save(&shared_state.borrow()); },
+                "save"
+            }
+            button {
+                onclick: move |_| { *shared_state.borrow_mut() = load(); cx.needs_update() },
+                "load"
+            }
         }
     ))
 }
 
 fn save(data: &[TodoItemProps]) {
-
+    let data = data.iter().map(|x| TodoState {
+        text: x.text.borrow().clone(),
+        done: x.done.borrow().clone(),
+    }).collect::<Vec<_>>();
+    // haha
+    let dest = "./test.ron";
+    if let Ok(file) = std::fs::File::create(dest) {
+        match ron::ser::to_writer(file, &data) {
+            Ok(()) => (),
+            Err(e) => eprintln!("{}", e),
+        }
+    }
 }
 
-/*
-#[derive(Debug)]
+fn load() -> Vec<TodoItemProps> {
+    let src = "./test.ron";
+    let file = std::fs::File::open(src).unwrap();
+    let data: Vec<TodoState> =
+        ron::de::from_reader(file).unwrap();
+    data.into_iter().map(|x| TodoItemProps {
+        text: Rc::new(RefCell::new(x.text)),
+        done: Rc::new(RefCell::new(x.done)),
+    }).collect()
+}
+
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 struct TodoState {
     text: String,
     done: bool,
 }
-*/
 
 #[derive(PartialEq, dioxus::prelude::Props)]
 struct TodoItemProps {

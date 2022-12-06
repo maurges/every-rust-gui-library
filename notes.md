@@ -384,6 +384,18 @@ Ughhh, I can't create a dialog? And no transitive dependency allows me to? Well
 that's stupid. I wonder if there's a standalone rust library for native file
 dialogs which one would use, but I don't want to look for one now.
 
+Once again I'm reminded that people shitting on haskell because of immutability
+are retards. It's the exact same in rust! It's because structs with data and
+structs with behaviour are different!
+
+Ok, added saves and loads. I'm tired of this so I'm not exploring how to do
+native dialogues, just use a builtin location. It was pretty easy to do, but I
+ran into the "problem" from the paragraph above. More like stupidity that this
+library forces me to do it. Also I forgot to add "redraw" and it didn't redraw,
+ugh. And it seems that, again, consecutive presses of "load" don't redraw it,
+even though the state is changed, and the button is pressed. So this is very
+unreliable.
+
 ## Dominator
 
 What a name.
