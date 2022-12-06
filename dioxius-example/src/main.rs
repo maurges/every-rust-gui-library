@@ -12,6 +12,7 @@ fn app(cx: Scope<i32>) -> Element {
 
     let make_shared_state = || Rc::new(RefCell::new(vec![
         TodoState { text: "example".into(), done: true },
+        TodoState { text: "example2".into(), done: false },
     ]));
     let shared_state = use_state(&cx, || {
         let state = make_shared_state();
@@ -21,6 +22,13 @@ fn app(cx: Scope<i32>) -> Element {
 
     let input_state = cx.use_hook(|_| Rc::new(RefCell::new(String::new())));
     let input_state_b = input_state.clone();
+
+    let shared_state_len = shared_state.borrow().len();
+    let rendered_items = (0..shared_state_len).map(|i|
+        rsx!(TodoItem {
+            index: i,
+        })
+    );
 
     cx.render(rsx! (
         input {
@@ -33,19 +41,17 @@ fn app(cx: Scope<i32>) -> Element {
                     text: input_state_b.borrow().clone(),
                     done: false,
                 });
-                eprintln!("handling update");
-                shared_state.needs_update();
+                eprintln!("handling update: {:?}", shared_state.borrow());
             },
             "add"
         }
-        TodoItem {
-            index: 0,
-        }
+        rendered_items
     ))
 }
 
 #[derive(Clone)]
 struct SharedTodoState(Rc<RefCell<Vec<TodoState>>>);
+#[derive(Debug)]
 struct TodoState {
     text: String,
     done: bool,

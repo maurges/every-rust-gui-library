@@ -16,6 +16,8 @@ on 2022-12-03 and test them.
 
 ## Azul
 
+Time spent: an hour max.
+
 Oh no, CSS, that's a bad sign.
 
 Requres a shared library. The binary release is windows-only. Ok, let's build it.
@@ -109,6 +111,8 @@ uses objective C though and I don't want to set all of this bullshit up right
 now, but it might just be an option maybe if I'm bothered.
 
 ## CXX-Qt
+Time spent: a couple of hours.
+
 I like qt, but I remember last time I tried it failed in a lot of ways. Let's
 see how this one fares today.
 
@@ -186,6 +190,7 @@ corrosion, but nah. I also tried building it with nix-shell, but this thing
 requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
 
 ## Dioxus
+Time spent: a couple of evenings (so far)
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
@@ -329,6 +334,24 @@ hooks. And then you get a problem with components not fucking redrawing.
 Well, I tried several options and it still doesn't redraw. Let's call Arkadii
 and see his opinion.
 
+Great news: in react there's same еботня with taking changes from input fields
+into your own state. This is the problem with modern development, we have to
+think up roundabout ways to extract data that the computer already knows, that
+your system already knows, but which is hidden from you by your framework.
+Well, that's what someone like JB would say, but really this pattern is
+everywhere, you can say this is the essence of math.
+
+So, the shitty thing here was passing state completely into child components,
+instead of projection. I did this because I want the state to be mutable, and I
+can't pass mutable projections. Or can I? The first approach is to wrap every
+member in rc-refcell and pass those as prop, and mutate them. Since I only need
+to update the component itself and not outer data, this works.  
+The second approach is like with input fields: add a callback to child widget,
+and set my own state from the callback. This seems to be more general, but a
+lot worse in terms of performance, since I need to update every child it seems.  
+Also both those approaches don't solve the redraw problem, it seems. If they
+do, it's a very brittle problem that you could break by accident.
+
 ## Dominator
 
 What a name.
@@ -385,6 +408,7 @@ Kind of weird. Opensuse has a gnome variant as well, with the same repos, but no
 Immediate mode, skip.
 
 ## fltk
+Time spent: a full saturday and half of sunday.
 
 I can build the c++ library from source, or download a tarball. Well, I have
 the compiler, why the hell not build it.
@@ -525,3 +549,14 @@ One advantage is great input support, and it seems to support accessibility.
 - Tutorial: present, I didn't need it much
 - Diving into source: possible and not bad
 - Overall: approve, a very viable option to use now
+
+## flutter_rust_bridge
+
+I think I have the notes for this. In short: it's not making gui in rust, but
+so is qml, and that means I'm a hypocrite.
+
+## FUI
+Time spent: like 10 minutes (so far)
+
+Fuck me this one is ugly. And it depends on Qt for no good reason, so it has to
+be compared to the qt adjacent libraries.
