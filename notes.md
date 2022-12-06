@@ -190,7 +190,7 @@ corrosion, but nah. I also tried building it with nix-shell, but this thing
 requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
 
 ## Dioxus
-Time spent: a couple of evenings (so far)
+Time spent: a 3 evenings (so far)
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
@@ -220,7 +220,8 @@ Nope.
 
 A shame, but I expected to dislike the approach, again.
 
-Alright, round two after dealing with qt. I'm trying this on mac, the hello world is very easy to set up.
+Alright, round two after dealing with qt. I'm trying this on mac, the hello
+world is very easy to set up.
 
 > Coming from React, the Scope object might be confusing
 Ha-ha, react. Who do you think I am.
@@ -230,7 +231,7 @@ that relies on them gets minus points for that. Buut, with qml I also don't get
 rust-analyzer, because it's not even rust, so.
 
 Hah. I tried an example from the book, and it didn't run. Then I noticed that
-the book page has a "run" button near all the examples. So I press it, and I
+the book page has a "run" button near all the examples. So I press it, and it
 doesn't run as well.
 
 You can splice data into strings. How safe is that? Can you XSS the desktop
@@ -278,7 +279,7 @@ Why is it called hook? Makes no sense.
 sounds silly, like go's rules of channels.
 
 use_state is a kind of a hook, not like they are unrelated concepts. Alright. I
-fell like learning quantum physics, while working with fltk felt like doing
+feel like learning quantum physics, while working with fltk felt like doing
 fucking gui programming. The two are not that different, in both cases you have
 to bend backwards to persist state, and you can forget to redraw stuff.
 
@@ -359,6 +360,12 @@ them into EventHandler-s.
 
 "When working with large sets of inputs, you might be quickly tired of creating
 use_state for each value" they say, and then provide no solution. Lol.
+
+I reread this while fixing merge conflicts, and here are some things I now
+believe different:
+- Type confusion is not just in properties, it's also in events.
+- Both here and in fltk I pass state with rc-refcell, and call redraws by hand.
+  Where are the upsides of using this?
 
 Alright, I rewrote to rc-s. It didn't help, obvously. Then I added another call
 to needs_update in the same place I tried before, and now it fucking works. Ok.
@@ -577,11 +584,48 @@ One advantage is great input support, and it seems to support accessibility.
 
 ## flutter_rust_bridge
 
-I think I have the notes for this. In short: it's not making gui in rust, but
-so is qml, and that means I'm a hypocrite.
+Do I want to do this? How many people would have a flutter toolchain ready, how
+many know how to do it? Let's look at the tutorial and examples and see how
+much dart code there is.
 
-## FUI
+    This library is nothing but a code generator that helps your Flutter/Dart
+    functions call Rust functions
+
+So it's not a graphics framework, flutter is a graphics framework, and this
+only allows you to call rust functions from it. Not sure this is what I want.  
+On the other hand, with cxx-qt it was the exact same: you describe your
+graphics in another language, and you call rust functions from it. I guess the
+only difference is that I have qt toolchain already, and that I knew it would
+take me an hour max. Also I never said I wasn't a hypocrite.  
+But I remember being very interested in flutter myself, kind of liking it's
+approach when it came out. It's only recently that people discovered that it's
+very easy to make slow apps with it.  
+Maybe I'll go back to it later, when/if I'm more interested to try flutter
+again.
+
+## fui
 Time spent: like 10 minutes (so far)
 
-Fuck me this one is ugly. And it depends on Qt for no good reason, so it has to
-be compared to the qt adjacent libraries.
+A library by a single person. 40 stars on github. Last commit in august.
+Alrighty, let's see. It's not like you can't /finish/ making a graphics
+library, especiallly if all system stuff is done by libs you depend on.
+
+0 issues, 0 pull requests `>_>`
+
+```
+error: failed to run custom build command for `fui_system v0.11.0`
+--- stderr
+thread 'main' panicked at 'failed to execute 'qmake' process: Os { code: 2, kind: NotFound, message: "No such file or directory" }', /home/morj/.local/share/cargo/registry/src/github.com-1ecc6299db9ec823/fui_system-0.11.0/build.rs:47:10
+```
+
+Hah, shit. So it's qt, which is cool, but opensuse uses qmake-qt5 instead of
+just qmake. Who the hell uses qmake anymore anyway. Yes, I agree it's 1000
+times better than cmake, but still.
+
+HOLY SHIT IT'S SO UGLY, what the hell
+
+Well, the api docs don't exist, and there's no tutorial. Alrighty.
+
+Let's not forget, aside from the qmake thing, building it was very easy. But
+that also means that it has to be compared to qt adjacent libraries, where I'm
+not sure it would fare well.

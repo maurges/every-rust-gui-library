@@ -1,0 +1,17 @@
+[package]
+name = "fui-example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+fui_core = { version = "0.12" }
+fui_controls = { version = "0.12" }
+fui_macros = { version = "0.3" }
+fui_app = { version = "0.12" }
+anyhow = "1.0"
+time = "0.3"
+typed-builder = "0.10"
+typemap = "0.3"
+tokio = { version = "1", features = ["full"] }
