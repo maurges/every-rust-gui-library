@@ -44,6 +44,10 @@ fn app(cx: Scope<i32>) -> Element {
     ))
 }
 
+fn save(data: &[TodoItemProps]) {
+
+}
+
 /*
 #[derive(Debug)]
 struct TodoState {

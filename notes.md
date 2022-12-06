@@ -365,6 +365,18 @@ to needs_update in the same place I tried before, and now it fucking works. Ok.
 
 Top kek: in checkbox update event the data is not bool, but string.
 
+Alright, and now a million dollar question: how do I create a file saving
+dialog?
+
+I think a sizeable number of rust people have a conception of a prelude module
+very different from haskell guys. In haskell it's a convenient reexport module,
+but if you want you can import everything in a more structured way. In dioxus
+it's a module where you get stuff from, period.
+
+Ughhh, I can't create a dialog? And no transitive dependency allows me to? Well
+that's stupid. I wonder if there's a standalone rust library for native file
+dialogs which one would use, but I don't want to look for one now.
+
 ## Dominator
 
 What a name.
