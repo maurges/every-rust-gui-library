@@ -190,7 +190,7 @@ corrosion, but nah. I also tried building it with nix-shell, but this thing
 requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
 
 ## Dioxus
-Time spent: a couple of evenings (so far)
+Time spent: a 3 evenings (so far)
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
@@ -360,6 +360,12 @@ them into EventHandler-s.
 
 "When working with large sets of inputs, you might be quickly tired of creating
 use_state for each value" they say, and then provide no solution. Lol.
+
+I reread this while fixing merge conflicts, and here are some things I now
+believe different:
+- Type confusion is not just in properties, it's also in events.
+- Both here and in fltk I pass state with rc-refcell, and call redraws by hand.
+  Where are the upsides of using this?
 
 ## Dominator
 
