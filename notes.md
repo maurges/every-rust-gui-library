@@ -16,6 +16,8 @@ on 2022-12-03 and test them.
 
 ## Azul
 
+Time spent: an hour max.
+
 Oh no, CSS, that's a bad sign.
 
 Requres a shared library. The binary release is windows-only. Ok, let's build it.
@@ -75,6 +77,26 @@ morj@blackflame:~/projects/gui/azul-example> du -h -d0 .
 ```
 DAYUM BOI, chonki librari
 
+A couple of days later I decided to give this a second chance and try it on my
+mac. You know, since linux versions are hard to make for people regularly,
+let's give them some slack.  
+The first thing is that I forgot how to build this thing, and had to look it up
+again. Minus point.  
+The second thing is that it doesn't even run:
+
+    morj@mac:~/Projects/every-rust-gui-library/azul-example> ./azul_run.sh cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/azul-example`
+    azul.App.run(x11)
+
+What the hell is this? The mac support is mentioned on the website, and people
+would expect it to just work.
+
+But to cut the author some slack again, mac is even worse than linux, because
+to do anything you have to buy a special expensive laptop, and because
+everything breaks between versions so easily. If I didn't have my work macbook,
+I would be hating on mac as much as on windows.
+
 ## cacao
 Macos. I do have a mac, but nah. And it doesn't align with my future goals.
 
@@ -89,6 +111,8 @@ uses objective C though and I don't want to set all of this bullshit up right
 now, but it might just be an option maybe if I'm bothered.
 
 ## CXX-Qt
+Time spent: a couple of hours.
+
 I like qt, but I remember last time I tried it failed in a lot of ways. Let's
 see how this one fares today.
 
@@ -160,7 +184,13 @@ though
 - Diving into source: didn't have to
 - Overall: approve. You'll need some creativity to bypass the limitations
 
+Now I try to run it on mac again, and I can't build it with nix, because
+corrosion doesn't work with it. I could explore the options for offline
+corrosion, but nah. I also tried building it with nix-shell, but this thing
+requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
+
 ## Dioxus
+Time spent: a couple of evenings (so far)
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
@@ -189,6 +219,147 @@ Ughhh ok? Is there any way to use qt web view?
 Nope.
 
 A shame, but I expected to dislike the approach, again.
+
+Alright, round two after dealing with qt. I'm trying this on mac, the hello
+world is very easy to set up.
+
+> Coming from React, the Scope object might be confusing
+Ha-ha, react. Who do you think I am.
+
+God damn it, rust-analyzer doesn't work through macros. I guess every library
+that relies on them gets minus points for that. Buut, with qml I also don't get
+rust-analyzer, because it's not even rust, so.
+
+Hah. I tried an example from the book, and it didn't run. Then I noticed that
+the book page has a "run" button near all the examples. So I press it, and it
+doesn't run as well.
+
+You can splice data into strings. How safe is that? Can you XSS the desktop
+apps as well now? Let's see.  
+Not terrible, the tag control characters are escaped.
+
+Well, the tutorial is outdated. I can't find the standalone render function
+anywhere in the docs.
+
+You can embed NodeList inside rsx, convenient. I guess that's how you make
+widgets. Now I wonder if you can do it dynamically.
+
+You can't clone nodelist. This is stupid.
+
+You can use a lot of regular rust in rsx. Space separates node expansions, so I
+wonder how bad they parse this thing.
+
+What I really don't like about CSS is that it has zero discoverability. How do
+I know which styles I can add to a button? How do I make text field take all
+the available space? I just need to google it or ask Dima.
+
+The parser only recognizes elements starting from upcase letter. This is
+counterintuitive, since elements are regular rust functions, so you need to
+disable wrong casing warning.
+
+Some of the default elements have the attribute types confused. My own element
+has a bool prop, and I pass a bool, but when "input" has a bool prop, I need to
+pass a string.
+
+What's the difference between hook and state? I see that hooks don't tell the
+component that it needs to redraw, so why would you use hooks at all?
+
+> A single component will be called multiple times
+Sounds like immediate-mode with fewer updates.
+
+Ah ok. It seems that hooks can be easily updated, but state needs a ceremony to
+update, and updating state will redraw.
+
+The tutorial is out of date again on `use_state`. It doesn't return a tuple
+anymore.
+
+Why is it called hook? Makes no sense.
+
+"Rules of hooks". Well ok, qml state management also has its rules, but this
+sounds silly, like go's rules of channels.
+
+use_state is a kind of a hook, not like they are unrelated concepts. Alright. I
+feel like learning quantum physics, while working with fltk felt like doing
+fucking gui programming. The two are not that different, in both cases you have
+to bend backwards to persist state, and you can forget to redraw stuff.
+
+There's one way to pass a component to a child: create a new type for the
+child. So this doesn't work if you have dynamic children. And I immediately
+thought of a way to make it work: provide both a vector and an index.
+
+> calling "consume" state can be a rather expensive operation to perform during
+> each render
+Ok, then what do I do?
+
+It recommends use_read for lifting state to pure components. This doesn't exist
+anymore.
+> This is the beauty of dioxus
+
+So I'm mostly done with the tutorial, the remaining chapters seem irrelevant.
+Well, it seems I do need to use those workarounds I thought of before. I got to
+say, this seems somewhere in the middle between qml and fltk: not very
+declarative and reactive and automatic, but not absolutely stateful. For
+example, there are no simple views into model, you need to explicitly pack your
+model into hooks and view into them. But at least there are hooks. Although I
+wonder if it's even better than just passing Rc around and calling needs_update
+by hand: the turorial lists so many ways to make hooks slow.
+
+Let's try to do it with hooks/models at first.
+
+Why do I need to provide context in the initialization of the hook? Can't it be
+a method that is used standalone?  
+Also with how often this library changes, makes it very easy to believe that
+something is an oversight or bad design.
+
+Whoa, this is even worse than qt-cxx's macros, because now I can't use
+autocompletion inside them. This sucks so much.
+
+A million krona question: how do you access an element's internal data? I can't
+name an element at all. Fuuuuck. I see a couple of ways: on content change I
+update some state, or write some javascript.
+
+Hah, did you think I would write javascript? The approach with content change
+is not that bad code-wise. It just doesn't work: I call needs_update, and the
+view doesn't get updated. What the fltking fuck is this?
+
+While washing the dishes I had a thought. The only way to add dynamicity to
+your app is state, and working with state is a pain. Furthermore, once a
+component is created you can't access it, get its internal state, so you have
+to pass Rc-s everywhere - dependency injection of sorts? This means that your
+component can't react to each other, and this means that you can't layout your
+components in relation to other components. Not just layout! In qml it's
+trivial for one component to have the same color as another, the same content,
+and they will be updated automatically. Here, you need to pass it through
+hooks. And then you get a problem with components not fucking redrawing.
+
+Well, I tried several options and it still doesn't redraw. Let's call Arkadii
+and see his opinion.
+
+Great news: in react there's same еботня with taking changes from input fields
+into your own state. This is the problem with modern development, we have to
+think up roundabout ways to extract data that the computer already knows, that
+your system already knows, but which is hidden from you by your framework.
+Well, that's what someone like JB would say, but really this pattern is
+everywhere, you can say this is the essence of math.
+
+So, the shitty thing here was passing state completely into child components,
+instead of projection. I did this because I want the state to be mutable, and I
+can't pass mutable projections. Or can I? The first approach is to wrap every
+member in rc-refcell and pass those as prop, and mutate them. Since I only need
+to update the component itself and not outer data, this works.  
+The second approach is like with input fields: add a callback to child widget,
+and set my own state from the callback. This seems to be more general, but a
+lot worse in terms of performance, since I need to update every child it seems.  
+Also both those approaches don't solve the redraw problem, it seems. If they
+do, it's a very brittle problem that you could break by accident.
+
+It seems I can't add event handlers to my own widgets. This is because I need
+to pass it in props, and Props need to be PartialEq, and EventHandler is not
+Eq. I also can't pass just functions, because the macro automatically converts
+them into EventHandler-s.
+
+"When working with large sets of inputs, you might be quickly tired of creating
+use_state for each value" they say, and then provide no solution. Lol.
 
 ## Dominator
 
@@ -246,6 +417,7 @@ Kind of weird. Opensuse has a gnome variant as well, with the same repos, but no
 Immediate mode, skip.
 
 ## fltk
+Time spent: a full saturday and half of sunday.
 
 I can build the c++ library from source, or download a tarball. Well, I have
 the compiler, why the hell not build it.
@@ -401,7 +573,7 @@ only allows you to call rust functions from it. Not sure this is what I want.
 On the other hand, with cxx-qt it was the exact same: you describe your
 graphics in another language, and you call rust functions from it. I guess the
 only difference is that I have qt toolchain already, and that I knew it would
-take me an hour max.  
+take me an hour max. Also I never said I wasn't a hypocrite.  
 But I remember being very interested in flutter myself, kind of liking it's
 approach when it came out. It's only recently that people discovered that it's
 very easy to make slow apps with it.  
@@ -409,6 +581,7 @@ Maybe I'll go back to it later, when/if I'm more interested to try flutter
 again.
 
 ## fui
+Time spent: like 10 minutes (so far)
 
 A library by a single person. 40 stars on github. Last commit in august.
 Alrighty, let's see. It's not like you can't /finish/ making a graphics
@@ -430,4 +603,6 @@ HOLY SHIT IT'S SO UGLY, what the hell
 
 Well, the api docs don't exist, and there's no tutorial. Alrighty.
 
-Let's not forget, aside from the qmake thing, building it was very easy.
+Let's not forget, aside from the qmake thing, building it was very easy. But
+that also means that it has to be compared to qt adjacent libraries, where I'm
+not sure it would fare well.
