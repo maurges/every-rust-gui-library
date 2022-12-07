@@ -429,6 +429,15 @@ implementations, but I didn't achieve layout parity. I reaaaaally don't want to
 bother with CSS right now. Instead I'm going to do a second round, where I make
 every implementation look the same.
 
+So, funny story. Today I asked my web friends about the use of hooks and state
+to get text field value, and there was an argument between them about good
+practices, what you should do and what you shouldn't. I take away from that two
+things: noone in web knows what to do, and they don't fucking care about
+performance. Keep in mind my sample size is only slightly better than one since
+I know them well.  
+Also they were talking about react refs, which would be a neat solution and
+which this library doesn't have.
+
 ## Dominator
 
 What a name.
