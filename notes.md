@@ -500,7 +500,25 @@ Oh no, it is all of gtk, as I now see while looking how to get atk. Shit.
 Opensuse doesn't pack atk, so I'm boned. Why the hell does gtk require it
 /in rust/ anyway?
 
-Kind of weird. Opensuse has a gnome variant as well, with the same repos, but no atk-devel.
+Kind of weird. Opensuse has a gnome variant as well, with the same repos, but
+no atk-devel.
+
+Round 2, trying it on mac. The example from readme doesn't build, fucking
+classic.
+
+Well, it really requires gtk on linux, no way around it. They are working on
+pure wayland and x11 backends to replace it, but not currently available. Sad.
+I hope by the time the examples in readme are not outdated, it will be ready.
+
+WHAT the FUCK, 0.7.0 was released in january 2010? So it's not the examples
+that are outdated, it's my library copy!  
+So let's try from HEAD. I try, and I get "generic associated types are
+unstable". But wait, weren't they stabilized recently? The hell is going on?  
+Ah ok, I'm using outdated rustc turns out. Without the one feature I was very
+waiting for.
+
+Lol it's a mac app, closing the window doesn't kill the program. Lol,
+inconvenient.
 
 ## egui
 Immediate mode, skip.
