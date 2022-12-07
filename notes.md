@@ -438,6 +438,18 @@ I know them well.
 Also they were talking about react refs, which would be a neat solution and
 which this library doesn't have.
 
+- Default widgets: enough, alright looking, everyone is used to them
+- Creating simple widgets: medium
+- Creating compound widgets: simple to medium, problems with props
+- Layouting: easy until it's very hard
+- Custom layouts: just kill yourself
+- Reactivity: medium
+- Setting up: very easy except on linux
+- Documentation: medium to bad
+- Tutorial: present, outdated, very necessary
+- Diving into source: didn't try
+- Overall: only if you like web
+
 ## Dominator
 
 What a name.
