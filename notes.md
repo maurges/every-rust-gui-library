@@ -396,6 +396,39 @@ ugh. And it seems that, again, consecutive presses of "load" don't redraw it,
 even though the state is changed, and the button is pressed. So this is very
 unreliable.
 
+I was told that in react instead of onchange callbacks for input, you can use
+use_ref and ref for the field. There is some use_ref function, but no ref
+field.
+
+Conditional rendering is a nice concept. Assembling your tree from some input
+is very intuitive.
+
+What's not intuitive is that mapping to html is weird, so I can't use MDN.
+What's worse is that it's not in the docs, it seems rsx macro does some magic.
+I can't set input's value to text, it expects "Arguments", but arguments are
+not documented. And input itself is not documented either! After a bit I
+remembered that I could try string interpolation instead of setting to a
+string, and it worked. This is a stupid limitation.
+
+Would be nice to have autocloning of rcs into closures in rust, but I already
+complain about autoderefs being too magical, so I don't know. Do I want
+c++-style very explicit lambdas?
+
+Ohhhh fuck, hooks are stupid. That's why I had rc-refcell, I forgot. So a hook
+returns you just a mutable reference to your data. You can't use that reference
+in more than one callback, obviously. So you're boned.
+
+Lol, I can see update artifacts after pressing the done button, what the fuck.
+So much for web being fast.
+
+You can use state instead of hooks and now you don't need rcs, they are hidden
+there for you. Damn, so now at every junction you need to make a choice.
+
+So, at this point I have reached (almost) feature-parity with other
+implementations, but I didn't achieve layout parity. I reaaaaally don't want to
+bother with CSS right now. Instead I'm going to do a second round, where I make
+every implementation look the same.
+
 ## Dominator
 
 What a name.
