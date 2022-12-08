@@ -29,24 +29,21 @@ pub fn main() {
 }
 
 fn build_root_widget() -> impl Widget<HelloState> {
-    // a label that will determine its text based on the current app data.
-    let label = TextBox::new()
-        .with_placeholder("heh")
-        .with_text_size(18.0)
-        .fix_width(TEXT_BOX_WIDTH)
-        .lens(HelloState::name);
-
-    // a textbox that modifies `name`.
-    let textbox = TextBox::new()
-        .with_placeholder("Who are we greeting?")
-        .with_text_size(18.0)
-        .fix_width(TEXT_BOX_WIDTH)
-        .lens(HelloState::name);
+    let make = |text| Label::new(text).with_text_size(18.0);
 
     // arrange the two widgets vertically, with some padding
     Flex::column()
-        .with_child(label)
-        .with_spacer(VERTICAL_WIDGET_SPACING)
-        .with_child(textbox)
-        .align_vertical(UnitPoint::CENTER)
+        .must_fill_main_axis(true)
+        .with_child(Flex::row()
+            .with_child(make("topleft"))
+            .with_child(make("topright"))
+            .must_fill_main_axis(true)
+        )
+        .with_flex_spacer(0.0)
+        .with_child(Flex::row()
+            .with_child(make("botleftleft"))
+            .with_child(make("botleftright"))
+            .must_fill_main_axis(true)
+        )
+        .center()
 }

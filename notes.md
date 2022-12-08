@@ -566,6 +566,9 @@ Can a lens modify the content meaningfully?
 
 Two textboxes can point into the same state projection. This is neat.
 
+must_fill_main_axis behaves vety weird. I don't understad the layouting.  
+I want to debug it but I can't find something like a qt rectangle.
+
 ## egui
 Immediate mode, skip.
 
