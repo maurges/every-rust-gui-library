@@ -520,6 +520,52 @@ waiting for.
 Lol it's a mac app, closing the window doesn't kill the program. Lol,
 inconvenient.
 
+Widget creation looks like fltk. I wonder who came first.
+
+Alright, this looks very foreign to me, so time to read the tutorial.
+
+> This book is written against the latest code on git, so some examples may not
+> work with 0.7.0.
+Ha, ok. I gave too little credit to the guys, but that's because I remember the
+author saying that druid is starting to focus more on experiments and eschews
+stability. So I thought this is it, no onboarding for the new versions.
+
+Flex row tries to center horizontally, but flex columnt aligns to the top. Mmmm
+ok.
+
+Align doesn't do anything. Dafuck.
+
+Lens chaining is verbose, but that's what you get for not having custom
+operators. Though I wonder if + could be reused here.
+
+Oh shit, the online docs are also for 0.7. I forgot, time to use a local copy.
+
+Passing env by hand, because you also don't have monad readers in rust `>_<`
+
+> localization is currently half-baked
+I wonder how does localization work in qt.
+
+Well, this was a short tutorial with only the very very basicx. I guess now I
+need to experiment and use my own judgement? Awful, no wonder programmers burn
+out so quickly.
+
+What I gather from the tutorial is that ALL state is top-down, from parent to
+child. Only parent keeps the state, the children just get a view into it. It
+seems they can modify the view, and they declare what is the type of state they
+themselves require. My questions now before I learn more about it: how painful
+is it to create all the state at the top? Can you serialize and deserialize
+state? Can the widget modify its projection? Can two widgets have the same view
+into state?  
+Already it seems you can't serialize in the general case, because arc can be
+state and it can contain anything.
+
+From the hello example, the textbox doesn't modify the state explicitly, but it
+gets the projection into it as a model, a-la qml. This is pretty neat. Now,
+another question: can I have a textbox point not into state? Into void maybe?
+Can a lens modify the content meaningfully?
+
+Two textboxes can point into the same state projection. This is neat.
+
 ## egui
 Immediate mode, skip.
 

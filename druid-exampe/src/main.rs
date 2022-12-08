@@ -30,14 +30,11 @@ pub fn main() {
 
 fn build_root_widget() -> impl Widget<HelloState> {
     // a label that will determine its text based on the current app data.
-    let label = Label::new(|data: &HelloState, _env: &Env| {
-        if data.name.is_empty() {
-            "Hello anybody!?".to_string()
-        } else {
-            format!("Hello {}!", data.name)
-        }
-    })
-    .with_text_size(32.0);
+    let label = TextBox::new()
+        .with_placeholder("heh")
+        .with_text_size(18.0)
+        .fix_width(TEXT_BOX_WIDTH)
+        .lens(HelloState::name);
 
     // a textbox that modifies `name`.
     let textbox = TextBox::new()
