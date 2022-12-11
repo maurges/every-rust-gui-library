@@ -644,13 +644,27 @@ there. When I did dive into the examples, they were very easy to understand and
 I immediately grasped the mechanics. Those were lenses, state, and meta-widgets
 like List and Either.
 
-- Default widgets: enough, good looking
+Alright, alright, let's try it without gtk on linux now, does the alpha work?
+I'm not using any advanced features after all.
+
+```
+The following NEW package is going to be installed:
+  libxkbcommon-devel
+  libxkbcommon-x11-devel
+```
+
+Oh, zbus. Isn't that the incredibly bloated one?
+
+Alright, it builds and works. But the input field behaviour is very wrong,
+whereas on mac it was only slightly wrong. Scheisse.
+
+- Default widgets: enough, good looking, weird text behavior
 - Creating simple widgets: medium, long
 - Creating compound widgets: simple
 - Layouting: basic rows and cols are trivial, but I didn't understand the complicated stuff at all
 - Custom layouts: medium, very long
 - Reactivity: simpler than qml
-- Setting up: very easy except on linux
+- Setting up: very easy
 - Documentation: medium with good examples, except flexes
 - Tutorial: present, outdated, very necessary
 - Diving into source: didn't need to

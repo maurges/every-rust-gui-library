@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-druid = { git = "https://github.com/linebender/druid", branch = "master", features = ["im"] }
+druid = { git = "https://github.com/linebender/druid", branch = "master", default-features = false, features = ["im", "x11"] }
 
 ron = { version = "0.8" }
 serde = { version = "1", features = ["derive"] }
