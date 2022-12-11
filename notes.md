@@ -658,6 +658,12 @@ Oh, zbus. Isn't that the incredibly bloated one?
 Alright, it builds and works. But the input field behaviour is very wrong,
 whereas on mac it was only slightly wrong. Scheisse.
 
+```
+morj@blackflame:~/projects/gui/druid-exampe> du -h target/debug/druid-exampe
+186M    target/debug/druid-exampe
+```
+Shieeeeeeeet, rust
+
 - Default widgets: enough, good looking, weird text behavior
 - Creating simple widgets: medium, long
 - Creating compound widgets: simple
@@ -863,3 +869,36 @@ Well, the api docs don't exist, and there's no tutorial. Alrighty.
 Let's not forget, aside from the qmake thing, building it was very easy. But
 that also means that it has to be compared to qt adjacent libraries, where I'm
 not sure it would fare well.
+
+```
+thread 'main' panicked at '`spawn_local` called from outside of a `task::LocalSet`', /home/morj/.local/share/cargo/registry/src/github.com-1ecc6299db9ec823/fui_app-0.12.0/src/application.rs:105:35
+```
+
+So you need to start the gui from LocalSet. Alrighty. Why wouldn't the lib
+itself handle it for you then.
+
+Ughhh, how do you set size of a text field?
+
+Judging by the docs, this is inspired by qml. I deduce that from attached
+properties. The approach that the "declarative" syntax is just sugar for
+builder is neat I think. Duid would look better with the same sugar.
+
+What happens if you use local as a Property? I tried it now and it doesn't
+break it seems.  
+Well first of all, I won't be able to update it from callbacks, as they require
+an rc-refcell.
+
+Let's just play by the rules and finish this fast. I don't like this library,
+but it seems simple to use.
+
+Oh fuck, can I have internal state? Is it possible? Creating custom complex
+widgets is not really explained anywhere. Alright, there is one example. You
+need a sub-viewmodel. Ok, let's try.
+
+Looking at other examples, the ui macro seems similar to that of dioxus: same
+nesting, same magic places where you can write rust for real.
+
+I'm thinkingof abandoning this library. Wading through weird compilation errors
+of incompatible Into bounds is so tiring when the examples are minimal and the
+apidocs are without comments. This project was to show that rust has nice gui
+libraries, and this one clearly isn't.

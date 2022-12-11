@@ -2,10 +2,10 @@
 
 use anyhow::{Error, Result};
 use fui_app::{Application, Window, WindowOptions};
-use fui_controls::{Button, Text};
+use fui_controls::{Button, Text, TextBox, ToggleButton};
 use fui_core::{
-    Callback, Children, ControlObject, Horizontal, Margin, Property, Style, Thickness, ViewContext,
-    ViewModel,
+    Callback, Children, ControlObject, Horizontal, Property, Style,
+    Vertical, ViewContext, ViewModel, ObservableVec,
 };
 use fui_macros::ui;
 
@@ -17,24 +17,16 @@ use typed_builder::TypedBuilder;
 use typemap::TypeMap;
 
 struct MainViewModel {
-    pub counter: Property<i32>,
-    pub counter2: Property<i32>,
+    add_new: Property<String>,
+    items: ObservableVec<TodoItem>,
 }
 
 impl MainViewModel {
     pub fn new() -> Rc<RefCell<Self>> {
         Rc::new(RefCell::new(MainViewModel {
-            counter: Property::new(10),
-            counter2: Property::new(0),
+            add_new: Property::new("Enter note here".to_owned()),
+            items: ObservableVec::new(),
         }))
-    }
-
-    pub fn increase(&mut self) {
-        self.counter.change(|c| c + 1);
-    }
-
-    pub fn decrease(&mut self) {
-        self.counter.change(|c| c - 1);
     }
 }
 
@@ -44,6 +36,38 @@ pub struct ButtonText {
     pub text: Property<String>,
     #[builder(default = Callback::empty())]
     pub clicked: Callback<()>,
+}
+
+#[derive(TypedBuilder, Clone)]
+struct TodoItem {
+    #[builder(default = Property::new("".to_string()))]
+    pub text: Property<String>,
+    #[builder(default = Property::new(false))]
+    pub done: Property<bool>,
+    #[builder(default = Property::new(false))]
+    editing: Property<bool>,
+}
+
+impl ViewModel for TodoItem {
+    fn create_view(view_model: &Rc<RefCell<Self>>) -> Rc<RefCell<dyn ControlObject>> {
+        let vm: &mut Self = &mut view_model.borrow_mut();
+        ui! (
+            Horizontal {
+                ToggleButton {
+                    is_checked: &vm.done,
+                },
+                Text {
+                    text: &vm.text,
+                },
+                Button {
+                    Text {
+                        text: (&vm.editing, |is| if is { "done".to_owned() } else { "edit".to_owned() }),
+                    },
+                    clicked: Callback::new_vm(view_model, |vm, _| vm.editing.change(|x| !x)),
+                },
+            }
+        )
+    }
 }
 
 impl ButtonText {
@@ -65,35 +89,32 @@ impl ViewModel for MainViewModel {
     fn create_view(view_model: &Rc<RefCell<Self>>) -> Rc<RefCell<dyn ControlObject>> {
         let vm: &mut MainViewModel = &mut view_model.borrow_mut();
 
-        vm.counter2.bind(&mut vm.counter);
-        vm.counter.bind(&mut vm.counter2);
+        let todo_item = TodoItem {
+            text: Property::new("foobar".to_owned()),
+            done: Property::new(false),
+            editing: Property::new(false),
+        };
+        let todo_item = Rc::new(RefCell::new(todo_item));
+        let todo_view: Property<Rc<RefCell<dyn ControlObject>>> =
+            Property::new(TodoItem::create_view(&todo_item));
 
         ui!(
-            Horizontal {
-                Margin: Thickness::sides(0.0f32, 5.0f32),
-                Text {
-                    Margin: Thickness::all(5.0f32),
-                    text: (&vm.counter, |counter| format!("Counter {}", counter))
+            Vertical {
+                Horizontal {
+                    TextBox {
+                        text: &vm.add_new,
+                    },
+                    Button {
+                        Text { text: "Add" }
+                    }
                 },
-                Button {
-                    clicked: Callback::new_vm(view_model, |vm, _| vm.decrease()),
-                    Text { text: "Decrease" }
-                },
-                ButtonText {
-                    clicked: Callback::new_vm(view_model, |vm, _| vm.increase()),
-                    text: "Increase"
-                },
-                Text {
-                    Margin: Thickness::all(5.0f32),
-                    text: (&vm.counter2, |counter| format!("Counter2 {}", counter))
-                },
+                &vm.items
             }
         )
     }
 }
 
-#[tokio::main(flavor = "current_thread")]
-//#[tokio::main]
+#[tokio::main]
 async fn main() -> Result<()> {
     LocalSet::new()
         .run_until(async {
