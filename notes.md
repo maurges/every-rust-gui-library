@@ -190,7 +190,7 @@ corrosion, but nah. I also tried building it with nix-shell, but this thing
 requires wrapQtAppsHook, so nada. Minus points for ease of setting up.
 
 ## Dioxus
-Time spent: a 3 evenings (so far)
+Time spent: 3 evenings (so far)
 
 Apparently uses tauri, which is just a webview. Ah fuck. Well still, let's see.
 
@@ -470,6 +470,7 @@ Yeah, even hello world is yarn. Ok. I hope this becomes a good web browser, but
 I don't want to develop for fucking web again.
 
 ## druid
+Time spent: 3-4 evenings? I forgot to time.
 
 The one everyone knows about.
 
@@ -617,6 +618,43 @@ like dynamic(), from_label() and such.
 
 Fucking lol, every app in my mac freezes when it tries to open a save dialogue.
 I thought it was just buggy firefox, but no.
+
+Saving and loading is weird. Is it possible for a subcomponent to open a save
+dialogue? Yes. Is it possible for the subcomponent to then act on the result of
+the dialogue? Only if the app allows it. So you need to set up a message
+passing system for this to work. I like the qml approach more, even though it
+also becomes a non-locality spaghetti.
+
+And with this, druid is done. I could have styled it, but oh my god flexes are
+weird. The default widgets look neat, modern you might say. Creating new
+widgets is pretty easy. But you can't style the existing controls, so that's a
+minor downside. Although so far only qml and css-based things allow for
+styling, and in very different ways, and for qml it's kind of .. strange? that
+they do. It's nice that it's there, but why did they do it if it still requires
+creating new widgets.
+
+So, I really liked the approach with state and lenses. It was very intuitive
+and easy to combine, but kind of boilerplatey, since you need to declare your
+state separately. Would be nice to have the state hidden with async maybe? I
+don't know, how would lenses even work then.
+
+I couldn't grok the flexes approach, but on the other hand I specifically
+avoided the examples as to not spoil myself on the todo list solution present
+there. When I did dive into the examples, they were very easy to understand and
+I immediately grasped the mechanics. Those were lenses, state, and meta-widgets
+like List and Either.
+
+- Default widgets: enough, good looking
+- Creating simple widgets: medium, long
+- Creating compound widgets: simple
+- Layouting: basic rows and cols are trivial, but I didn't understand the complicated stuff at all
+- Custom layouts: medium, very long
+- Reactivity: simpler than qml
+- Setting up: very easy except on linux
+- Documentation: medium with good examples, except flexes
+- Tutorial: present, outdated, very necessary
+- Diving into source: didn't need to
+- Overall: approve, even though flexes are hard
 
 ## egui
 Immediate mode, skip.

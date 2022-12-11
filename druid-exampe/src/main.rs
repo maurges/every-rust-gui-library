@@ -13,6 +13,16 @@ struct AppState {
     todo_items: im::Vector<TodoItemState>,
 }
 
+impl AppState {
+    fn items_vec(&self) -> Vec<TodoItem> {
+        self.todo_items.iter().map(|x| x.item_state.clone()).collect()
+    }
+
+    fn set_items_vec(&mut self, items: Vec<TodoItem>) {
+        self.todo_items = items.into_iter().map(|x| TodoItemState::new(x)).collect();
+    }
+}
+
 pub fn main() {
     // describe the main window
     let main_window = WindowDesc::new(build_root_widget())
@@ -22,21 +32,12 @@ pub fn main() {
     // create the initial app state
     let initial_state = AppState {
         add_new: String::new(),
-        todo_items: vec![
-            TodoItemState::new(TodoItem {
-                text: "foo".into(),
-                done: false,
-            }),
-            TodoItemState::new(TodoItem {
-                text: "bar".into(),
-                done: true,
-            }),
-        ]
-        .into(),
+        todo_items: im::Vector::new(),
     };
 
     // start the application. Here we pass in the application state.
     AppLauncher::with_window(main_window)
+        .delegate(Delegate)
         .log_to_console()
         .launch(initial_state)
         .expect("Failed to launch application");
@@ -81,4 +82,42 @@ fn build_root_widget() -> impl Widget<AppState> {
             )
             .center(),
     )
+}
+
+struct Delegate;
+
+impl druid::AppDelegate<AppState> for Delegate {
+    fn command(
+        &mut self,
+        _ctx: &mut druid::DelegateCtx,
+        _target: druid::Target,
+        cmd: &druid::Command,
+        data: &mut AppState,
+        _env: &Env,
+    ) -> druid::Handled
+    {
+        if let Some(file_info) = cmd.get(druid::commands::SAVE_FILE_AS) {
+            match std::fs::File::create(&file_info.path) {
+                Ok(file) => match ron::ser::to_writer(file, &data.items_vec()) {
+                    Ok(()) => (),
+                    Err(e) => eprintln!("{}", e),
+                }
+                Err(e) => eprintln!("{}", e),
+            };
+            druid::Handled::Yes
+
+        } else if let Some(file_info) = cmd.get(druid::commands::OPEN_FILE) {
+            match std::fs::File::open(&file_info.path) {
+                Ok(file) => match ron::de::from_reader(file) {
+                    Ok(items) => data.set_items_vec(items),
+                    Err(e) => eprintln!("{}", e),
+                }
+                Err(e) => eprintln!("{}", e),
+            }
+            druid::Handled::Yes
+
+        } else {
+            druid::Handled::No
+        }
+    }
 }
