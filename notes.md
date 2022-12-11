@@ -615,6 +615,9 @@ like here when lifetime inferrence goes to shit. It goes to shit in presence of
 Into traits, and thankfully this library provides a way to bypass those traits,
 like dynamic(), from_label() and such.
 
+Fucking lol, every app in my mac freezes when it tries to open a save dialogue.
+I thought it was just buggy firefox, but no.
+
 ## egui
 Immediate mode, skip.
 

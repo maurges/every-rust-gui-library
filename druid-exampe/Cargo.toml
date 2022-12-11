@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 druid = { git = "https://github.com/linebender/druid", branch = "master", features = ["im"] }
+
+ron = { version = "0.8" }
+serde = { version = "1", features = ["derive"] }

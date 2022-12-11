@@ -1,6 +1,6 @@
 use druid::{widget, Data, Lens, LensExt, Widget, WidgetExt};
 
-#[derive(Clone, Data, Lens)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize, Data, Lens)]
 pub struct TodoItem {
     pub text: String,
     pub done: bool,
