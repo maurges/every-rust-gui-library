@@ -1,13 +1,16 @@
-use druid::widget::prelude::*;
-use druid::widget::{Flex, Label, TextBox};
-use druid::{AppLauncher, Data, Lens, UnitPoint, WidgetExt, WindowDesc};
+mod todo_item;
 
-const VERTICAL_WIDGET_SPACING: f64 = 20.0;
-const TEXT_BOX_WIDTH: f64 = 200.0;
+use druid::im;
+use druid::widget::prelude::*;
+use druid::widget;
+use druid::{AppLauncher, Data, Lens, WidgetExt, WindowDesc};
+
+use todo_item::{todo_item, TodoItemState, TodoItem};
 
 #[derive(Clone, Data, Lens)]
-struct HelloState {
-    name: String,
+struct AppState {
+    add_new: String,
+    todo_items: im::Vector<TodoItemState>,
 }
 
 pub fn main() {
@@ -17,9 +20,20 @@ pub fn main() {
         .window_size((400.0, 400.0));
 
     // create the initial app state
-    let initial_state: HelloState = HelloState {
-        name: "World".into(),
+    let initial_state = AppState {
+        add_new: String::new(),
+        todo_items: vec![
+            TodoItemState::new(TodoItem {
+                text: "foo".into(),
+                done: false,
+            }),
+            TodoItemState::new(TodoItem {
+                text: "bar".into(),
+                done: true,
+            }),
+        ].into()
     };
+
 
     // start the application. Here we pass in the application state.
     AppLauncher::with_window(main_window)
@@ -28,22 +42,27 @@ pub fn main() {
         .expect("Failed to launch application");
 }
 
-fn build_root_widget() -> impl Widget<HelloState> {
-    let make = |text| Label::new(text).with_text_size(18.0);
+fn build_root_widget() -> impl Widget<AppState> {
+    let add_button = widget::Button::new("add").on_click(|_ctx, state: &mut AppState, _env| {
+        state.todo_items.push_back(TodoItemState::new(TodoItem {
+            text: state.add_new.clone(),
+            done: false
+        }));
+    });
 
-    // arrange the two widgets vertically, with some padding
-    Flex::column()
-        .must_fill_main_axis(true)
-        .with_child(Flex::row()
-            .with_child(make("topleft"))
-            .with_child(make("topright"))
-            .must_fill_main_axis(true)
-        )
-        .with_flex_spacer(0.0)
-        .with_child(Flex::row()
-            .with_child(make("botleftleft"))
-            .with_child(make("botleftright"))
-            .must_fill_main_axis(true)
-        )
+    widget::Scroll::new(
+        widget::Flex::column()
+            .with_child(widget::Flex::row()
+                .with_child(widget::TextBox::new()
+                    .with_placeholder("Add note")
+                    .lens(AppState::add_new)
+                )
+                .with_child(add_button)
+                .center()
+            )
+            .with_child(widget::List::new(|| todo_item())
+                .lens(AppState::todo_items)
+            )
         .center()
+    )
 }

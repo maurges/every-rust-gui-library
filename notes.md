@@ -569,6 +569,52 @@ Two textboxes can point into the same state projection. This is neat.
 must_fill_main_axis behaves vety weird. I don't understad the layouting.  
 I want to debug it but I can't find something like a qt rectangle.
 
+I have no fucking idea how flex layouting works, specifically spacers. How do I
+make a widget occupy all available vertical space? How can I add maximum
+spacing inside the parent?  
+I have a feeling that here, in qml terms, widgets only have implicit sizes, and
+you can't set size explicitly at all. Wait, that's wrong, there is SizedBox.
+But it's inconvenient to use. And you can't size a widget in terms of another
+widget, because that's state and state is hard to manage.
+
+Ok, this layouting is getting me nowhere. Let's do the most simple way and be
+done with it. So far I am very pleased with performance, find some core ideas
+interesting, but the whole execution could be better, or at least needs a
+better tutorial to flexing.
+
+Wow, I don't know how centering works as well. This shit is too weird.
+
+Playing with state: state type is constrained in the widget, so you can't fuck
+this up in runtime. Good, I didn't give enough credit to the autors. Now how do
+I project state for my custom widgets, and have it be generic?
+
+Fuck, I was trying to make Vec work, but turns out I need im::Vector.
+
+If you go through the examples, there is a specific widget for creating a list
+of items, a-la Repeater. Pretty convenient.
+
+Wow, fuck me, when creating a button with a callback I got a huuuuge lifetime
+error. Because rust type inference is weird and works differently depending on
+if you create a local, or just make an expression. This sucks.
+
+Creating a label with dynamic data sucks just as much, but now even without a
+local. Fuck, this would be so much better if it were garbage-collected. If it
+were haskell. Maybe one day I could port this approach to haskell, with native
+lenses, with native immutability, with easier callbacks.
+
+Now here's a hard part: separate widget state into internal and external.  
+It wasn't so hard.
+
+So you have widget sum with Either, and you have widget catamorphism with List.
+One could create widgets for anything similar using the default interface,
+which is nice.
+
+I really like how if it compiles, it works. Best part of rust. The worst part
+of rust is, of course, that sometimes it's hard to fucking make it compile,
+like here when lifetime inferrence goes to shit. It goes to shit in presence of
+Into traits, and thankfully this library provides a way to bypass those traits,
+like dynamic(), from_label() and such.
+
 ## egui
 Immediate mode, skip.
 
