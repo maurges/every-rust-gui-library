@@ -1,7 +1,8 @@
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct TodoItem {
     text: String,
-    is_done: bool,
+    done: bool,
+    #[serde(skip)]
     is_editing: bool,
 }
 
@@ -16,7 +17,7 @@ impl TodoItem {
     pub fn new(text: String) -> Self {
         TodoItem {
             text,
-            is_done: false,
+            done: false,
             is_editing: false,
         }
     }
@@ -28,7 +29,7 @@ impl<Msg> iced_lazy::Component<Msg, iced::Renderer> for TodoItem {
 
     fn update(&mut self, _: &mut (), message: Self::Event) -> Option<Msg> {
         match message {
-            Message::DoneChanged(x) => self.is_done = x,
+            Message::DoneChanged(x) => self.done = x,
             Message::EditingChanged => self.is_editing = !self.is_editing,
             Message::TextChanged(x) => self.text = x,
         }
@@ -37,7 +38,7 @@ impl<Msg> iced_lazy::Component<Msg, iced::Renderer> for TodoItem {
 
     fn view(&self, _: &()) -> iced::Element<'_, Self::Event> {
         iced::widget::row![
-            iced::widget::checkbox("", self.is_done, Message::DoneChanged),
+            iced::widget::checkbox("", self.done, Message::DoneChanged),
             if self.is_editing {
                 iced::Element::from(
                     iced::widget::text_input("", &self.text, Message::TextChanged)

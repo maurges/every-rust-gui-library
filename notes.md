@@ -965,4 +965,9 @@ like a tutorial.
 
 Wow, it's getting even worse.
 
-Alright, how do I do file dialogs?
+Alright, how do I do file dialogs? Ok, there aren't any. Shiet.  
+Ok, people discuss using [rfd] for that, which is toolkit-agnostic. That means
+I can add to dioxus too.
+
+Why does all of rust love the fucking gtk so much? Why does rfd need whole gtk
+for it?
