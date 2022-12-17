@@ -957,3 +957,12 @@ understand there, but this little escapes me. And like, if I could ask the
 right questions, finding the answers seems pretty easy, but I don't even know
 what to ask. Something about paddings and alignments is not as I expect it to
 be, and I haven't formulated what I expect and what is wrong.
+
+The fuckery with renderer is weird. It's good that I can ignore it, but I would
+like a tutorial.
+
+    Finished dev [unoptimized + debuginfo] target(s) in 8.68s
+
+Wow, it's getting even worse.
+
+Alright, how do I do file dialogs?

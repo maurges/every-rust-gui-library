@@ -1,63 +1,61 @@
+mod todo_item;
+
 use iced::Sandbox;
 
+use todo_item::TodoItem;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    TodoItem::run(iced::Settings::default())?;
+    TodoApp::run(iced::Settings::default())?;
     Ok(())
 }
 
-struct TodoItem {
-    text: String,
-    is_done: bool,
-    is_editing: bool,
+struct TodoApp {
+    create_text: String,
+    items: Vec<TodoItem>,
 }
 
 #[derive(Debug, Clone)]
 enum Message {
-    DoneChanged(bool),
-    EditingChanged,
     TextChanged(String),
+    CreateNew,
 }
 
-impl Sandbox for TodoItem {
+impl Sandbox for TodoApp {
     type Message = Message;
 
     fn new() -> Self {
-        TodoItem {
-            text: "".to_owned(),
-            is_done: false,
-            is_editing: false,
+        TodoApp {
+            create_text: String::new(),
+            items: Vec::new(),
         }
     }
 
     fn title(&self) -> String {
-        "todo test".to_owned()
+        "todo app".to_owned()
     }
 
     fn update(&mut self, message: Self::Message) {
         match message {
-            Message::DoneChanged(x) => self.is_done = x,
-            Message::EditingChanged => self.is_editing = !self.is_editing,
-            Message::TextChanged(x) => self.text = x,
+            Message::TextChanged(x) => self.create_text = x,
+            Message::CreateNew => self.items.push(TodoItem::new(self.create_text.clone())),
         }
     }
 
     fn view(&self) -> iced::Element<'_, Self::Message> {
-        iced::widget::row![
-            iced::widget::checkbox("", self.is_done, Message::DoneChanged),
-            if self.is_editing {
-                iced::Element::from(
-                    iced::widget::text_input("", &self.text, Message::TextChanged)
-                        .width(200.into())
-                )
-            } else {
-                iced::widget::text(self.text.clone())
-                    .width(200.into())
-                    .into()
-            },
-            iced::widget::button(if self.is_editing {"done"} else {"edit"})
-                .on_press(Message::EditingChanged)
-        ]
-        .padding(20)
-        .into()
+        let mut content = Vec::new();
+
+        let creation = iced::widget::row![
+            iced::widget::text_input("New item", &self.create_text, Message::TextChanged)
+                .width(150.into()),
+            iced::widget::button("Add")
+                .on_press(Message::CreateNew)
+        ];
+        content.push(creation.into());
+        content.extend(self.items.iter().map(|x| x.clone().into()));
+
+        iced::widget::column(content)
+            .padding(20)
+            .align_items(iced::Alignment::Center)
+            .into()
     }
 }
