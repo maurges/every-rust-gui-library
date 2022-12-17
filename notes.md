@@ -929,3 +929,18 @@ needs to tell component how to map component messages to its own. I wonder why
 not the alternative: to map those messages in parent itself. Ah ok, I thought
 of a reason: if your component doesn't produce any messages at all, the current
 option is easier to do. How often is a component so isolated?
+
+Playing with controls tour, they look very like qml controls, but less ugly.
+Accent color looks good. Being positioned in the middle of the window looks
+good. Shouldn't be hard to make flexboxes like this in qml.
+
+No animation on toggler! How do I do animations at all here? I haven't had that
+question with any of the frameworks, but it's kind of very important.
+Animations in qml are piss-easy for example.
+
+Oh-ow, image doesn't load. Shiet.
+
+No kinetic scroll in default scroll widget. At least it scrolls naturally.
+Scroll remembers position when you go between pages.
+
+Overall, the control quality seems good. Alright, let's try it.
