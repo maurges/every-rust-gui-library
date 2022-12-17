@@ -902,3 +902,30 @@ I'm thinkingof abandoning this library. Wading through weird compilation errors
 of incompatible Into bounds is so tiring when the examples are minimal and the
 apidocs are without comments. This project was to show that rust has nice gui
 libraries, and this one clearly isn't.
+
+## GTK
+
+Next in line, but there are problems installing it so I'm postponing.
+
+## iced
+
+I've never used elm before, or have tried the elm architecture. The example in
+the readme is very simple to understand. Now, is there a tutorial? Do I need
+one?
+
+    Finished dev [unoptimized + debuginfo] target(s) in 7.58s
+
+Fucking how long? What the shit did they do?
+
+Ha-ha, todo example is there. I'm not going to look there of course, even after
+I'm done, as I did with the others.
+
+I read somewhere once that in elm it's very hard to do encapsulation. Here I'm
+given a `Component` typeclass, which allows me just that. But for some reason
+it's in a different crate.
+
+So component needs to be able to produce message of any type. That means parent
+needs to tell component how to map component messages to its own. I wonder why
+not the alternative: to map those messages in parent itself. Ah ok, I thought
+of a reason: if your component doesn't produce any messages at all, the current
+option is easier to do. How often is a component so isolated?
