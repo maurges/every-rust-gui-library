@@ -2,7 +2,7 @@ mod todo_item;
 
 use iced::Sandbox;
 
-use todo_item::TodoItem;
+use todo_item::{TodoItem, TodoState};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     TodoApp::run(iced::Settings::default())?;
@@ -11,15 +11,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 struct TodoApp {
     create_text: String,
-    items: Vec<TodoItem>,
+    items: Vec<TodoState>,
 }
 
 #[derive(Debug, Clone)]
 enum Message {
     TextChanged(String),
+    ItemTextChanged(String, usize),
     CreateNew,
     Save,
     Load,
+}
+
+impl From<todo_item::TextChanged> for Message {
+    fn from(todo_item::TextChanged(x, i): todo_item::TextChanged) -> Self {
+        Message::ItemTextChanged(x, i)
+    }
 }
 
 impl Sandbox for TodoApp {
@@ -39,12 +46,13 @@ impl Sandbox for TodoApp {
     fn update(&mut self, message: Self::Message) {
         match message {
             Message::TextChanged(x) => self.create_text = x,
-            Message::CreateNew => self.items.push(TodoItem::new(self.create_text.clone())),
+            Message::CreateNew => self.items.push(TodoState::new(self.create_text.clone())),
             Message::Save => save(&self.items),
             Message::Load => match load() {
                 Some(items) => self.items = items,
                 None => (),
             }
+            Message::ItemTextChanged(text, index) => self.items[index].text = text,
         }
     }
 
@@ -59,7 +67,7 @@ impl Sandbox for TodoApp {
         ];
         content.push(creation.into());
 
-        content.extend(self.items.iter().map(|x| x.clone().into()));
+        content.extend(self.items.iter().enumerate().map(|(i, x)| TodoItem::from_state(x, i).into()));
 
         let save_load = iced::widget::row![
             iced::widget::button("Save")
@@ -76,7 +84,7 @@ impl Sandbox for TodoApp {
     }
 }
 
-fn save(items: &[TodoItem]) {
+fn save(items: &[TodoState]) {
     if let Some(path) = rfd::FileDialog::new().save_file() {
         match std::fs::File::create(&path) {
             Ok(file) => match ron::ser::to_writer(file, items) {
@@ -88,7 +96,7 @@ fn save(items: &[TodoItem]) {
     }
 }
 
-fn load() -> Option<Vec<TodoItem>> {
+fn load() -> Option<Vec<TodoState>> {
     let path = rfd::FileDialog::new().pick_file()?;
     match std::fs::File::open(path) {
         Err(e) => { eprintln!("{}", e); None }

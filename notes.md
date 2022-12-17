@@ -908,6 +908,7 @@ libraries, and this one clearly isn't.
 Next in line, but there are problems installing it so I'm postponing.
 
 ## iced
+Time spent: a couple of hours
 
 I've never used elm before, or have tried the elm architecture. The example in
 the readme is very simple to understand. Now, is there a tutorial? Do I need
@@ -971,3 +972,36 @@ I can add to dioxus too.
 
 Why does all of rust love the fucking gtk so much? Why does rfd need whole gtk
 for it?
+
+Well, and it's done. This was extremely nice, if only every library was as
+accessible and intuitive as this one. Actually no, there are only so many
+"intuitive" to me approaches, and seeing something new is also good.  
+This library is better fltk in a sense. You just write out your widget, handle
+messages, and it works. And unlike fltk, you don't need to care about redraws,
+that's done for you. But like fltk, something can very easily go wrong. It's a
+miracle nothing did here: I expected data to not update.
+
+Oh shit, and it doesn't update! Because I clone! Fuck!
+
+Well, emitting a message from an encapsulated widget in a row of such is a
+problem. Again I'm making shit up with setting explicit index.
+
+Ok, it works and wasn't even that painful. The better approach here would be to
+embed the state struct completely into widget, and maybe even use the special
+state variable in the methods. Still, it wasn't great, especially seeing how
+now I've forgotten to update the bool. I don't know, I did expect everyone but
+qt to be bad at it, but druid was very good here. My opinion of iced is a bit
+lower now, but I still think it's really solid and can recommend it, and
+probably will use it again.
+
+- Default widgets: enough, stylish
+- Creating simple widgets: hard
+- Creating compound widgets: medium
+- Layouting: I don't understand flex
+- Custom layouts: no idea TODO
+- Reactivity: simple-medium, problems with subwidgets
+- Setting up: very easy
+- Documentation: good
+- Tutorial: no, but wasn't needed
+- Diving into source: didn't need to
+- Overall: approve, very easy to start using right no
