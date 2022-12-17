@@ -944,3 +944,16 @@ No kinetic scroll in default scroll widget. At least it scrolls naturally.
 Scroll remembers position when you go between pages.
 
 Overall, the control quality seems good. Alright, let's try it.
+
+Fuuuuuuck the build times are bad. This really grinds my gears.
+
+I don't understand flexboxes again. I have copy-pasted the hello world example,
+and it looks a lot worse now: wrong padding, wrong alignment.
+
+Well, this elm architecture thing is pretty nice to work with! Creating a
+simple widget is very simple. Layouting here is as hard as in druid in seems, I
+just don't understand flexboxes. It doesn' seem like there is a lot to
+understand there, but this little escapes me. And like, if I could ask the
+right questions, finding the answers seems pretty easy, but I don't even know
+what to ask. Something about paddings and alignments is not as I expect it to
+be, and I haven't formulated what I expect and what is wrong.
