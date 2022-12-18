@@ -843,8 +843,10 @@ very easy to make slow apps with it.
 Maybe I'll go back to it later, when/if I'm more interested to try flutter
 again.
 
+TODO
+
 ## fui
-Time spent: like 10 minutes (so far)
+Time spent: A full evening
 
 A library by a single person. 40 stars on github. Last commit in august.
 Alrighty, let's see. It's not like you can't /finish/ making a graphics
@@ -898,7 +900,7 @@ need a sub-viewmodel. Ok, let's try.
 Looking at other examples, the ui macro seems similar to that of dioxus: same
 nesting, same magic places where you can write rust for real.
 
-I'm thinkingof abandoning this library. Wading through weird compilation errors
+I'm thinking of abandoning this library. Wading through weird compilation errors
 of incompatible Into bounds is so tiring when the examples are minimal and the
 apidocs are without comments. This project was to show that rust has nice gui
 libraries, and this one clearly isn't.
@@ -906,6 +908,8 @@ libraries, and this one clearly isn't.
 ## GTK
 
 Next in line, but there are problems installing it so I'm postponing.
+
+TODO
 
 ## iced
 Time spent: a couple of hours
@@ -1005,3 +1009,32 @@ probably will use it again.
 - Tutorial: no, but wasn't needed
 - Diving into source: didn't need to
 - Overall: approve, very easy to start using right no
+
+## imgui
+
+Immediate mode, so no. Imgui for C++ was nice, so try using this and see how it
+goes.
+
+## iui
+
+Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
+
+## KAS
+
+When I first read about a "toolkit abstraction layer", I thought this wouldn't
+work. But the author pivoted and now it's just a toolkit itself without native
+dependencies. From the readme, I sympathise a lot with the author's approach.
+
+Whoa, whoa, macros for widgets? A bad sign, so far this approach has been shit.
+
+    Finished dev [unoptimized + debuginfo] target(s) in 11.73s
+
+Holy shit, this is even worse than iced.
+
+The composition is weird. Why in the counter example the buttons are in a
+different role than a label? What if I want to change the button text?  
+Alright, that one was simple. The ones in layout declaration are anonymous, but
+you can create named widgets as members.
+
+Huh, fun. I tried dynamically changing the button text, and the sizing breaks.
+How do you size elements anyway? The layouting is so weird.
