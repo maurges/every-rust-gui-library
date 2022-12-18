@@ -60,6 +60,15 @@ impl Counter {
             button_plus: TextButton::new_msg("+", Increment(1)),
         }
     }
+
+    fn new_from_model(count: SharedRc<i32>) -> Self {
+        Counter {
+            core: Default::default(),
+            display: SingleView::new(count),
+            button_minus: TextButton::new_msg("−", Decrement(1)),
+            button_plus: TextButton::new_msg("+", Increment(1)),
+        }
+    }
 }
 impl Window for Counter {
     fn title(&self) -> &str {
@@ -69,7 +78,14 @@ impl Window for Counter {
 
 fn main() -> kas::shell::Result<()> {
     let theme = kas::theme::SimpleTheme::new().with_font_size(24.0);
+
+    let model = SharedRc::new(0);
+    let spinner_view = kas::view::driver::Spinner::<i32>::new(i32::MIN..=i32::MAX, 1);
+    let spinner = SingleView::new_with_driver(spinner_view, model.clone());
+    let body = Counter::new_from_model(model);
+
     kas::shell::Toolkit::new(theme)?
-        .with(Counter::new(0))?
+        .with(kas::widgets::dialog::Window::new("Counter", body))?
+        .with(kas::widgets::dialog::Window::new("Another", spinner))?
         .run()
 }

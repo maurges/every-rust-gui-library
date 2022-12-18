@@ -1020,6 +1020,7 @@ goes.
 Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
 
 ## KAS
+Time spent: a couple of hours (so far)
 
 When I first read about a "toolkit abstraction layer", I thought this wouldn't
 work. But the author pivoted and now it's just a toolkit itself without native
@@ -1046,3 +1047,13 @@ how do I size the elements? Can I do it dynamically?
 What happens to messages that are never handled? Do they pile, or are they
 discarded? What if my message handling reads different messages on different
 calls? It does so right now too.
+
+Unlike Qt, there is a distinction between view and a widget. A widget is a view
+with a model attached? But this is in stdlib only, the widget I myself wrote
+switches from view to widget depending on constructor. Hmm. Also good news is
+that sharing state is extremely easy, as long as your widgets support that. So,
+good to know: write your widgets to use SharedRc and SingleView, or even
+ListView and others. Yeah, so the distinction from qt is that there there were
+properties as class fields, and here properties are first-class values. Class
+field properties are easy to create and so everyone just did that, and first
+class properties you need to account for.
