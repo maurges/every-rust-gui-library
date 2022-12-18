@@ -1038,3 +1038,11 @@ you can create named widgets as members.
 
 Huh, fun. I tried dynamically changing the button text, and the sizing breaks.
 How do you size elements anyway? The layouting is so weird.
+
+Actually, the layouting is very easy. It's just qml's rows and columns (and
+grids) with align() added. Not GridLayout though! Still the question stands:
+how do I size the elements? Can I do it dynamically?
+
+What happens to messages that are never handled? Do they pile, or are they
+discarded? What if my message handling reads different messages on different
+calls? It does so right now too.
