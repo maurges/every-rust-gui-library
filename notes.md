@@ -1117,3 +1117,120 @@ instances. Stupid piece of shit with too complicated types.
 Welp, turns out there were borrow errors that rustc shows too late. I can't
 implement SharedCell like this. Maybe something more involved is possible, but.
 At this point I'm even more tempted to fucking give up on this.
+
+So let me write down some "closing" thoughts now before I give up on this: this
+library hides stuff from you in some places, but exposes too much complexity in
+others. The layouts are too simplistic for real use, but custom models are too
+complicated. And the worst part is that they are not so bad that you notice it
+immediately, at first you think that that could work, but then it doesn't and
+there's nothing you can do. I wanted to solve those problems myself by writing
+my own layouts or models, but the toolkit doesn't give me enough instruments to
+do that; some parts are forbidden, and other parts are unintentionally locked.
+
+- Default widgets: enough, plain
+- Creating simple widgets: dunno
+- Creating compound widgets: easy
+- Layouting: only basic rows and columns
+- Custom layouts: impossible
+- Reactivity: simple and easy to understand
+- Setting up: very easy
+- Documentation: good
+- Tutorial: seems good at first, but model-view is lacking
+- Diving into source: looked for model-view, sources are nice
+- Overall: too complicated
+
+## lvgl
+
+This is an interesting thing. I once thought that it would be interesting to
+create a gui library for pine watch or something similar, and here it is
+already existing. It's not rust though, it's a c library. Do I need to
+pre-install it? Does it run in immediate mode?
+
+Fucking styles, this is stupid.
+
+So this is a display library, similar to fltk I guess. It has basic layouting
+it seems. Rust docs are absent, but I also can't find a link to C docs on their
+github page. Alright, I found it on their website, but there are no apidocs
+there. How do those people even live. Also from the rust example it seems that
+it's immediate mode? You need to handle all events yourself in the main loop.
+
+So this is not what I'm looking for, but an interesting project. Too minimal
+for my preferences, but
+
+## Makepad
+
+No readme on crates.io, lol. Ah, it seems it's a placeholder. Fucking
+squatters.
+
+Is makepad.dev them? There are a lot of makepads, but this one uses webgl for
+the website; and the website contains rust code; and the website doesn't have
+any info on what the hell is this.
+
+Ohh ok, found their github. They have some info there, and that website was
+indeed them. That's the super new rust IDE with live reaload. Cool.
+
+> To facilitate this, the styling of Makepad Framework applications is
+> described using a DSL. Code written in this DSL is tightly integrated with
+> the main Rust code via the use of proc macros
+
+From ehhh to nyehhh.
+
+Hah, the layouting is similar to KAS: you describe the element's flow and then
+you put all children inside it. Actually what I didn't y back then about KAS is
+that nesting flows for one widgets is a neat idea that is really easy to keep
+in your head. That's one thing they did right. Here you would need to nest
+widgets like qml, but you can still only operate on flows it seems.
+
+Main event handling loop, ok. Can this be widget-local, or is this elm
+architecture again?
+
+Explicit draw call handling? What is this? Don't you just always draw on that,
+why the complication? Uh-huh, it's because draws are immediate mode they say.
+Huh. But also from this example it seems that handling can be nested, which is
+good.
+
+Ughhh what the fuck, explicitly get event from the button, explicitly update
+label, explicitly redraw? This is worse than fltk.
+
+So ok, this is woefully incomplete, has a crap api, no docs, no tutorial, no
+official release, doesn't support linux or windows. But the author knows all
+that maybe except for the api, so let's not linger on this and move on.
+
+## native-windows-gui
+
+Windows, lol
+
+## OrbTK
+
+Only one letter until the one I care about. This one I have heard things of,
+but not very excited. Buut, an unexciting library can be pretty good, like iced
+was. Let's read the first line from readme.
+
+> It is with great sadness that I announce that OrbTk is sunsetting
+
+FUCKING LOL. The reality can be so fun sometimes.
+
+Interesting, one developer went on to make iced, and the other two went to
+slint. I like them both, so now I /am/ interested in orbtk. Enough to read the
+docs at least, don't wanna program I'm burned out sad boy (or girl).
+
+Huh, by the time of iced the devs learned to make pretty widgets, but here they
+are still ugly. Not fui ugly, but android 1.0 ugly. Maybe it will also be that
+they didn't learn to design a framework until their next one as well?
+
+Who is this book for? Why does it not assume the familiarity with rust? This is
+a new. Also funny how first three whole chapters are all introduction.
+
+Similar to KAS, you emit events somewhere, and then catch them somewhere else,
+doesn't need to be the same widget it seems. Like iced, the events need to be
+the same type. I didn't really like how events in KAS were all basically
+untyped, same as sending labels around in ruby, although you could use it more
+safely with hand-rolled enums. Ehh actually now thinking about it, it's a
+complicated matter and I'm not sure myself what is better. In rust I mean, it
+would be really fucking great to use open sum types (row sums actually), but.
+
+Who enforces the separation of state handling? What's stopping me from handling
+the state in the callbacks? I mean, I guess if I play by the rules it's easier,
+but I prefer it when the best option is the only option.
+
+Either this thing is too complicated, or I'm too sleepy.
