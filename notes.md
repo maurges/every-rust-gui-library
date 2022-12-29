@@ -1020,7 +1020,7 @@ goes.
 Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
 
 ## KAS
-Time spent: a couple of hours (so far)
+Time spent: a couple of hours (so far) + a day
 
 When I first read about a "toolkit abstraction layer", I thought this wouldn't
 work. But the author pivoted and now it's just a toolkit itself without native
