@@ -1,7 +1,7 @@
-use kas::prelude::{Widget, impl_scope, SetAccel, EventMgr, HasBool};
+use kas::prelude::{Widget, impl_scope, SetAccel, EventMgr, HasBool, HasStr};
 use kas::{widgets, TkAction};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TodoState {
     pub text: String,
     pub done: bool,
@@ -63,7 +63,16 @@ impl TodoItem {
     pub fn set_done(&mut self, done: bool) -> TkAction {
         self.checkbox.set_bool(done)
     }
+    /* // might need this later, but probably not
     pub fn set_text(&mut self, text: String) -> TkAction {
         self.text.set_text(text)
+    }
+    */
+
+    pub fn get_state(&self) -> TodoState {
+        TodoState {
+            text: self.text.get_string(),
+            done: self.checkbox.get_bool(),
+        }
     }
 }

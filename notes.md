@@ -1140,6 +1140,12 @@ need to give points to iced and druid here that their debug builds still run
 very fucking fast. Also, damn this is kind of ugly. Sizing, spacing, what the
 hell.
 
+It seems there are no platform dialogues. Alright, I already know a crate for
+that!
+
+Why does config_mgr require fucking FnMut when it's called once? This sucks,
+now I need to clone shit.
+
 - Default widgets: enough, plain
 - Creating simple widgets: dunno
 - Creating compound widgets: easy
