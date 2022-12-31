@@ -1222,9 +1222,9 @@ indeed them. That's the super new rust IDE with live reaload. Cool.
 From ehhh to nyehhh.
 
 Hah, the layouting is similar to KAS: you describe the element's flow and then
-you put all children inside it. Actually what I didn't y back then about KAS is
-that nesting flows for one widgets is a neat idea that is really easy to keep
-in your head. That's one thing they did right. Here you would need to nest
+you put all children inside it. Actually what I didn't say back then about KAS
+is that nesting flows for one widgets is a neat idea that is really easy to
+keep in your head. That's one thing they did right. Here you would need to nest
 widgets like qml, but you can still only operate on flows it seems.
 
 Main event handling loop, ok. Can this be widget-local, or is this elm
@@ -1258,7 +1258,7 @@ FUCKING LOL. The reality can be so fun sometimes.
 
 Interesting, one developer went on to make iced, and the other two went to
 slint. I like them both, so now I /am/ interested in orbtk. Enough to read the
-docs at least, don't wanna program I'm burned out sad boy (or girl).
+docs at least, don't wanna program I'm a burned out sad boy (or girl).
 
 Huh, by the time of iced the devs learned to make pretty widgets, but here they
 are still ugly. Not fui ugly, but android 1.0 ugly. Maybe it will also be that
