@@ -1127,6 +1127,19 @@ there's nothing you can do. I wanted to solve those problems myself by writing
 my own layouts or models, but the toolkit doesn't give me enough instruments to
 do that; some parts are forbidden, and other parts are unintentionally locked.
 
+I decided to go back and redo it without model-view. Good thing is that I don't
+have to redo the TodoItem, only add a get-state method. This is a good sign.
+
+The bad news is that it freezes on launch and can only be shut by kill -9 for
+some reason. Is this like when you allocate too much in haskell?
+
+Hmm, yeah, might have been a random allocation or recursion problem. Or just
+too big datatype built. I replaced a dialog::Window with a Window instance for
+my struct, and now it runs ok, but the startup is still kind of slow. I guess I
+need to give points to iced and druid here that their debug builds still run
+very fucking fast. Also, damn this is kind of ugly. Sizing, spacing, what the
+hell.
+
 - Default widgets: enough, plain
 - Creating simple widgets: dunno
 - Creating compound widgets: easy

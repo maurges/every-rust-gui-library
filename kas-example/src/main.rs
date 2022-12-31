@@ -5,59 +5,12 @@
 
 //! Counter example (simple button)
 
-mod shared_cell;
 mod todo_item;
 
-use kas::prelude::{impl_scope, EventMgr, Widget};
-use kas::view::{Driver, MaybeOwned};
+use kas::prelude::{impl_scope, EventMgr, Widget, HasStr};
 use kas::widgets;
 
-use shared_cell::SharedCell;
-use todo_item::{TodoItem, TodoState};
-
-#[derive(Debug)]
-struct TodoDriver;
-
-type RefVec<T> = SharedCell<Vec<T>>;
-
-impl Driver<TodoState, RefVec<TodoState>> for TodoDriver {
-    type Widget = TodoItem;
-
-    fn make(&self) -> Self::Widget {
-        TodoItem::new()
-    }
-
-    fn set_mo(
-        &self,
-        widget: &mut Self::Widget,
-        _key: &usize,
-        item: MaybeOwned<TodoState>,
-    ) -> kas::TkAction {
-        let data = item.into_owned();
-        widget.set_done(data.done) | widget.set_text(data.text)
-    }
-
-    fn on_message(
-        &self,
-        mgr: &mut EventMgr,
-        _widget: &mut TodoItem,
-        data: &RefVec<TodoState>,
-        key: &usize,
-    ) {
-        if let Some(todo_item::CheckToggle(val)) = mgr.try_pop_msg() {
-            let mut data = data.cell.borrow_mut();
-            data[*key].done = val;
-        }
-    }
-}
-
-impl Default for TodoDriver {
-    fn default() -> Self {
-        TodoDriver
-    }
-}
-
-type ListView<T, D> = kas::view::ListView<kas::dir::Direction, T, D>;
+use todo_item::TodoItem;
 
 impl_scope! {
     #[widget{
@@ -65,7 +18,8 @@ impl_scope! {
             row: [
                 self.text_field_add,
                 self.button_add,
-            ]
+            ],
+            self.main_list,
         ];
     }]
     #[derive(Debug)]
@@ -77,11 +31,15 @@ impl_scope! {
         #[widget]
         button_add: widgets::TextButton,
         #[widget]
-        main_list: ListView< RefVec<TodoState>, TodoDriver >,
+        main_list: widgets::List<kas::dir::Down,TodoItem> ,
     }
     impl Widget for Self {
-        fn handle_message(&mut self, _mgr: &mut EventMgr, _: usize) {
-
+        fn handle_message(&mut self, mgr: &mut EventMgr, _: usize) {
+            if let Some(ItemAdd) = mgr.try_pop_msg() {
+                mgr.config_mgr(|mgr|
+                    self.main_list.push(mgr, TodoItem::new(self.text_field_add.get_string()))
+                );
+            }
         }
     }
 }
@@ -91,11 +49,9 @@ struct ItemAdd;
 
 impl MainWindow {
     fn new() -> Self {
-        let data = SharedCell::new(Vec::new());
-
         let text_field_add = widgets::EditBox::new("");
         let button_add = widgets::TextButton::new_msg("Add", ItemAdd);
-        let main_list = ListView::new_with_direction(kas::dir::Direction::Down, data);
+        let main_list = widgets::List::new();
 
         MainWindow {
             core: Default::default(),
@@ -106,17 +62,16 @@ impl MainWindow {
         }
     }
 }
-
-impl MainWindow {
-
+impl kas::Window for MainWindow {
+    fn title(&self) -> &str {
+        "Todos"
+    }
 }
 
 fn main() -> kas::shell::Result<()> {
     let theme = kas::theme::SimpleTheme::new().with_font_size(24.0);
 
-    let window = MainWindow::new();
-
     kas::shell::Toolkit::new(theme)?
-        .with(kas::widgets::dialog::Window::new("Todos", window))?
+        .with(MainWindow::new())?
         .run()
 }

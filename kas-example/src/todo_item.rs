@@ -46,14 +46,14 @@ impl_scope! {
 }
 
 impl TodoItem {
-    pub fn new() -> Self {
+    pub fn new(text: String) -> Self {
         let checkbox = widgets::CheckBox::new_on(|m, b| m.push_msg(CheckToggle(b)));
         let edit_button = widgets::TextButton::new_msg("edit", EditPressed);
 
         Self {
             core: Default::default(),
             checkbox,
-            text: widgets::StringLabel::new("".to_owned()),
+            text: widgets::StringLabel::new(text),
             edit_button,
 
             editing: false,
