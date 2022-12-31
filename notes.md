@@ -1146,17 +1146,44 @@ that!
 Why does config_mgr require fucking FnMut when it's called once? This sucks,
 now I need to clone shit.
 
-- Default widgets: enough, plain
-- Creating simple widgets: dunno
+Ok, this was almost straightforward, if the api for managers was more sane it
+would be even better. Why the hell do I need managers anyway? Why can't I just
+do stuff directly? I guess half of that is for theming, but that's stupid and
+noone actually likes theming.
+
+Now a million dollar question: how do I switch between widgets dynamically?
+Honestly this is one thing those vdom-inspired libraries did right, that you
+can alter the tree however you like depending on everything. This gives you
+nice freedom.
+
+Well, I can't complain much, the stack is a pretty natural way to do this. I
+think something like this could be done with an enum of possible widgets, but
+then I would need to implement a lot of shit from Widget class. I need a macro
+to derive that for active value, would be a really good solution.
+
+Closing closing thoughts: kind of rough. Has some nice ideas with bad
+implementation. The good thing is that I think those implementation problems
+can be easily fixed with some manpower. Oh wait, not all of them, I have no
+idea what is to be done with layouting, it's just so basic it's impossible.
+Also it's a bit disappointing how it doens't bring any new ideas to the gui
+world, but that's really not a bad thing. Tried and tested solutions, all that.
+Reactivity here is weird, in that it's closer to fltk, but it has all that
+model-view thing. The MV is really undercooked, it's hard to do anything
+complicated. Simple stuff seems ok but requires a change of thinking, adding
+explicit models to your struct fields. I might have gotten it wrong, since
+after all I didn't manage to get it to work, so.
+
+- Default widgets: enough, plain to ugly-ish
+- Creating simple widgets: a lot of work
 - Creating compound widgets: easy
 - Layouting: only basic rows and columns
 - Custom layouts: impossible
-- Reactivity: simple and easy to understand
+- Reactivity: simple and easy to understand, but not pervasive
 - Setting up: very easy
 - Documentation: good
 - Tutorial: seems good at first, but model-view is lacking
 - Diving into source: looked for model-view, sources are nice
-- Overall: too complicated
+- Overall: from alright to too complicated
 
 ## lvgl
 
