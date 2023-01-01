@@ -110,7 +110,7 @@ place? I mean, not a lot of people would consider using conrod at this point.
 Doubly so for me, since immediate mode libraries are not what I want.
 
 ## core-foundation
-Macos again. And the previous one is supposed to worn on GNUStep, what's that?
+Macos again. And the previous one is supposed to work on GNUStep, what's that?
 
 Ho-ho, gnustep is a reimplementation of nextstep environment for other OS-s. It
 uses objective C though and I don't want to set all of this bullshit up right
@@ -143,7 +143,7 @@ Fuck yeah! This was not bad.
 So this means I can provide models from rust and use them from qml. Reactivity
 and the whole shebang coming for cheap.
 
-Oh yiss, qml is nice. I's so easy to create a simple interface with, with
+Oh yiss, qml is nice. It's so easy to create a simple interface with, with
 states, reactivity, layouts. All the basic controls are there, and while they
 look weird, they are not that ugly, just very basic.  
 Now that layout is done, let's do this with a proper model.
@@ -714,6 +714,11 @@ Well, this indeed was fast and pleasant. Imguis are nice. Yeah, the widgets
 aren't great and I don't want to get into sizing, but for basic stuff this is a
 really great library. Hearty approve.
 
+    du -h -d1 target/
+    2,3G    target/debug
+
+Fucking hell, rust, what the shit is this?
+
 - Default widgets: enough, good but not great style
 - Creating simple widgets: dunno, but should be easy
 - Creating compound widgets: simple until you want customization, then medium
@@ -884,7 +889,7 @@ On the other hand, with cxx-qt it was the exact same: you describe your
 graphics in another language, and you call rust functions from it. I guess the
 only difference is that I have qt toolchain already, and that I knew it would
 take me an hour max. Also I never said I wasn't a hypocrite.  
-But I remember being very interested in flutter myself, kind of liking it's
+But I remember being very interested in flutter myself, kind of liking its
 approach when it came out. It's only recently that people discovered that it's
 very easy to make slow apps with it.  
 Maybe I'll go back to it later, when/if I'm more interested to try flutter
@@ -1055,7 +1060,7 @@ probably will use it again.
 - Documentation: good
 - Tutorial: no, but wasn't needed
 - Diving into source: didn't need to
-- Overall: approve, very easy to start using right no
+- Overall: approve, very easy to start using right now
 
 ## imgui
 
