@@ -1280,3 +1280,18 @@ the state in the callbacks? I mean, I guess if I play by the rules it's easier,
 but I prefer it when the best option is the only option.
 
 Either this thing is too complicated, or I'm too sleepy.
+
+Oh hey, orbtk uses ron, nice. I approve.
+
+    could not find native static library `SDL2main`
+
+Huh, didn't a lot of other libraries use sdl without this problem? They might
+not have since sdl has an option of using a bundled library, but here they
+might be using a system one. So I installed a sdl2-devel, and now I have
+/usr/lib64/libSDLmain.a, but this problem still persists!  
+Ok, they mention you can use a feature "bundled" for that. And it also doesn't
+work. Ughh.
+
+Well, since I don't have a mac now, this will be be a pause or maybe the end
+with orbtk. I don't remember what I read in those tutorials, so I don't have
+any opinion really.
