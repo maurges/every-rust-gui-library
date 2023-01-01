@@ -1407,3 +1407,14 @@ work. Ughh.
 Well, since I don't have a mac now, this will be be a pause or maybe the end
 with orbtk. I don't remember what I read in those tutorials, so I don't have
 any opinion really.
+
+## qmetaobject
+
+Oh boy. This should be the good one.
+
+It even has qwebengine, whaat. Why are all the rust people even using gtk on
+linux then?
+
+Interesting, this build uses my kde's breeze theme instead of qml default. Also
+it has a weird but with button recoil, where if you press it too quickly, it
+won't execute the action.
