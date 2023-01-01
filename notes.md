@@ -103,6 +103,16 @@ Macos. I do have a mac, but nah. And it doesn't align with my future goals.
 ## conrod-core
 Unmaintained. Also it's immediate mode.
 
+The last release wasn't that long ago, and the author has said that they still
+use it for their projects. Still, they say that egui is better in every way
+except default style, so why not believe them and just use egui in the first
+place? I mean, not a lot of people would consider using conrod at this point.
+Doubly so for me, since immediate mode libraries are not what I want.
+
+Uh-huh, the author says the idea was to have minimal dependencies, but it's 180
+now, more than orbtk. To be fair, that's not egui per se, that's eframe, but
+still, come on.
+
 ## core-foundation
 Macos again. And the previous one is supposed to worn on GNUStep, what's that?
 
@@ -679,6 +689,16 @@ Shieeeeeeeet, rust
 ## egui
 Immediate mode, skip.
 
+Alright, right now I'm procrastinating before going to qt again with
+qmetaobject. I don't know, am I afraid to be disappointed that the state hasn't
+moved far, or that I can't even build it like orbtk before it? Anyway, let's
+look into egui, why not. Immediate mode is also important sometimes, and
+sometimes it's just a better way to do things, like how most of non-web guis
+I've written professionally were imgui in c++. So, let's look at the most
+popular rust gui library I guess.
+
+This is pretty neat. The default style is too small.
+
 ## fltk
 Time spent: a full saturday and half of sunday.
 
@@ -1020,7 +1040,7 @@ goes.
 Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
 
 ## KAS
-Time spent: a couple of hours (so far) + a day
+Time spent: a couple of hours (so far) + a day + half a day
 
 When I first read about a "toolkit abstraction layer", I thought this wouldn't
 work. But the author pivoted and now it's just a toolkit itself without native
@@ -1202,6 +1222,11 @@ it's immediate mode? You need to handle all events yourself in the main loop.
 
 So this is not what I'm looking for, but an interesting project. Too minimal
 for my preferences, but
+
+For the records let's say that the main reason I skipped it was because desktop
+is not even a first class target. You need an emulator-like environment to run
+this, or so I gathered from the docs. The docs are not ideal, and the rust docs
+are just missing, so.
 
 ## Makepad
 
