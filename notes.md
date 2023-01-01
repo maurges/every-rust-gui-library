@@ -1067,6 +1067,32 @@ probably will use it again.
 Immediate mode, so no. Imgui for C++ was nice, so try using this and see how it
 goes.
 
+Well, why not try this one too then. The egui author was saying as if this one
+is as good, though they did this faint praise thing when you don't really love
+it or something.
+
+Why the fuck is init from example so long? Do I need all of this?  
+I see, so this library is lacking an endorsed eframe thing. There are a couple
+of options. The readme mentions imgui-winit-support, which as docs.rs reports
+has some problems, lol.  
+The main library mentions that you need to pick and choose your options, but
+the pick is like 4 crates long. Fuck that. So let's just copy the support code
+from example.
+
+Wow, it also doesn't include a default font it seems. This is very bare-bones,
+or should I say, embedding-oriented. Also brings me flashbacks of loading
+system fonts at tempo and getting very weird UB in c++.
+
+    thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', /home/morj/.local/share/cargo/registry/src/github.com-1ecc6299db9ec823/imgui-0.9.0/src/fonts/atlas.rs:73:55
+
+Fucking, fuck. This might be because I removed all fonts, so fiiiiine, let's
+add something.  
+Yep, it was fonts. Now japanese doesn't render, but that's ok.
+
+Wow, the system integration is thin. It renders a window inside a system
+window, the resizing and position is not synced. I don't remember having this
+problem in c++.
+
 ## iui
 
 Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
