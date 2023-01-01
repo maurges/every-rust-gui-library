@@ -7,3 +7,8 @@ edition = "2021"
 
 [dependencies]
 eframe = { version = "0.20.1" }
+
+rfd = { version = "0.10.0", default-features = false, features = ["xdg-portal"] }
+
+ron = { version = "0.8" }
+serde = { version = "1", features = ["derive"] }

@@ -109,10 +109,6 @@ except default style, so why not believe them and just use egui in the first
 place? I mean, not a lot of people would consider using conrod at this point.
 Doubly so for me, since immediate mode libraries are not what I want.
 
-Uh-huh, the author says the idea was to have minimal dependencies, but it's 180
-now, more than orbtk. To be fair, that's not egui per se, that's eframe, but
-still, come on.
-
 ## core-foundation
 Macos again. And the previous one is supposed to worn on GNUStep, what's that?
 
@@ -687,6 +683,8 @@ Shieeeeeeeet, rust
 - Overall: approve, even though flexes are hard
 
 ## egui
+Time spent: entire Colors II by BTBAM
+
 Immediate mode, skip.
 
 Alright, right now I'm procrastinating before going to qt again with
@@ -697,7 +695,36 @@ sometimes it's just a better way to do things, like how most of non-web guis
 I've written professionally were imgui in c++. So, let's look at the most
 popular rust gui library I guess.
 
+Uh-huh, the author says the idea was to have minimal dependencies, but it's 180
+now, more than orbtk. To be fair, that's not egui per se, that's eframe, but
+still, come on.
+
 This is pretty neat. The default style is too small.
+
+Alright, forget what I said about dependencies: ron, serde and rfd pull in
+another 280. What the fuck, rust, what is this js shit.
+
+What's the deal with gui libraries and adding a text field to a check box? It's
+a check /box/, not a check /form/.
+
+Hah, shit, buffers need to be persistent between frames, otherwise nothing gets
+written. That makes sense, and it makes an inconvenience.
+
+Well, this indeed was fast and pleasant. Imguis are nice. Yeah, the widgets
+aren't great and I don't want to get into sizing, but for basic stuff this is a
+really great library. Hearty approve.
+
+- Default widgets: enough, good but not great style
+- Creating simple widgets: dunno, but should be easy
+- Creating compound widgets: simple until you want customization, then medium
+- Layouting: well it's imgui. There are rows and columns and grids.
+- Custom layouts: dunno, but it's imgui so probably easy
+- Reactivity: immediate
+- Setting up: trivial
+- Documentation: no tutorial, so you need to be acquaintanced with some of the concepts. Apidocs are good.
+- Tutorial: none
+- Diving into source: didn't need
+- Overall: great stuff, recommend
 
 ## fltk
 Time spent: a full saturday and half of sunday.
