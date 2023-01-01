@@ -1,29 +1,31 @@
-use imgui::*;
-
 mod support;
+
+mod todo_item;
 
 fn main() {
     let system = support::init(file!());
     let mut value = 0;
-    let choices = ["test test this is 1", "test test this is 2"];
+
+    let mut state = todo_item::TodoItem::new("foo".to_owned());
+    let mut state2 = todo_item::TodoItem::new("foo".to_owned());
+
     system.main_loop(move |_, ui| {
         ui.window("Hello world")
-            .size([300.0, 110.0], Condition::FirstUseEver)
+            .size([300.0, 110.0], imgui::Condition::FirstUseEver)
             .build(|| {
-                ui.text_wrapped("Hello world!");
-                ui.text_wrapped("こんにちは世界！");
-                if ui.button(choices[value]) {
-                    value += 1;
-                    value %= 2;
-                }
+                if ui.button("-") { value -= 1; }
+                ui.same_line();
+                ui.text(format!("{}", value));
+                ui.same_line();
+                if ui.button("+") { value += 1; }
 
-                ui.button("This...is...imgui-rs!");
-                ui.separator();
-                let mouse_pos = ui.io().mouse_pos;
-                ui.text(format!(
-                    "Mouse Position: ({:.1},{:.1})",
-                    mouse_pos[0], mouse_pos[1]
-                ));
+                state.draw(ui);
+                state2.draw(ui);
+
+                if ui.button("print") {
+                    eprintln!("{:?}", state.state);
+                    eprintln!("{:?}", state2.state);
+                }
             });
     });
 }

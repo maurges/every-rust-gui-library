@@ -1063,6 +1063,7 @@ probably will use it again.
 - Overall: approve, very easy to start using right now
 
 ## imgui
+Time spent: like 30 minutes
 
 Immediate mode, so no. Imgui for C++ was nice, so try using this and see how it
 goes.
@@ -1092,6 +1093,34 @@ Yep, it was fonts. Now japanese doesn't render, but that's ok.
 Wow, the system integration is thin. It renders a window inside a system
 window, the resizing and position is not synced. I don't remember having this
 problem in c++.
+
+I forgot how weird this is. To arrange widgets horizontally, you need to call
+ui.same_line between them. This is stupid.
+
+The positioning of widgets is controlled via cursor, which is more well defined
+than egui, where I don't know how it works. The bad thing is that it's in terms
+of window not parent, so you can't really control it. Althoughh, you can query
+the current pos and layout from there. In any case, this is a pain and you
+don't want to do it.
+
+    imgui-example: ./third-party/imgui-master/imgui/imgui.cpp:7793: bool ImGui::ItemAdd(const ImRect&, ImGuiID, const ImRect*, ImGuiItemFlags): Assertion `id != window->ID && "Cannot have an empty ID at the root of a window. If you need an empty label, use ## and read the FAQ about how the ID Stack works!"' failed.
+
+Fucking hell. Where did I do that?  
+Huh, that was checkbox. So I can't have checkbox without text? Are you out of
+your fucking mind? What is this with gui libraries and checkboxes?
+
+Ughhhh, and the text input also has a label. What the shit is this?
+
+Fucking lol, and now it aborts when I left click on the text input. Oh god, I
+wonder if it's all rust fault or the original was like that.
+
+Ok, the abort was because the checkbox and the input had the same label. So
+what, if I have a lot of widgets, I need to create a different label for each?
+
+Yep, I do. Alright, this shit is broken, I can't continue.
+
+So from the api already egui was a lot better, but with the bugs and
+null-terminated strings and weirdness, you just don't want to use this.
 
 ## iui
 

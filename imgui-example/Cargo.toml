@@ -10,3 +10,8 @@ imgui = { version = "0.9.0" }
 glium = { version = "0.32.1", default-features = true }
 imgui-glium-renderer = { version = "0.9.0" }
 imgui-winit-support = { version = "0.9.0" }
+
+rfd = { version = "0.10.0", default-features = false, features = ["xdg-portal"] }
+
+ron = { version = "0.8" }
+serde = { version = "1", features = ["derive"] }
