@@ -1418,3 +1418,20 @@ linux then?
 Interesting, this build uses my kde's breeze theme instead of qml default. Also
 it has a weird but with button recoil, where if you press it too quickly, it
 won't execute the action.
+
+Ohh, so for setters you can use a regular rust method, nice. Overall this
+provides some pretty good apis it seems. Well, it seemed to me this way long
+ago, but now I need to fucking sit down and write it.
+
+Interesting, slint was co-authored by the main author of this crate. So it's
+part orbtk, part qt, and I remember seeing there was a third person. Good
+creds.
+
+Qrc. It's better than xml.. or is it. At least malformed qrc is visible at
+compile time, but there's a lot of room for mistakes still. I would like
+something like yesod, would be cool, but there are still problems that qml
+itself is too dynamic. Maybe qt6 with compilation fixes this, need to
+investigate. Also I hope slint makes it better.
+
+So thanks to the fact that I didn't use a real model with cxx-qt, I could port
+the view from there without work, this is nice.

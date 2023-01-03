@@ -1,5 +1,12 @@
 use cstr::cstr;
-use qmetaobject::prelude::*;
+use qmetaobject::{QObject, QString, QmlEngine, qml_register_type, qt_base_class, qt_method, qt_property, qt_signal, qrc};
+
+qrc!(gui_resource,
+    "qml" as "qml" {
+        "main.qml",
+        "TodoItem.qml",
+    }
+);
 
 // The `QObject` custom derive macro allows to expose a class to Qt and QML
 #[derive(QObject,Default)]
@@ -24,51 +31,14 @@ struct Counter {
 }
 
 fn main() {
+    gui_resource();
     // Register the `Greeter` struct to QML
-    qml_register_type::<Greeter>(cstr!("Greeter"), 1, 0, cstr!("Greeter"));
-    qml_register_type::<Counter>(cstr!("Greeter"), 1, 0, cstr!("Counter"));
+    qml_register_type::<Greeter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("Greeter"));
+    qml_register_type::<Counter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("Counter"));
+    qml_register_type::<Counter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("MyObject"));
     // Create a QML engine from rust
     let mut engine = QmlEngine::new();
     // (Here the QML code is inline, but one can also load from a file)
-    engine.load_data(r#"
-        import QtQuick 2.6
-        import QtQuick.Controls 2.6
-        import QtQuick.Window 2.0
-        // Import our Rust classes
-        import Greeter 1.0
-
-        Window {
-            visible: true
-            // Instantiate the rust struct
-            Greeter {
-                id: greeter;
-                // Set a property
-                name: "World"
-            }
-            Counter {
-                id: counter
-            }
-            Column {
-                Text {
-                    // Call a method
-                    text: greeter.compute_greetings("hello")
-                }
-
-                Row {
-                    Button {
-                        text: "-"
-                        onClicked: { counter.value -= 1 }
-                    }
-                    Text {
-                        text: counter.value
-                    }
-                    Button {
-                        text: "+"
-                        onClicked: { counter.value += 1 }
-                    }
-                }
-            }
-        }
-    "#.into());
+    engine.load_file("qrc:/qml/main.qml".into());
     engine.exec();
 }
