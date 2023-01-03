@@ -1,5 +1,8 @@
+#![allow(non_snake_case)]
 use cstr::cstr;
-use qmetaobject::{QObject, QString, QmlEngine, qml_register_type, qt_base_class, qt_method, qt_property, qt_signal, qrc};
+use qmetaobject::{
+    qml_register_type, qrc, qt_base_class, qt_method, QObject, QString, QUrl, QmlEngine,
+};
 
 qrc!(gui_resource,
     "qml" as "qml" {
@@ -8,34 +11,103 @@ qrc!(gui_resource,
     }
 );
 
-// The `QObject` custom derive macro allows to expose a class to Qt and QML
-#[derive(QObject,Default)]
-struct Greeter {
-    // Specify the base class with the qt_base_class macro
-    base: qt_base_class!(trait QObject),
-    // Declare `name` as a property usable from Qt
-    name: qt_property!(QString; NOTIFY name_changed),
-    // Declare a signal
-    name_changed: qt_signal!(),
-    // And even a slot
-    compute_greetings: qt_method!(fn compute_greetings(&self, verb: String) -> QString {
-        format!("{} {}", verb, self.name.to_string()).into()
-    })
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+struct TodoItem {
+    text: String,
+    done: bool,
 }
 
 #[derive(QObject, Default)]
-struct Counter {
+struct MyObject {
     base: qt_base_class!(trait QObject),
-    value: qt_property!(i32; NOTIFY value_changed),
-    value_changed: qt_signal!(),
+    items: Vec<TodoItem>,
+    reading_index: Option<usize>,
+
+    addItem: qt_method!(fn(&mut self, text: String, done: bool)),
+    saveItems: qt_method!(fn(&mut self, path: QUrl) -> QString),
+    loadItems: qt_method!(fn(&mut self, path: QUrl) -> QString),
+    nextItem: qt_method!(fn(&mut self) -> bool),
+    nextItemText: qt_method!(fn(&self) -> QString),
+    nextItemDone: qt_method!(fn(&self) -> bool),
+}
+
+impl MyObject {
+    fn addItem(&mut self, text: String, done: bool) {
+        let item = TodoItem {
+            text: text.to_string(),
+            done,
+        };
+        self.items.push(item);
+    }
+
+    pub fn saveItems(&mut self, path: QUrl) -> QString {
+        let dest: String = QString::from(path).into();
+        let dest = dest.strip_prefix("file://").unwrap_or(&dest);
+        let r = match std::fs::File::create(dest) {
+            Ok(file) => match ron::ser::to_writer(file, &self.items) {
+                Ok(()) => "".to_owned(),
+                Err(e) => format!("{}", e),
+            },
+            Err(e) => format!("{}", e),
+        };
+        self.items = Vec::new();
+        eprintln!("saved");
+        r.into()
+    }
+
+    pub fn loadItems(&mut self, path: QUrl) -> QString {
+        let src: String = QString::from(path).into();
+        eprintln!("loading {}", src);
+        let src = src.strip_prefix("file://").unwrap_or(&src);
+        match std::fs::File::open(src) {
+            Ok(file) => match ron::de::from_reader(file) {
+                Ok(items) => {
+                    self.items = items;
+                    "".into()
+                }
+                Err(e) => format!("{}", e).into(),
+            },
+            Err(e) => format!("{}", e).into(),
+        }
+    }
+
+    pub fn nextItem(&mut self) -> bool {
+        match self.reading_index {
+            None if self.items.is_empty() => false,
+            None => {
+                self.reading_index = Some(0);
+                true
+            }
+            Some(mut i) => {
+                i += 1;
+                self.reading_index = Some(i);
+                if i < self.items.len() {
+                    true
+                } else {
+                    self.items = Vec::new();
+                    false
+                }
+            }
+        }
+    }
+
+    pub fn nextItemText(&self) -> QString {
+        match self.reading_index {
+            None => "".into(),
+            Some(i) => self.items[i].text.clone().into(),
+        }
+    }
+    pub fn nextItemDone(&self) -> bool {
+        match self.reading_index {
+            None => false,
+            Some(i) => self.items[i].done,
+        }
+    }
 }
 
 fn main() {
     gui_resource();
-    // Register the `Greeter` struct to QML
-    qml_register_type::<Greeter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("Greeter"));
-    qml_register_type::<Counter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("Counter"));
-    qml_register_type::<Counter>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("MyObject"));
+    qml_register_type::<MyObject>(cstr!("men.morj.qmetaobject"), 1, 0, cstr!("MyObject"));
     // Create a QML engine from rust
     let mut engine = QmlEngine::new();
     // (Here the QML code is inline, but one can also load from a file)

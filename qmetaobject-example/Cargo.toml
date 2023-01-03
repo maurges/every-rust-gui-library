@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 qmetaobject = { version = "0.2.7" }
 cstr = { version = "0.2.11" }
+
+ron = { version = "0.8" }
+serde = { version = "1", features = ["derive"] }

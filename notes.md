@@ -1435,3 +1435,18 @@ investigate. Also I hope slint makes it better.
 
 So thanks to the fact that I didn't use a real model with cxx-qt, I could port
 the view from there without work, this is nice.
+
+Why not first try the approach from cxx-qt and then do a proper model-view?
+Let's show that cxx-qt is really not the thing you want.
+
+Uh-huh, cxx-qt had auto camel case, but not here. It would be better to use
+snake in qml, but easier to use camel in rust, so let's go.
+
+Alright, so there is a problem that qml can't handle rust Strings, but this
+library will happily allow you to pass them back. Actually, it's weird, since
+you can accept Strings and it will autoconvert, but the return strings won't.
+Not big of an issue, it might be a good idea at all to just use QString
+everywhere maybe.
+
+qinvokable from cxx-qt was more convenient than double defining stuff. I could
+also single-define stuff, but I don't like the style. Although..
