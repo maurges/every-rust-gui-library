@@ -121,7 +121,7 @@ Window {
         }
     }
 
-    SimpleListModel {
+    TodoListModel {
         id: listModel
     }
 

@@ -1461,3 +1461,26 @@ question: can I access an object from both qml and rust? Actually, what am I
 even thinking about? I have somthing in my head about creating an object in
 rust's main and passing it to engine. There are singletons, but that ain't
 really that as they are created by engine itself. What else was there in c++
+
+Well shit, there are a lot of problems for mutable list models. The one I'm
+running into right now is that SimpleListItem doesn't allow setting by role.
+This sucks, now I can't derive them anymore.
+
+Ugh-huh, and the problem with derive + generic + type macros is not this
+library, it's rustc, a 5 year old bug. Shit. I can't make qt methods this way.
+So is the solution the same as qt - live with shitty monomorphic types? At
+least one could write macros for that.  
+I think this problem could be fixed in the crate: replace the type macros with
+attribute macros and hand-written types. Or not replace, but give me an option
+to use them. Kind of what they do with SimpleListModel internally, but for
+other stuff as well.
+
+I can convert from rust values to qvariant, but not back. This is stupid. I can
+circumvent this with conversions via json, but they are very unsafe, in a c++
+way. Well, let's do it with json. Also I don't really need to do it, but I want
+a generic approach.
+
+Right, this is failing now because I used a different json structure in qml
+than the TodoItem proper. Because the model has weirdness with indexes or
+something, I don't remember, and also to distinguish names. So ok, you know
+what, let's just rewrite it to a proper model with proper functions.

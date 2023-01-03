@@ -1,8 +1,11 @@
 #![allow(non_snake_case)]
+mod todo_list_model;
+
 use cstr::cstr;
 use qmetaobject::{
-    qml_register_type, qrc, qt_base_class, qt_method, QObject, QString, QUrl, QmlEngine, SimpleListItem, SimpleListModel,
+    qml_register_type, qrc, qt_base_class, qt_method, QObject, QString, QUrl, QmlEngine,
 };
+use todo_list_model::{TodoListModel, TodoItem};
 
 qrc!(gui_resource,
     "qml" as "qml" {
@@ -10,12 +13,6 @@ qrc!(gui_resource,
         "TodoItem.qml",
     }
 );
-
-#[derive(Clone, Default, serde::Serialize, serde::Deserialize, SimpleListItem)]
-struct TodoItem {
-    pub text: String,
-    pub done: bool,
-}
 
 #[derive(QObject, Default)]
 struct MyObject {
@@ -109,10 +106,10 @@ fn main() {
     gui_resource();
     let qml_module = cstr!("men.morj.qmetaobject");
     qml_register_type::<MyObject>(qml_module, 1, 0, cstr!("MyObject"));
-    qml_register_type::<SimpleListModel<TodoItem>>(
+    qml_register_type::<TodoListModel>(
         qml_module,
         1, 0,
-        cstr!("SimpleListModel"),
+        cstr!("TodoListModel"),
     );
     // Create a QML engine from rust
     let mut engine = QmlEngine::new();
