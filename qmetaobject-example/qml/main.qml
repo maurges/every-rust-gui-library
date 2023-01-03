@@ -121,7 +121,7 @@ Window {
         }
     }
 
-    ListModel {
+    SimpleListModel {
         id: listModel
     }
 

@@ -1450,3 +1450,14 @@ everywhere maybe.
 
 qinvokable from cxx-qt was more convenient than double defining stuff. I could
 also single-define stuff, but I don't like the style. Although..
+
+There is a SimpleListModel, but it's not mutable from qml. Inconvenient.
+
+So at first I was thinking: how do I even use this simple list model? But the
+solution is actually the natural one: you define the qml type the regular way
+and instantiate it in qml, that's it. But yes, it isn't a drop-in replacement
+for what was a qml's ListModel, you can't append to it etc. Now another
+question: can I access an object from both qml and rust? Actually, what am I
+even thinking about? I have somthing in my head about creating an object in
+rust's main and passing it to engine. There are singletons, but that ain't
+really that as they are created by engine itself. What else was there in c++
