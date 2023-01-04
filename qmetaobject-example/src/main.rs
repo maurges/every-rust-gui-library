@@ -30,6 +30,7 @@ struct MyObject {
 
 impl MyObject {
     fn addItem(&mut self, text: String, done: bool) {
+        eprintln!("add item: {} {}", text, done);
         let item = TodoItem {
             text: text.to_string(),
             done,

@@ -1484,3 +1484,23 @@ Right, this is failing now because I used a different json structure in qml
 than the TodoItem proper. Because the model has weirdness with indexes or
 something, I don't remember, and also to distinguish names. So ok, you know
 what, let's just rewrite it to a proper model with proper functions.
+
+Regarding setting a value from rust: that can be done with setContextProperty
+on engine, I remember now.
+
+Oh right, there is conversion from qvariant, it's hidden in
+QMetaType::from_qvariant. Ok, this is nice. Now can I convert qstring and
+others like this? Yes I can, a lot of rust types have the instance. Nice.
+
+A lot of things happening and I'm not writing about them. It's somewhat hard
+since I'm familiar with qml, but there are a lot of things happening here,
+where I'm surprised and then fix it with another approach. The most recent one
+being that I need to create property `count` myself, it's not derived from
+rowCount. At the base of it all is that I'm still not doing the model from
+scratch, but am still writing based on the yesterday's bullshit, and making it
+work. Oh right, I still haven't checked if it's actually read-write, let's see.
+
+Warnings about binding loops, how I missed you (not). Well, everything works
+now. Turns out qt docs are really well, written and describe my exact problem
+and solution. Who would have thought, huh. Well, this is a solution with double
+model sharing, now let's export it immediately from list model.

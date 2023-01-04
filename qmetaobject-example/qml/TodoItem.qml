@@ -8,6 +8,8 @@ RowLayout {
     property alias checked: checkbox.checked
     property string text
 
+    Layout.fillHeight: false
+
     CheckBox {
         id: checkbox
         Layout.fillHeight: true

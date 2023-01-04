@@ -3,20 +3,13 @@
 use std::collections::HashMap;
 
 use qmetaobject::{
-    qt_base_class, QAbstractListModel, QModelIndex, QObject, QVariant, USER_ROLE, qt_method, QGadget, QString, QByteArray, QVariantMap,
+    qt_base_class, QAbstractListModel, QModelIndex, QObject, QVariant, USER_ROLE, qt_method, QGadget, QString, QByteArray, QVariantMap, QMetaType,
 };
 
-#[derive(QGadget, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(QGadget, Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TodoItem {
     pub text: String,
     pub done: bool,
-}
-
-fn from_variant<T>(x: QVariant) -> T
-where
-    qmetaobject::QJsonValue: Into<T>,
-{
-    qmetaobject::QJsonValue::from(x).into()
 }
 
 impl TodoItem {
@@ -29,14 +22,24 @@ impl TodoItem {
             Default::default()
         }
     }
-    fn set(&mut self, role: i32, x: &QVariant) -> bool {
+    fn set(&mut self, role: i32, x: QVariant) -> bool {
         let x = x.clone();
         if role == 0 {
-            self.text = from_variant::<QString>(x).into();
-            true
+            if let Some(text) = QMetaType::from_qvariant(x) {
+                eprintln!("set text to {}", text);
+                self.text = text;
+                true
+            } else {
+                false
+            }
         } else if role == 1 {
-            self.done = from_variant(x);
-            true
+            if let Some(done) = QMetaType::from_qvariant(x) {
+                eprintln!("set done to {}", done);
+                self.done = done;
+                true
+            } else {
+                false
+            }
         } else {
             false
         }
@@ -44,8 +47,8 @@ impl TodoItem {
 
     fn names() -> HashMap<i32, QByteArray> {
         HashMap::from([
-            (0, "text".into()),
-            (1, "done".into()),
+            (0, "modelText".into()),
+            (1, "modelDone".into()),
         ])
     }
 }
@@ -58,6 +61,17 @@ pub struct TodoListModel {
     append: qt_method!(fn (&mut self, value: TodoItem)),
     get: qt_method!(fn (&self, index: usize) -> QVariantMap),
     setProperty: qt_method!(fn (&mut self, index: usize, prop: QByteArray, value: QVariant)),
+
+    len: qt_method!(fn len(&self) -> i32 {
+        self.row_count()
+    }),
+
+    make: qt_method!(fn make(&self, text: String) -> QVariant {
+        TodoItem {
+            text,
+            done: false,
+        }.to_qvariant()
+    }),
 }
 
 impl TodoListModel {
@@ -67,6 +81,7 @@ impl TodoListModel {
         (self as &mut dyn QAbstractListModel).end_insert_rows();
     }
     pub fn append(&mut self, value: TodoItem) {
+        eprintln!("append: {:?}", value);
         let idx = self.values.len();
         self.insert(idx, value);
     }
@@ -92,15 +107,15 @@ impl TodoListModel {
 
     pub fn get(&self, index: usize) -> QVariantMap {
         let mut r: QVariantMap = Default::default();
-        r.insert("text".into(), QString::from(self.values[index].text.clone()).into());
-        r.insert("done".into(), self.values[index].done.into());
+        r.insert("modelText".into(), QString::from(self.values[index].text.clone()).into());
+        r.insert("modelDone".into(), self.values[index].done.into());
         r
     }
     pub fn setProperty(&mut self, index: usize, prop: QByteArray, value: QVariant) {
         let mb_role = TodoItem::names().iter()
             .find_map(|(k, ref v)| if *v == &prop { Some(*k) } else { None });
         if let Some(role) = mb_role {
-            self.values[index].set(role, &value);
+            self.values[index].set(role, value);
         }
     }
 
@@ -127,11 +142,14 @@ impl QAbstractListModel for TodoListModel {
         self.values[idx].get(role - USER_ROLE).clone()
     }
     fn set_data(&mut self, index: QModelIndex, value: &QVariant, role: i32) -> bool {
+        let role = role - USER_ROLE;
+        eprintln!("setting data");
         let idx = match self.checked_index(index) {
             None => return false,
             Some(i) => i,
         };
-        let r = self.values[idx].set(role, value);
+        eprintln!("at index {}", idx);
+        let r = self.values[idx].set(role, value.clone());
         if r {
             (self as &mut dyn QAbstractListModel).data_changed(index, index);
         }

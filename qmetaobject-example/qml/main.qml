@@ -33,11 +33,7 @@ Window {
                     text: qsTr("Add")
 
                     onClicked: {
-                        listModel.append({
-                            "modelIndex": listModel.count,
-                            "modelText": input.text,
-                            "modelChecked": false,
-                        });
+                        listModel.append(listModel.make(input.text));
                         input.text = "";
                     }
                 }
@@ -47,15 +43,14 @@ Window {
                 model: listModel
                 delegate: TodoItem {
                     text: modelText
-                    checked: modelChecked
-                    Layout.fillHeight: false
+                    checked: modelDone
 
-                    onCheckedChanged: {
-                        listModel.setProperty(modelIndex, "modelChecked", checked)
-                    }
                     onTextChanged: {
-                        listModel.setProperty(modelIndex, "modelText", text)
+                        console.log("text changed: %1".arg(text));
+                        modelText = text;
+                        console.log("in model: %1".arg(modelText));
                     }
+                    onCheckedChanged: modelDone = checked
                 }
             }
 
@@ -69,10 +64,11 @@ Window {
                 Button {
                     text: qsTr("save")
                     onClicked: {
-                        console.log("saving...")
-                        for (let i = 0; i < listModel.count; ++i) {
+                        console.log("saving...");
+                        for (let i = 0; i < listModel.len(); ++i) {
                             let x = listModel.get(i);
-                            rust.addItem(x.modelText, x.modelChecked);
+                            console.log("got: %1 %2".arg(x.modelText).arg(x.modelDone));
+                            rust.addItem(x.modelText, x.modelDone);
                         }
                         saveDialog.open();
                     }
@@ -111,11 +107,9 @@ Window {
                 while (rust.nextItem()) {
                     let text = rust.nextItemText();
                     let checked = rust.nextItemDone();
-                    listModel.append({
-                        "modelIndex": listModel.count,
-                        "modelText": text,
-                        "modelChecked": checked,
-                    })
+                    let item = listModel.make(text);
+                    item.done = checked;
+                    listModel.append(item);
                 }
             }
         }
