@@ -42,15 +42,13 @@ Window {
             Repeater {
                 model: listModel
                 delegate: TodoItem {
-                    text: modelText
-                    checked: modelDone
+                    text: model.text
+                    checked: model.done
 
                     onTextChanged: {
-                        console.log("text changed: %1".arg(text));
-                        modelText = text;
-                        console.log("in model: %1".arg(modelText));
+                        model.text = text;
                     }
-                    onCheckedChanged: modelDone = checked
+                    onCheckedChanged: model.done = checked
                 }
             }
 
@@ -63,21 +61,11 @@ Window {
             Row {
                 Button {
                     text: qsTr("save")
-                    onClicked: {
-                        console.log("saving...");
-                        for (let i = 0; i < listModel.len(); ++i) {
-                            let x = listModel.get(i);
-                            console.log("got: %1 %2".arg(x.modelText).arg(x.modelDone));
-                            rust.addItem(x.modelText, x.modelDone);
-                        }
-                        saveDialog.open();
-                    }
+                    onClicked: { saveDialog.open(); }
                 }
                 Button {
                     text: qsTr("load")
-                    onClicked: {
-                        loadDialog.open();
-                    }
+                    onClicked: { loadDialog.open(); }
                 }
             }
         }
@@ -88,7 +76,7 @@ Window {
         selectMultiple: false
         selectExisting: false
         onAccepted: {
-            let r = rust.saveItems(saveDialog.fileUrl);
+            let r = listModel.save_items(saveDialog.fileUrl);
             if (r !== "") {
                 console.error("couldn't save: %1".arg(r));
             }
@@ -99,27 +87,14 @@ Window {
         selectMultiple: false
         selectExisting: true
         onAccepted: {
-            let r = rust.loadItems(loadDialog.fileUrl);
+            let r = listModel.load_items(loadDialog.fileUrl);
             if (r !== "") {
                 console.error("couldn't load: %1".arg(r));
-            } else {
-                listModel.clear();
-                while (rust.nextItem()) {
-                    let text = rust.nextItemText();
-                    let checked = rust.nextItemDone();
-                    let item = listModel.make(text);
-                    item.done = checked;
-                    listModel.append(item);
-                }
             }
         }
     }
 
     TodoListModel {
         id: listModel
-    }
-
-    MyObject {
-        id: rust
     }
 }

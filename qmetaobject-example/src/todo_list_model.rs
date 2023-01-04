@@ -1,9 +1,8 @@
-#![allow(dead_code)]
-
 use std::collections::HashMap;
 
 use qmetaobject::{
-    qt_base_class, QAbstractListModel, QModelIndex, QObject, QVariant, USER_ROLE, qt_method, QGadget, QString, QByteArray, QVariantMap, QMetaType,
+    qt_base_class, qt_method, QAbstractListModel, QByteArray, QGadget, QMetaType, QModelIndex,
+    QObject, QString, QUrl, QVariant, USER_ROLE,
 };
 
 #[derive(QGadget, Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
@@ -26,7 +25,6 @@ impl TodoItem {
         let x = x.clone();
         if role == 0 {
             if let Some(text) = QMetaType::from_qvariant(x) {
-                eprintln!("set text to {}", text);
                 self.text = text;
                 true
             } else {
@@ -34,7 +32,6 @@ impl TodoItem {
             }
         } else if role == 1 {
             if let Some(done) = QMetaType::from_qvariant(x) {
-                eprintln!("set done to {}", done);
                 self.done = done;
                 true
             } else {
@@ -46,10 +43,7 @@ impl TodoItem {
     }
 
     fn names() -> HashMap<i32, QByteArray> {
-        HashMap::from([
-            (0, "modelText".into()),
-            (1, "modelDone".into()),
-        ])
+        HashMap::from([(0, "text".into()), (1, "done".into())])
     }
 }
 
@@ -58,20 +52,15 @@ pub struct TodoListModel {
     base: qt_base_class!(trait QAbstractListModel),
     values: Vec<TodoItem>,
 
-    append: qt_method!(fn (&mut self, value: TodoItem)),
-    get: qt_method!(fn (&self, index: usize) -> QVariantMap),
-    setProperty: qt_method!(fn (&mut self, index: usize, prop: QByteArray, value: QVariant)),
+    append: qt_method!(fn(&mut self, value: TodoItem)),
+    save_items: qt_method!(fn(&self, path: QUrl) -> QString),
+    load_items: qt_method!(fn(&mut self, path: QUrl) -> QString),
 
-    len: qt_method!(fn len(&self) -> i32 {
-        self.row_count()
-    }),
-
-    make: qt_method!(fn make(&self, text: String) -> QVariant {
-        TodoItem {
-            text,
-            done: false,
-        }.to_qvariant()
-    }),
+    make: qt_method!(
+        fn make(&self, text: String) -> QVariant {
+            TodoItem { text, done: false }.to_qvariant()
+        }
+    ),
 }
 
 impl TodoListModel {
@@ -81,41 +70,40 @@ impl TodoListModel {
         (self as &mut dyn QAbstractListModel).end_insert_rows();
     }
     pub fn append(&mut self, value: TodoItem) {
-        eprintln!("append: {:?}", value);
         let idx = self.values.len();
         self.insert(idx, value);
-    }
-    pub fn remove(&mut self, index: usize) {
-        (self as &mut dyn QAbstractListModel).begin_remove_rows(index as i32, index as i32);
-        self.values.remove(index);
-        (self as &mut dyn QAbstractListModel).end_remove_rows();
-    }
-    pub fn change_line(&mut self, index: usize, value: TodoItem) {
-        self.values[index] = value;
-        let idx = (self as &mut dyn QAbstractListModel).row_index(index as i32);
-        (self as &mut dyn QAbstractListModel).data_changed(idx, idx);
     }
     pub fn reset_data(&mut self, data: Vec<TodoItem>) {
         (self as &mut dyn QAbstractListModel).begin_reset_model();
         self.values = data;
         (self as &mut dyn QAbstractListModel).end_reset_model();
     }
-    /// Returns an iterator over the items in the model
-    pub fn iter(&self) -> impl Iterator<Item = &TodoItem> {
-        self.values.iter()
+
+    pub fn save_items(&mut self, path: QUrl) -> QString {
+        let dest: String = QString::from(path).into();
+        let dest = dest.strip_prefix("file://").unwrap_or(&dest);
+        let r = match std::fs::File::create(dest) {
+            Ok(file) => match ron::ser::to_writer(file, &self.values) {
+                Ok(()) => "".to_owned(),
+                Err(e) => format!("{}", e),
+            },
+            Err(e) => format!("{}", e),
+        };
+        r.into()
     }
 
-    pub fn get(&self, index: usize) -> QVariantMap {
-        let mut r: QVariantMap = Default::default();
-        r.insert("modelText".into(), QString::from(self.values[index].text.clone()).into());
-        r.insert("modelDone".into(), self.values[index].done.into());
-        r
-    }
-    pub fn setProperty(&mut self, index: usize, prop: QByteArray, value: QVariant) {
-        let mb_role = TodoItem::names().iter()
-            .find_map(|(k, ref v)| if *v == &prop { Some(*k) } else { None });
-        if let Some(role) = mb_role {
-            self.values[index].set(role, value);
+    pub fn load_items(&mut self, path: QUrl) -> QString {
+        let src: String = QString::from(path).into();
+        let src = src.strip_prefix("file://").unwrap_or(&src);
+        match std::fs::File::open(src) {
+            Ok(file) => match ron::de::from_reader(file) {
+                Ok(items) => {
+                    self.reset_data(items);
+                    "".into()
+                }
+                Err(e) => format!("{}", e).into(),
+            },
+            Err(e) => format!("{}", e).into(),
         }
     }
 
@@ -143,12 +131,10 @@ impl QAbstractListModel for TodoListModel {
     }
     fn set_data(&mut self, index: QModelIndex, value: &QVariant, role: i32) -> bool {
         let role = role - USER_ROLE;
-        eprintln!("setting data");
         let idx = match self.checked_index(index) {
             None => return false,
             Some(i) => i,
         };
-        eprintln!("at index {}", idx);
         let r = self.values[idx].set(role, value.clone());
         if r {
             (self as &mut dyn QAbstractListModel).data_changed(index, index);

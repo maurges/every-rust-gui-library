@@ -1504,3 +1504,31 @@ Warnings about binding loops, how I missed you (not). Well, everything works
 now. Turns out qt docs are really well, written and describe my exact problem
 and solution. Who would have thought, huh. Well, this is a solution with double
 model sharing, now let's export it immediately from list model.
+
+Rewriting to a proper model was piss easy. This shows that in qml using a
+proper solution is simple enough anyone could do it. This is good. Still I
+don't know what to do with binding loops. I wonder if I can assign to model and
+then restore the binding, or should I use a bi-directional binding, I remember
+qt having those.
+
+So there are a couple of inconvenient things in this library. Documentation for
+one, just copy-paste stuff from qt docs, come on. I really think that mutable
+list model should be present, or at least possible. It's impossible because of
+rustc, yes, but the library authors could bypass it. Some conversions are weird
+and how it allows you to pass rust types and then fails in qml with
+"unsupported type", this is bullshit.
+
+Still, I like qml and this is a pretty good implementation of qml in rust,
+really easy to comprehend and use. A good candidate for me.
+
+- Default widgets: enough, alright-ish looking
+- Creating simple widgets: simple
+- Creating compound widgets: simple
+- Layouting: simple
+- Custom layouts: can do with manual coordinate setting
+- Reactivity: simple
+- Setting up: easy
+- Documentation: great for qt, ok for library
+- Tutorial: none, but qt concepts map 1 to 1
+- Diving into source: good sources where c++ is not mentioned
+- Overall: very approve, this is a great choice for guis right now.
