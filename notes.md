@@ -957,6 +957,9 @@ of incompatible Into bounds is so tiring when the examples are minimal and the
 apidocs are without comments. This project was to show that rust has nice gui
 libraries, and this one clearly isn't.
 
+## Gladis
+This seems to be part of gtk-rs now, so it's coming right up!
+
 ## GTK
 
 Next in line, but there are problems installing it so I'm postponing.
@@ -1555,3 +1558,47 @@ I now think that it would be interesting to port qt-widgets to a qmetaobject
 system.
 
 So this is really not for everyone and not for me, skip.
+
+## relm
+
+What is the relationship between this and relm4? They share the name, the elm
+architecture, and gtk, but have zero common devs and target different gtk
+versions. What is going on here?  
+Oh, I found it. In the relm4 readme, they say that it's a from scratch
+reimplementation. Ok, makes sense, still weird that the original is ongoing and
+the og developer is not participating.  
+Found also relm4 developers giving special thanks to antoyo.
+
+Hm, so gtk and gtk4 are different crates. Which one did I have problems with
+with other libraries?
+
+## Relm4
+
+As far as I understand, I had problems with gtk3 but not with gtk4 at least
+yet. So let's try this one first. Start with reading the book. Books are nice.
+Relm plain doesn't have one, they only have a four page tutorial.
+
+It seems they are going through major updates? I'm going to look at the old
+version.  
+No I'm not, the old one assumes version 0.2, and the new one is 0.5. It's cool
+that they still consider that one stable, but this one seems developed enough,
+it's been more versions already.
+
+    sudo zypper in libgraphene-devel gdk-pixbuf-devel gtk4-devel
+    The following 12 NEW packages are going to be installed:
+      gdk-pixbuf-devel gettext-its-gtk4 gtk4-devel gtk4-devel-tools libepoxy-devel libgraphene-devel libjpeg62 libjpeg62-devel libtiff-devel typelib-1_0-GdkPixdata-2_0
+      typelib-1_0-Graphene-1_0 typelib-1_0-Gtk-4_0
+
+Oh yay, it built!
+
+Fucking lol, I copy-pasted the example from the readme, and it doesn't work
+because I need to replace every mention of gtk with gtk4.
+
+Another lol with the example is that they use u8. What are you sparing the
+bytes for, my dudes.
+
+The basic concepts part of the tutorial was kind of shit. Also they still
+mention gtk everywhere.
+
+Huh, the 0.5 version breaks some api. So I have an option of either beta or the
+very old thing. Hmm. The beta also installs ok.
