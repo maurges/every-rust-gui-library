@@ -1657,3 +1657,9 @@ explicit method. What is this, web or something.
 This tracker thing is nice, but now I have a warning about reset not used. Also
 I don't understand when do I need to use a getter versus just getting the field
 value.
+
+Oh right, it was warning for reset because I do need to call it, otherwise the
+old changes are tracked again. Um, this has very narrow use cases. Would be
+good to just use fucking properties and signals and slots, not all this
+bullshit. Like, with macros it's almost that, except I need to send handle
+signals first.

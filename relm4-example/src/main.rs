@@ -107,6 +107,7 @@ impl relm4::SimpleComponent for AppModel {
         AppMsg::Change(delta, index): Self::Input,
         _sender: relm4::ComponentSender<Self>,
     ) {
+        self.reset();
         if index == 0 {
             self.update_counter1(|x| *x += delta);
         } else if index == 1 {
