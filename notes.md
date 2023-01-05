@@ -1630,3 +1630,12 @@ window. Well, not really. For some reason, the buttons have fixed width but
 unfixed height here. No clue what's happening. But at least I know that gtk
 apps can have precize layout and sizing, because I've seen gnome and they can
 make it look pretty, so it's just the defaults that are weird.
+
+Macros for ui again. Guys, think about my lsp with autocompletion!
+
+This view macro has a lot of magic. Fucking, ughhh, I'm so tired of it. It's
+not better than using a whole separate language, worse in that your error
+messages are now shit and there is no lsp or other language support.
+
+But the macro with the watch attribute does restore the elm-likeness, so it's
+somewhat better. I wonder if it is optimized under the hood though.
