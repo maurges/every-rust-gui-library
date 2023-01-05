@@ -1639,3 +1639,21 @@ messages are now shit and there is no lsp or other language support.
 
 But the macro with the watch attribute does restore the elm-likeness, so it's
 somewhat better. I wonder if it is optimized under the hood though.
+
+The magic square bracket syntax is for cloning vars. It's fun how c++ was the
+better one here with explicit variable storage in lambdas, and in rust you have
+to work around.
+
+The problem with a thousand widgets is explicitly mentioned in the tutorial.
+Bravo, relm4 authors.
+
+Huh, now that I have hbox inside vbox, it's independent of the window size
+completely. Interesting, I assumed the default behaviour would be anchoring to
+parent like in KAS, but it's only so for some widgets.
+
+Fucking gtk, you can only set the window background color with styles, no
+explicit method. What is this, web or something.
+
+This tracker thing is nice, but now I have a warning about reset not used. Also
+I don't understand when do I need to use a getter versus just getting the field
+value.
