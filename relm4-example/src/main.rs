@@ -1,77 +1,84 @@
-use gtk4::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt};
-use relm4::{send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
+use relm4::gtk;
+use gtk::{prelude::{BoxExt, ButtonExt, GtkWindowExt}, glib::clone};
+use relm4::RelmWidgetExt;
 
 #[derive(Default)]
 struct AppModel {
     counter: isize,
 }
 
+#[derive(Debug)]
 enum AppMsg {
     Change(isize),
 }
 
-impl Model for AppModel {
-    type Msg = AppMsg;
-    type Widgets = AppWidgets;
-    type Components = ();
-}
-
-impl AppUpdate for AppModel {
-    fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
-        match msg {
-            AppMsg::Change(delta) => {
-                self.counter = self.counter + delta;
-            }
-        }
-        true
-    }
-}
-
 struct AppWidgets {
-    label: gtk4::Label,
+    label: gtk::Label,
 }
 
-impl SimpleComponent for AppModel {
+impl relm4::SimpleComponent for AppModel {
+    type Input = AppMsg;
+    type Output = ();
+    type Init = isize;
+    type Root = gtk::Window;
+    type Widgets = AppWidgets;
 
-}
+    fn init_root() -> Self::Root {
+        gtk::Window::builder()
+            .title("hello gtk")
+            .default_width(640)
+            .default_height(480)
+            .build()
+    }
 
-/*
-#[relm4::widget]
-impl Widgets<AppModel, ()> for AppWidgets {
-    view! {
-        gtk4::ApplicationWindow {
-            set_title: Some("Simple app"),
-            set_default_width: 300,
-            set_default_height: 100,
-            set_child = Some(&gtk4::Box) {
-                set_orientation: gtk4::Orientation::Vertical,
-                set_margin_all: 5,
-                set_spacing: 5,
+    fn init(
+        init: Self::Init,
+        root: &Self::Root,
+        sender: relm4::ComponentSender<Self>,
+    ) -> relm4::ComponentParts<Self> {
+        let model = AppModel { counter: init };
 
-                append = &gtk4::Button {
-                    set_label: "Increment",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::Change(1));
-                    },
-                },
-                append = &gtk4::Button {
-                    set_label: "Decrement",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::Change(-1));
-                    },
-                },
-                append = &gtk4::Label {
-                    set_margin_all: 5,
-                    set_label: watch! { &format!("Counter: {}", model.counter) },
-                }
-            },
-        }
+        let hbox = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(5)
+            .build();
+
+        let inc_button = gtk::Button::with_label("Increment");
+        let dec_button = gtk::Button::with_label("Decrement");
+
+        let label = gtk::Label::new(Some(&format!("Counter: {}", model.counter)));
+        label.set_margin_all(5);
+
+        root.set_child(Some(&hbox));
+        hbox.set_margin_all(5);
+        hbox.append(&dec_button);
+        hbox.append(&label);
+        hbox.append(&inc_button);
+
+        inc_button.connect_clicked(clone!(@strong sender => move |_| {
+            sender.input(AppMsg::Change(1));
+        }));
+
+        dec_button.connect_clicked(clone!(@strong sender => move |_| {
+            sender.input(AppMsg::Change(-1));
+        }));
+
+        let widgets = AppWidgets { label };
+
+        relm4::ComponentParts { model, widgets }
+    }
+
+    fn update(&mut self, AppMsg::Change(delta): Self::Input, _sender: relm4::ComponentSender<Self>) {
+        self.counter += delta;
+    }
+
+    /// Update the view to represent the updated model.
+    fn update_view(&self, widgets: &mut Self::Widgets, _sender: relm4::ComponentSender<Self>) {
+        widgets.label.set_label(&format!("Counter: {}", self.counter));
     }
 }
-*/
 
 fn main() {
-    let model = AppModel::default();
-    let app = RelmApp::new(model);
-    // app.run();
+    let app = relm4::RelmApp::new("dafuq.is.this");
+    app.run::<AppModel>(0);
 }

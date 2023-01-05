@@ -716,7 +716,6 @@ dependencies = [
 name = "relm4-example"
 version = "0.1.0"
 dependencies = [
- "gtk4",
  "relm4",
  "relm4-components",
  "relm4-macros",
