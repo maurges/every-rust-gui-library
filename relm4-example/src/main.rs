@@ -1,9 +1,120 @@
+use std::marker::PhantomData;
+
 use gtk::{
     prelude::{BoxExt, ButtonExt, GtkWindowExt},
     traits::OrientableExt,
 };
 use relm4::gtk;
 use relm4::{ComponentSender, RelmWidgetExt};
+use relm4::factory::DynamicIndex;
+
+#[derive(Default)]
+struct Counter<T> {
+    value: isize,
+    phantom: PhantomData<T>,
+}
+
+#[derive(Debug)]
+enum CounterMsg {
+    Change(isize),
+}
+
+#[derive(Debug)]
+enum CounterOutput {
+    MoveUp(DynamicIndex),
+    MoveDown(DynamicIndex),
+}
+
+#[relm4::factory]
+impl<T> relm4::factory::FactoryComponent for Counter<T>
+where
+    T: From<CounterOutput> + 'static + std::fmt::Debug,
+{
+    type Init = isize;
+    type Input = CounterMsg;
+    type Output = CounterOutput;
+    type CommandOutput = ();
+    type Widgets = CounterWidgets;
+    type ParentInput = T;
+    type ParentWidget = gtk::Box;
+
+    view! {
+        gtk::Box {
+            set_orientation: gtk::Orientation::Horizontal,
+            set_spacing: 5,
+            set_margin_all: 5,
+
+            gtk::Button {
+                set_label: "-",
+                connect_clicked[sender] => move |_| {
+                    sender.input(CounterMsg::Change(-1))
+                },
+            },
+            gtk::Label {
+                #[watch]
+                set_label: &format!("{}", self.value),
+            },
+            gtk::Button {
+                set_label: "+",
+                connect_clicked[sender] => move |_| {
+                    sender.input(CounterMsg::Change(1))
+                },
+            },
+
+            gtk::Button {
+                set_label: "Up",
+                connect_clicked[sender, index] => move |_| {
+                    sender.output(CounterOutput::MoveUp(index.clone()))
+                },
+            },
+            gtk::Button {
+                set_label: "Down",
+                connect_clicked[sender, index] => move |_| {
+                    sender.output(CounterOutput::MoveDown(index.clone()))
+                },
+            },
+        }
+    }
+
+    fn init_model(
+        value: Self::Init,
+        _index: &DynamicIndex,
+        _sender: relm4::factory::FactorySender<Self>,
+    ) -> Self {
+        Self {
+            value,
+            phantom: PhantomData,
+        }
+    }
+
+    fn output_to_parent_input(output: Self::Output) -> Option<Self::ParentInput> {
+        Some(output.into())
+    }
+}
+
+impl<T> relm4::Component for Counter<T>
+where
+    T: From<CounterOutput> + 'static + std::fmt::Debug,
+{
+    type Init = isize;
+    type Input = CounterMsg;
+    type Output = CounterOutput;
+    type CommandOutput = ();
+    type Root = <Self as relm4::factory::FactoryComponent>::Root;
+    type Widgets = CounterWidgets;
+
+    fn init_root() -> Self::Root {
+        <Self as relm4::factory::FactoryComponent>::init_root();
+    }
+
+    fn init(
+        init: Self::Init,
+        root: &Self::Root,
+        sender: ComponentSender<Self>,
+    ) -> relm4::ComponentParts<Self> {
+        todo!()
+    }
+}
 
 #[tracker::track]
 #[derive(Default)]
@@ -32,6 +143,10 @@ impl relm4::SimpleComponent for AppModel {
 
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
+
+                Counter {
+
+                },
 
                 gtk::Box {
                     set_orientation: gtk::Orientation::Horizontal,

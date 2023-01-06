@@ -1663,3 +1663,48 @@ old changes are tracked again. Um, this has very narrow use cases. Would be
 good to just use fucking properties and signals and slots, not all this
 bullshit. Like, with macros it's almost that, except I need to send handle
 signals first.
+
+I've been ildly reading the turorial and looking forward to implementing the
+examples. And I've kind of liked what I've read about components, factoriesand
+grids. Gtk did get some things right.
+
+Component and FactoryComponent are different. This is stupid, I wonder if it's
+gtk thing or relm thing. Althoughhhh, if one could easily wrap unrelated
+widgets into it, this would be pretty good. Like in qml the widgets for a
+repeater need to be of a specific shape to accept model input, the same happens
+here. So ok, this is an interesting idea with interesting implications.
+
+FactoryComponent is more similar to a regular Component, and so far the
+tutorial has covered SimpleComponent only. God damn there's a lot of
+boilerplate for everything, qml is still better.
+
+Ugh, magical variables appearing in scope magically, like qml. I hate this. I
+also hate that autocomplete doesn't work. Guys, just invent your language, it's
+what you're already doing anyway!
+
+Now here's a question: can I create a factory component without a factory?
+
+Wait, wait, the parent thing is still stupid! Since I'm constraining myself not
+on factory type, but on container type. In qml I can contain my delegates
+inside anything. What I was thinking about was initial data being a type
+parameter, which is also here, but you also can't do anything without it, since
+it's rust, as strict typed language, yo.
+
+output_to_parent_input is also constrained on component for some reason. Mmmmmm
+right now I think this is very fucking inconvenient, but it was sort-of the
+same way in iced, except without factories.
+
+I can't add a component as a child of box because it's not `IsA<gtk::Widget>`.
+That is almost an auto trait, except it's unsafe. So, ughhh, can I implement
+it, or is this fltk situation again?  
+Hmmmm, looking at some other examples, it seems by implementing a component, I
+automatically get IsA<Widget>. Let's try.
+
+Trying to derive Component from FactoryComponent and failing. Init types are
+different. Fucking alright, I was trying to learn by trying, but instead I have
+to go forward and read the fucking book, right? The bad thing is, knowledge
+about factories is already enough to create the todo list, but I'm not
+satisfied with components here and want to find out how they work. If I knew
+about gtk in advance, I would have made a task where I need to use both
+components in a factory, and components by themselves in a tree. Maybe create a
+custom button or something. Or make search field into a separate widget!
