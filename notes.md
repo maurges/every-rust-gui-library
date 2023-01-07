@@ -1708,3 +1708,18 @@ satisfied with components here and want to find out how they work. If I knew
 about gtk in advance, I would have made a task where I need to use both
 components in a factory, and components by themselves in a tree. Maybe create a
 custom button or something. Or make search field into a separate widget!
+
+This piece of shit breaks. So I want to create a component, but for some reson
+it says `view_output` not found, and also now it complains that I need to
+define Root and init_root. Fucking magic macros.
+
+The tutorial is still outdated at times. Fuck me, I should have gone with the
+old version.
+
+The macros break my code actions. Fuck this shit. Both qt and gtk suck.
+
+Well, the factory example worked, but I didn't like writing it. I mean, no,
+writing it itself was pretty easy, but trying to deviate from the example in
+the tutorial fails. Well that's not true as well, only the big deviations that
+I tried to do failed, but small meaningless changes are ok. Except that for the
+macros breaking themselves and breaking my rust-analyzer.

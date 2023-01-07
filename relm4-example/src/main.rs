@@ -1,138 +1,34 @@
-use std::marker::PhantomData;
+mod counter;
 
+use counter::{Counter, CounterOutput};
 use gtk::{
-    prelude::{BoxExt, ButtonExt, GtkWindowExt},
-    traits::OrientableExt,
+    prelude::{BoxExt, GtkWindowExt},
+    traits::OrientableExt, traits::ButtonExt,
 };
-use relm4::gtk;
-use relm4::{ComponentSender, RelmWidgetExt};
-use relm4::factory::DynamicIndex;
+use relm4::{gtk, factory::FactoryVecDeque};
+use relm4::ComponentSender;
 
-#[derive(Default)]
-struct Counter<T> {
-    value: isize,
-    phantom: PhantomData<T>,
-}
-
-#[derive(Debug)]
-enum CounterMsg {
-    Change(isize),
-}
-
-#[derive(Debug)]
-enum CounterOutput {
-    MoveUp(DynamicIndex),
-    MoveDown(DynamicIndex),
-}
-
-#[relm4::factory]
-impl<T> relm4::factory::FactoryComponent for Counter<T>
-where
-    T: From<CounterOutput> + 'static + std::fmt::Debug,
-{
-    type Init = isize;
-    type Input = CounterMsg;
-    type Output = CounterOutput;
-    type CommandOutput = ();
-    type Widgets = CounterWidgets;
-    type ParentInput = T;
-    type ParentWidget = gtk::Box;
-
-    view! {
-        gtk::Box {
-            set_orientation: gtk::Orientation::Horizontal,
-            set_spacing: 5,
-            set_margin_all: 5,
-
-            gtk::Button {
-                set_label: "-",
-                connect_clicked[sender] => move |_| {
-                    sender.input(CounterMsg::Change(-1))
-                },
-            },
-            gtk::Label {
-                #[watch]
-                set_label: &format!("{}", self.value),
-            },
-            gtk::Button {
-                set_label: "+",
-                connect_clicked[sender] => move |_| {
-                    sender.input(CounterMsg::Change(1))
-                },
-            },
-
-            gtk::Button {
-                set_label: "Up",
-                connect_clicked[sender, index] => move |_| {
-                    sender.output(CounterOutput::MoveUp(index.clone()))
-                },
-            },
-            gtk::Button {
-                set_label: "Down",
-                connect_clicked[sender, index] => move |_| {
-                    sender.output(CounterOutput::MoveDown(index.clone()))
-                },
-            },
-        }
-    }
-
-    fn init_model(
-        value: Self::Init,
-        _index: &DynamicIndex,
-        _sender: relm4::factory::FactorySender<Self>,
-    ) -> Self {
-        Self {
-            value,
-            phantom: PhantomData,
-        }
-    }
-
-    fn output_to_parent_input(output: Self::Output) -> Option<Self::ParentInput> {
-        Some(output.into())
-    }
-}
-
-impl<T> relm4::Component for Counter<T>
-where
-    T: From<CounterOutput> + 'static + std::fmt::Debug,
-{
-    type Init = isize;
-    type Input = CounterMsg;
-    type Output = CounterOutput;
-    type CommandOutput = ();
-    type Root = <Self as relm4::factory::FactoryComponent>::Root;
-    type Widgets = CounterWidgets;
-
-    fn init_root() -> Self::Root {
-        <Self as relm4::factory::FactoryComponent>::init_root();
-    }
-
-    fn init(
-        init: Self::Init,
-        root: &Self::Root,
-        sender: ComponentSender<Self>,
-    ) -> relm4::ComponentParts<Self> {
-        todo!()
-    }
-}
-
-#[tracker::track]
-#[derive(Default)]
 struct AppModel {
-    counter1: isize,
-    counter2: isize,
+    counters: FactoryVecDeque<Counter<AppMsg>>,
 }
 
 #[derive(Debug)]
 enum AppMsg {
-    Change(isize, usize),
+    FromCounter(CounterOutput),
+    Add,
+}
+
+impl From<CounterOutput> for AppMsg {
+    fn from(x: CounterOutput) -> Self {
+        AppMsg::FromCounter(x)
+    }
 }
 
 #[relm4::component]
 impl relm4::SimpleComponent for AppModel {
     type Input = AppMsg;
     type Output = ();
-    type Init = isize;
+    type Init = ();
     type Widgets = AppWidgets;
 
     view! {
@@ -143,95 +39,70 @@ impl relm4::SimpleComponent for AppModel {
 
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
-
-                Counter {
-
+                gtk::Button {
+                    set_label: "Add",
+                    connect_clicked => AppMsg::Add,
                 },
 
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Horizontal,
+                #[local_ref]
+                counter_box -> gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
                     set_spacing: 5,
-                    set_margin_all: 5,
-
-                    gtk::Button {
-                        set_label: "-",
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Change(-1, 0))
-                        }
-                    },
-
-                    gtk::Label {
-                        #[track = "model.changed(AppModel::counter1())"]
-                        set_label: &format!("{}", model.counter1)
-                    },
-
-                    gtk::Button {
-                        set_label: "+",
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Change(1, 0))
-                        }
-                    },
-                },
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Horizontal,
-                    set_spacing: 5,
-                    set_margin_all: 5,
-
-                    gtk::Button {
-                        set_label: "-",
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Change(-1, 1))
-                        }
-                    },
-
-                    gtk::Label {
-                        #[track = "model.changed(AppModel::counter2())"]
-                        set_label: &format!("{}", model.counter2)
-                    },
-
-                    gtk::Button {
-                        set_label: "+",
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Change(1, 1))
-                        }
-                    },
                 },
             },
         }
     }
 
     fn init(
-        init: Self::Init,
+        (): Self::Init,
         root: &Self::Root,
         sender: relm4::ComponentSender<Self>,
     ) -> relm4::ComponentParts<Self> {
-        let model = AppModel {
-            counter1: init,
-            counter2: init,
-            tracker: Default::default(),
+        let mut model = AppModel {
+            counters: FactoryVecDeque::new(gtk::Box::default(), sender.input_sender()),
         };
 
         // Insert the macro code generation here
+        let counter_box = model.counters.widget();
         let widgets = view_output!();
+
+        model.counters.guard().push_back(0);
 
         relm4::ComponentParts { model, widgets }
     }
 
     fn update(
         &mut self,
-        AppMsg::Change(delta, index): Self::Input,
+        msg: Self::Input,
         _sender: relm4::ComponentSender<Self>,
     ) {
-        self.reset();
-        if index == 0 {
-            self.update_counter1(|x| *x += delta);
-        } else if index == 1 {
-            self.update_counter2(|x| *x += delta);
+        match msg {
+            AppMsg::Add => {
+                self.counters.guard().push_back(0);
+            }
+            AppMsg::FromCounter(CounterOutput::MoveUp(index)) => {
+                let index = index.current_index();
+                let new_index = index + 1;
+                if new_index < self.counters.len() {
+                    self.counters.guard().move_to(index, new_index);
+                }
+            }
+            AppMsg::FromCounter(CounterOutput::MoveDown(index)) => {
+                let index = index.current_index();
+                let (new_index, overflown) = index.overflowing_sub(1);
+                if !overflown {
+                    self.counters.guard().move_to(index, new_index);
+                }
+            }
+            AppMsg::FromCounter(CounterOutput::Delete(index)) => {
+                let index = index.current_index();
+                self.counters.guard().remove(index);
+            }
         }
     }
 }
 
 fn main() {
     let app = relm4::RelmApp::new("dafuq.is.this");
-    app.run::<AppModel>(0);
+    app.run::<AppModel>(());
 }
