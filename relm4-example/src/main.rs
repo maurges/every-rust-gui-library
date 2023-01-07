@@ -1,11 +1,12 @@
 mod counter;
+mod controls;
 
 use counter::{Counter, CounterOutput};
 use gtk::{
     prelude::{BoxExt, GtkWindowExt},
-    traits::OrientableExt, traits::ButtonExt,
+    traits::OrientableExt,
 };
-use relm4::{gtk, factory::FactoryVecDeque};
+use relm4::{gtk, factory::FactoryVecDeque, Component, ComponentController};
 use relm4::ComponentSender;
 
 struct AppModel {
@@ -15,7 +16,8 @@ struct AppModel {
 #[derive(Debug)]
 enum AppMsg {
     FromCounter(CounterOutput),
-    Add,
+    Add(isize),
+    DeleteLast,
 }
 
 impl From<CounterOutput> for AppMsg {
@@ -39,10 +41,8 @@ impl relm4::SimpleComponent for AppModel {
 
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
-                gtk::Button {
-                    set_label: "Add",
-                    connect_clicked => AppMsg::Add,
-                },
+
+                controls.widget(),
 
                 #[local_ref]
                 counter_box -> gtk::Box {
@@ -62,6 +62,12 @@ impl relm4::SimpleComponent for AppModel {
             counters: FactoryVecDeque::new(gtk::Box::default(), sender.input_sender()),
         };
 
+        let controls = controls::Controls::builder().launch(())
+            .forward(sender.input_sender(), |x| match x {
+                controls::Output::Add(x) => AppMsg::Add(x),
+                controls::Output::DeleteLast => AppMsg::DeleteLast,
+            });
+
         // Insert the macro code generation here
         let counter_box = model.counters.widget();
         let widgets = view_output!();
@@ -77,8 +83,14 @@ impl relm4::SimpleComponent for AppModel {
         _sender: relm4::ComponentSender<Self>,
     ) {
         match msg {
-            AppMsg::Add => {
-                self.counters.guard().push_back(0);
+            AppMsg::Add(val) => {
+                self.counters.guard().push_back(val);
+            }
+            AppMsg::DeleteLast => {
+                let size = self.counters.len();
+                if size != 0 {
+                    self.counters.guard().remove(size - 1);
+                }
             }
             AppMsg::FromCounter(CounterOutput::MoveUp(index)) => {
                 let index = index.current_index();

@@ -1723,3 +1723,37 @@ writing it itself was pretty easy, but trying to deviate from the example in
 the tutorial fails. Well that's not true as well, only the big deviations that
 I tried to do failed, but small meaningless changes are ok. Except that for the
 macros breaking themselves and breaking my rust-analyzer.
+
+Workers, allow sending async computation with sending messages in the end.
+Actually, you can send multiple messages during the handling, so ok. I wonder
+how this chimes with elm arcitecture, but this library is already very
+detached. Now another question is can I send messages /to/ the worker. Also
+there are commands and spawn_local. Honestly with rust I don't care much about
+all this, you can just use threading and do shit. Altough, can you? In qt for
+example you can only send signals from the gui thread or from QThreads. Yeah,
+this is a good question for all those frameworks, can I send gui signals
+asynchronously.
+
+Trying to create a component again. This time I'm not getting weird root
+errors. This time I'm wondering why the hell does my input need to be private.
+I don't want to receive input from outsiders.
+
+gtk4 doesn't have api docs. Ughhh. I'm just looking for a spinner or something.
+
+Output function for component sender returns a result, which I'm supposed to do
+something with? The factory sender doesn't require one. Bullshit.
+
+So ok, I have my component. How do I add it as a widget? It still tells me I
+need it to be `AsRef<Widget>`, so how do I do that? How was it done in the
+tutorial? Because it seems they did add it as a widget, but not in the tree
+exactly.
+
+Ok, so here's the deal. You can't just use your components as widgets, you need
+to wrap them inside a connector. This can't be done explicitly as the connector
+doesn't expose any constructors, but by the associated method
+`MyComponent::builder().launch(_)`. Then you can use it.widget() as a widget in
+a tree. The chapter kind of glossed over this all, or was it me reading
+unattentively?
+
+Anyway, my app fucking panics when handling the messages internally. Fucking
+lol. This is a beta, but still.
