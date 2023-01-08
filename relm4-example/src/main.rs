@@ -6,7 +6,7 @@ use gtk::{
     prelude::{BoxExt, GtkWindowExt},
     traits::OrientableExt,
 };
-use relm4::{gtk, factory::FactoryVecDeque, Component, ComponentController};
+use relm4::{gtk::{self, traits::WidgetExt}, factory::FactoryVecDeque, Component, ComponentController};
 use relm4::ComponentSender;
 
 struct AppModel {
@@ -42,7 +42,8 @@ impl relm4::SimpleComponent for AppModel {
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
 
-                controls.widget(),
+                controls.widget() {
+                },
 
                 #[local_ref]
                 counter_box -> gtk::Box {

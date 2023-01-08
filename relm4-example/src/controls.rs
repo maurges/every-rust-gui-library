@@ -2,6 +2,7 @@ use relm4::gtk;
 use relm4::ComponentSender;
 use relm4::gtk::traits::ButtonExt;
 use relm4::gtk::traits::OrientableExt;
+use relm4::gtk::traits::WidgetExt;
 
 #[derive(Debug)]
 pub enum Output {
@@ -35,6 +36,7 @@ impl relm4::SimpleComponent for Controls {
             #[name = "spinner"]
             gtk::SpinButton {
                 set_numeric: true,
+                set_width_request: 500,
 
                 connect_value_changed[sender] => move |this| {
                     sender.input(Input::SpinnerChanged(this.value()))
@@ -43,7 +45,9 @@ impl relm4::SimpleComponent for Controls {
 
             gtk::Button {
                 set_label: "Add new",
-                connect_clicked => Input::AddPressed,
+                connect_clicked[sender] => move |_| {
+                    sender.input(Input::AddPressed)
+                }
             },
 
             gtk::Button {
@@ -69,11 +73,13 @@ impl relm4::SimpleComponent for Controls {
         msg: Self::Input,
         sender: relm4::ComponentSender<Self>,
     ) {
+        eprintln!("message");
         match msg {
             Input::AddPressed => {
-                //let _ = sender.output(Output::Add(self.spinner_value));
+                let _ = sender.output(Output::Add(self.spinner_value));
             },
             Input::SpinnerChanged(val) => {
+                eprintln!("spinner changed");
                 self.spinner_value = val.floor() as isize;
             }
         }

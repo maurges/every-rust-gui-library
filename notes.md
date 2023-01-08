@@ -1757,3 +1757,12 @@ unattentively?
 
 Anyway, my app fucking panics when handling the messages internally. Fucking
 lol. This is a beta, but still.
+
+Oh and also, the sizing and layout are weird again. The spinner doesn't fit
+three numbers, and the buttons don't work. Do I need to fucking route them
+myself?
+
+Turns out the spinner is also broken. Well fuck and lol.
+
+I can set width to widgets, nice. It works weird though, setting width to a
+widget only works in horizontal box, not vertical.
