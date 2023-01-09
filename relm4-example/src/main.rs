@@ -1,29 +1,26 @@
-mod counter;
-mod controls;
+mod todo_item;
 
-use counter::{Counter, CounterOutput};
 use gtk::{
     prelude::{BoxExt, GtkWindowExt},
     traits::OrientableExt,
 };
-use relm4::{gtk::{self, traits::WidgetExt}, factory::FactoryVecDeque, Component, ComponentController};
 use relm4::ComponentSender;
+use relm4::{
+    factory::FactoryVecDeque,
+    gtk::{self, prelude::EntryBufferExtManual, traits::ButtonExt},
+};
+use todo_item::{TodoItem, TodoState};
 
 struct AppModel {
-    counters: FactoryVecDeque<Counter<AppMsg>>,
+    todo_items: FactoryVecDeque<TodoItem<AppMsg>>,
+    entry_buffer: gtk::EntryBuffer,
 }
 
 #[derive(Debug)]
 enum AppMsg {
-    FromCounter(CounterOutput),
-    Add(isize),
-    DeleteLast,
-}
-
-impl From<CounterOutput> for AppMsg {
-    fn from(x: CounterOutput) -> Self {
-        AppMsg::FromCounter(x)
-    }
+    Add,
+    Save,
+    Load,
 }
 
 #[relm4::component]
@@ -42,13 +39,34 @@ impl relm4::SimpleComponent for AppModel {
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
 
-                controls.widget() {
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Horizontal,
+
+                    gtk::Entry::with_buffer(&model.entry_buffer) {
+                    },
+                    gtk::Button {
+                        set_label: "Add",
+                        connect_clicked => AppMsg::Add,
+                    },
                 },
 
                 #[local_ref]
-                counter_box -> gtk::Box {
+                todos_box -> gtk::Box {
                     set_orientation: gtk::Orientation::Vertical,
                     set_spacing: 5,
+                },
+
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Horizontal,
+
+                    gtk::Button {
+                        set_label: "Save",
+                        connect_clicked => AppMsg::Save,
+                    },
+                    gtk::Button {
+                        set_label: "Load",
+                        connect_clicked => AppMsg::Load,
+                    },
                 },
             },
         }
@@ -59,57 +77,39 @@ impl relm4::SimpleComponent for AppModel {
         root: &Self::Root,
         sender: relm4::ComponentSender<Self>,
     ) -> relm4::ComponentParts<Self> {
-        let mut model = AppModel {
-            counters: FactoryVecDeque::new(gtk::Box::default(), sender.input_sender()),
+        let model = AppModel {
+            todo_items: FactoryVecDeque::new(gtk::Box::default(), sender.input_sender()),
+            entry_buffer: gtk::EntryBuffer::new(None),
         };
-
-        let controls = controls::Controls::builder().launch(())
-            .forward(sender.input_sender(), |x| match x {
-                controls::Output::Add(x) => AppMsg::Add(x),
-                controls::Output::DeleteLast => AppMsg::DeleteLast,
-            });
-
-        // Insert the macro code generation here
-        let counter_box = model.counters.widget();
+        let todos_box = model.todo_items.widget();
         let widgets = view_output!();
-
-        model.counters.guard().push_back(0);
 
         relm4::ComponentParts { model, widgets }
     }
 
-    fn update(
-        &mut self,
-        msg: Self::Input,
-        _sender: relm4::ComponentSender<Self>,
-    ) {
+    fn update(&mut self, msg: Self::Input, _sender: relm4::ComponentSender<Self>) {
         match msg {
-            AppMsg::Add(val) => {
-                self.counters.guard().push_back(val);
+            AppMsg::Add => {
+                self.todo_items
+                    .guard()
+                    .push_back(TodoState::new(self.entry_buffer.text()));
             }
-            AppMsg::DeleteLast => {
-                let size = self.counters.len();
-                if size != 0 {
-                    self.counters.guard().remove(size - 1);
+            AppMsg::Save => {
+                let items = self
+                    .todo_items
+                    .iter()
+                    .map(|x| x.state.clone())
+                    .collect::<Vec<_>>();
+                save(&items);
+            }
+            AppMsg::Load => {
+                if let Some(items) = load() {
+                    let mut todo_items = self.todo_items.guard();
+                    todo_items.clear();
+                    for item in items {
+                        todo_items.push_back(item);
+                    }
                 }
-            }
-            AppMsg::FromCounter(CounterOutput::MoveUp(index)) => {
-                let index = index.current_index();
-                let new_index = index + 1;
-                if new_index < self.counters.len() {
-                    self.counters.guard().move_to(index, new_index);
-                }
-            }
-            AppMsg::FromCounter(CounterOutput::MoveDown(index)) => {
-                let index = index.current_index();
-                let (new_index, overflown) = index.overflowing_sub(1);
-                if !overflown {
-                    self.counters.guard().move_to(index, new_index);
-                }
-            }
-            AppMsg::FromCounter(CounterOutput::Delete(index)) => {
-                let index = index.current_index();
-                self.counters.guard().remove(index);
             }
         }
     }
@@ -118,4 +118,33 @@ impl relm4::SimpleComponent for AppModel {
 fn main() {
     let app = relm4::RelmApp::new("dafuq.is.this");
     app.run::<AppModel>(());
+}
+
+fn save(items: &[TodoState]) {
+    if let Some(path) = rfd::FileDialog::new().save_file() {
+        match std::fs::File::create(&path) {
+            Ok(file) => match ron::ser::to_writer(file, items) {
+                Ok(()) => (),
+                Err(e) => eprintln!("{}", e),
+            },
+            Err(e) => eprintln!("{}", e),
+        }
+    }
+}
+
+fn load() -> Option<Vec<TodoState>> {
+    let path = rfd::FileDialog::new().pick_file()?;
+    match std::fs::File::open(path) {
+        Err(e) => {
+            eprintln!("{}", e);
+            None
+        }
+        Ok(file) => match ron::de::from_reader(file) {
+            Ok(items) => Some(items),
+            Err(e) => {
+                eprintln!("{}", e);
+                None
+            }
+        },
+    }
 }

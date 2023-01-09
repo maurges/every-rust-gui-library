@@ -1573,6 +1573,7 @@ Hm, so gtk and gtk4 are different crates. Which one did I have problems with
 with other libraries?
 
 ## Relm4
+Time spent: at least 3 full days
 
 As far as I understand, I had problems with gtk3 but not with gtk4 at least
 yet. So let's try this one first. Start with reading the book. Books are nice.
@@ -1766,3 +1767,75 @@ Turns out the spinner is also broken. Well fuck and lol.
 
 I can set width to widgets, nice. It works weird though, setting width to a
 widget only works in horizontal box, not vertical.
+
+Alright, it seems I know enough about shit to do the todo. There's still one
+unclear thing about widget sums / widget replacing, but I'll get to it later.
+
+No wait, somethings are unclear. How do I handle text input? I'm looking at
+gtk::Text widget, and it can't emit a changed signal elm-like, but I also don't
+even see how I can access it's contents other way. Do I need to fuck around
+with buffers?
+
+Default text widget looks ugly. I don't think it looks like that in adwaita
+apps, so what's up here?  
+Ok, let's fuck around. I am doing it right now, creating a buffer and printing
+it on button press. But instead I get the fucking name of the class. How the
+hell can I get the widget contents?
+
+Ok, thank fuck, I found it. So gtk crate splits the api into the class itself
+and then various Ext typeclasses. And for some reasons those exts don't show up
+in the apidocs, so you fucking can't find the methods of your object. I found
+it by browsing the gtk docs instead. Incidentally, the gtk docs are good, but
+why are they not completely hyperliked? Why are some direct mentions in the
+same list linked, but not others? And why is the search so shit? Admittedly,
+qt's search is also shit, so.
+
+Getting the fucking errors about set_root and other shit again. This time
+because I used an incorrect macro, and it didn't detect it. Eh ok. But actually
+I'm writing now to say that you can't fucking set a width to a label. What the
+shit is that? How am I supposed to layout stuff?
+
+So there are actually very few widgets I can set the size on. Well what now?
+
+I'm not going to use gtk file dialogues, they are shit. I don't doubt they are
+present though.
+
+I also can't find how do I manually toggle a checkbox. Or spawn it with a
+correct initial state. The gtk docs say there is a method `toggled` which might
+be related, but it's not documented! In the official gtk docs! What the shit is
+that.  
+Fuck, it's also not exported in gtk4 as a member of CheckBox. So ok, fuck this
+shit, I'm not going to do it.
+
+Visibility works the same way as in qt, which is nice because I know what to do
+with it. Whew, so it seems it's done? Let me run the final tests.
+
+Oh right, I thought there is a bug with toggles setting the first only, but
+actually there is not. It's just that I toggled every of them twice except for
+the third which I toggled again, and that set that to false from true how it
+loaded. So it's ok, it's just that the view is incorrect and I have to fucking
+idea how to set it to be correct.
+
+Alright, I believe relm is done now. This was my first time trying gtk and my
+second time trying the elm architecture. Relm has a good thing with component
+encapsulation, that's done almost great except for the fucking amount of
+different kinds. I tried two and a half and it's already stupid. So it means
+I'm just scratching the surface with this app, there are a lot of stuff! I feel
+like with qml I've done most of the concepts with this app, for comparison.  
+As for gtk, well I didn't dive too deep, but I already faced the documentation
+deficiencies and the bindings being lacking. Boxes are ok and the default
+widgets look nice, but without some styling this looks as bad as kas.  
+It's bad how your components are not the same class as library components,
+which is a common problem for binding libraries.
+
+- Default widgets: enough, good looking
+- Creating simple widgets: no idea
+- Creating compound widgets: simple but not first-class
+- Layouting: simple, but sizing is obscure
+- Custom layouts: no idea
+- Reactivity: present, but you need to work for it
+- Setting up: simple, requires gtk4
+- Documentation: bad in rust, alright for gtk
+- Tutorial: present, good, very very long
+- Diving into source: didn't do
+- Overall: ok if really want to do gtk, otherwise ehh
