@@ -1572,6 +1572,44 @@ Found also relm4 developers giving special thanks to antoyo.
 Hm, so gtk and gtk4 are different crates. Which one did I have problems with
 with other libraries?
 
+So I don't think I'm going to do it, at least in the near time. I need to
+figure out the gtk3 installation, and then I'm burned out on gtk. But let's
+read the tutorial and see the differences.
+
+First of all is that view updates are automatically generated from the view
+macro. See, wasn't so fucking hard! the bad part is that it's even more
+magical, so I don't want to use it even more. Oh and the author warns that the
+code generation is very dumb, sooo. So that's good actually? Dumb means
+predictable, means you can rely on it and plan for it.
+
+Another interesting thing is that there are no factories. Are there components
+at least? Hmm, it was already obscure in relm4, so. Now it seems to me that
+everything weird and shitty in relm4 is their own invention.
+
+Yep, no factories. Instead you can manually manipulate the gtk widget tree.
+Alrighty, this is a workable approach. But wait, this only works for
+relm-blessed components that implement ContainerWidget. But it has 3 methods
+and you can implement it for your custom components though, so.
+
+Ohh, there's a test suite with clicking and observing the widget tree! This is
+neat.
+
+Nested components are possible. It's done in a similar way to relm4, where you
+put your widget inside a Component, but I don't see the ability to map
+messages. In fact I don't see any outbound messages at all.  
+Wait, spoke too soon. Those ones I saw were more similar to factory since they
+are tied to manual creation and container widgets. But I found another example
+of custom components. And it seems they are first-class, which is great. But
+the author uses a message instead of calling a method, which is strange. I
+would have kept it similar to gtk widgets and use set_increment as a method. I
+kind of want to play around with it now and see how it works and where it
+breaks. But I also forsee that it will break in the most annoying places and I
+will be burned out even more.
+
+So my baseless conjecture from reading the docs is that it's a lot more
+streamlined and predictable than relm4, and I would suggest you use this if you
+don't care bout gtk4. The tutorial is worse, but the apidocs are better.
+
 ## Relm4
 Time spent: at least 3 full days
 
@@ -1828,6 +1866,31 @@ widgets look nice, but without some styling this looks as bad as kas.
 It's bad how your components are not the same class as library components,
 which is a common problem for binding libraries.
 
+Let's also look at the tutorial for relm4 v0.3. Not going to write any code,
+but just have a look at the api and how it's changed.  
+the biggest thing is that ll of the trait in SimpleComponent are split into
+Model, Update and Widget, so ironically v0.5 is closer to relm-the-original;
+and it thus it's a good thing I started with that since I can now look at
+tutorial for every version and understand it. Also, funnyly, it shows that
+relm4 developers had crap foresight: all the changes they made they have
+undone.  
+Honestly, I like this split more: no more problems with factory component being
+separate from a regular component. Oh wait, lol, are there? There is still a
+FactoryPrototype which is unsplit. And also the factory component can't update
+itself? This seems weird, I think the tutorial just doesn't show it.
+
+Creating components is even more unwieldy than in 0.5, so some progress was
+made.
+
+Looking at the migration guide now. Output messages were added in 0.5. This is
+the most endemic feature of relm4 for me, and it's weird seing it added only so
+late.
+
+Well, this is hard to judge. I didn't like 0.5 much, and the changes I've seen
+at least in the tutorial were both for worse and for better. I guess I can say
+is that having that many changes in a gui framework is bad for the users, so be
+mindful of that.
+
 - Default widgets: enough, good looking
 - Creating simple widgets: no idea
 - Creating compound widgets: simple but not first-class
@@ -1839,3 +1902,34 @@ which is a common problem for binding libraries.
 - Tutorial: present, good, very very long
 - Diving into source: didn't do
 - Overall: ok if really want to do gtk, otherwise ehh
+
+## rui
+
+Found it in merge requests for the AWGY website: https://lib.rs/crates/rui.
+Cool coincidence how it's alphabetically next, not cool how I'm so tired of gtk
+and want to try something nice like slint, and I'm not sure this one is.
+
+## sciter-rs
+
+Sciter is a stripped-down browser, with html and css and js engines. It's
+different from electron in that it supports not all of web standards by design,
+and that they roll their own js extensions with classes and shit. So they are
+not es6 compatible?
+
+I'm not interested. It's still fucking web development, but now even without
+typescript. Maybe someone will make a dioxus-like thing for it.
+
+Hypocrisy? Qml is a similar concept: a markdown language with js scripting.
+Welllll, again, I never said I'm not biased towards qt, but also I am biased
+against web and that's the point of this article, to say that you don't need
+fucking electron.
+
+# About accessiblity
+
+I have a good friend of mine telling me that accessibility in modern web is
+fucked. Everyone creates their own controls, and doesn't think about making
+them accessible, so it works like shit and real disabled people don't like it.
+So you know, it's bad everywhere, except maybe qt and gtk. In qt I know there
+are cool things with focus and priority and how it's assigned automatically,
+and gtk doesn't fucking build on my machine because of atk, so they better
+fucking have it figured out or else.
