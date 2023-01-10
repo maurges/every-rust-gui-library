@@ -1909,6 +1909,46 @@ Found it in merge requests for the AWGY website: https://lib.rs/crates/rui.
 Cool coincidence how it's alphabetically next, not cool how I'm so tired of gtk
 and want to try something nice like slint, and I'm not sure this one is.
 
+Immediate mode, mehhhh. But they say it has better layout options.
+
+No tutorial and I have zero experience with swiftui. Let's try and intuit it
+first.
+
+The build is fast and the dependencies are fewer than a lot of libraries. The
+default widgets are not pretty, I'd say a little uglier than egui.
+
+Why is this whole thing lighting up when I click on it? Is this that famed
+accessibility feature?
+
+Unlike other immediate mode libraries, managing widgets still requires writing
+a dsl. I wonder why can't you keep a tree then?
+
+I can create simple widgets by just creating a fn() -> impl View. But how do I
+access context from there? Oh wait, I have an idea.
+
+There is no explicit text, you just do a string or int and they are embedded
+into view. Actually there is a rui::Text, but I don't see how I can create it.
+Alright, and how do I handle text input? Right, this is imgui, so I have to
+look for functions, not structs.
+
+Now here's a good question: can I project state? I found I can create local
+state, which is nicely convenient. When I create this state, the context is
+local, but state is a variable. So what if I use it outside of the closure?
+Oops, I can't do it legally, since the closure is supposed to return a View.  
+Oh wow, there are state lenses, like druid! Very undocumented though.
+
+Cool, State implements Binding. Good to know, would be even better to have a
+fucking tutorial. This shit is very complicated, but also intuitive since it
+borrows everything from someone.
+
+Ok, those states and lenses are as cool as they were in driud, but more obtuse
+and you can accidentally make stuff without them. The local state is great
+though. I kind of like the data model here.
+
+Yeahhh text input is very rough. About as bad as gtk's unstyled one: no frame,
+no nothing. But also you can't really customize this one. It's not a lot of
+code, so you can maybe reimplement one for your needs.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
