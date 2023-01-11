@@ -77,6 +77,13 @@ macro_rules! make_bind {
             #[derive(Clone, Copy)]
             #[allow(non_camel_case_types)]
             pub struct $field;
+
+            pub(crate) trait Bind: ::rui::Binding<$from> {
+                fn $field(self) -> ::rui::Map<Self, $field, $to, $from> {
+                    ::rui::Map::new(self, $field)
+                }
+            }
+            impl<B: ::rui::Binding<$from>> Bind for B {}
         }
         impl rui::Lens<$from, $to> for $field::$field {
             fn focus<'a>(&self, data: &'a $from) -> &'a $to {
@@ -85,11 +92,6 @@ macro_rules! make_bind {
 
             fn focus_mut<'a>(&self, data: &'a mut $from) -> &'a mut $to {
                 &mut data.$field
-            }
-        }
-        impl $from {
-            fn $field(state: ::rui::State<Self>) -> impl ::rui::Binding<$to> {
-                ::rui::bind(state, $field::$field)
             }
         }
     }

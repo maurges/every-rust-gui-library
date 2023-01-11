@@ -1962,6 +1962,24 @@ the usage place. In rust, however, the lexeme is just substituted as-is, so you
 can find yourself referring to a thing with the same name in another scope, or
 more commonly, having an error with identifier not found.
 
+So I wrote a macro to make lenses behave like in druid. Then I noticed that
+they are used differently than druid: the object that is really passed around
+is a binding, not lens. So I then made another macro to generate bindings, but
+it lacks convenience now: you need to call an attached function for a type
+instead of a method on a binding. I think this could be resolved by creating a
+new Ext typeclass and instantiating it for the Binding. Hmm, let's try that
+actually.  
+Nope, can't do that because the primitive rui::bind uses an unnameable type.  
+Ok, actually that one uses a predictable and exported type that I can use,
+success. Now I get another problem with identifiers: I create this typeclass in
+a module so that it doesn't leak, but now the types mentioned in it are not
+reachable as they are not qualified. Fuck me.  
+Alright, I decided to just fully qualify the types. This thing is kind of
+brittle, but I like the ergonomics now, so let's continue and write the real
+application.  
+Fuuuck, it broke immediately. No wait, it didn't, I just have to rename the
+traits on input, which is not hard. Alrighty, this works for now.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
