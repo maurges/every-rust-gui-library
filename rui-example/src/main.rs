@@ -1,4 +1,6 @@
-use rui::{Auto, Modifiers, Lens};
+pub mod lens;
+
+use rui::Modifiers;
 
 #[derive(Default)]
 struct CounterState(isize);
@@ -8,14 +10,14 @@ fn counter(cx: &rui::Context, count: impl rui::Binding<CounterState>) -> impl ru
         rui::button("decrement", move |cx| {
             count.get_mut(cx).0 -= 1;
         })
-        .padding(Auto),
+        .padding(rui::Auto),
 
         count.get(cx).0,
 
         rui::button("increment", move |cx| {
             count.get_mut(cx).0 += 1;
         })
-        .padding(Auto),
+        .padding(rui::Auto),
     ))
 }
 
@@ -26,20 +28,20 @@ struct AppState {
     text_input: String,
 }
 
-rui::make_lens!(FstLens, AppState, CounterState, _1);
-rui::make_lens!(SndLens, AppState, CounterState, _2);
-rui::make_lens!(TextLens, AppState, String, text_input);
+lens::make_bind!(AppState, CounterState, _1);
+lens::make_bind!(AppState, CounterState, _2);
+lens::make_bind!(AppState, String, text_input);
 
 fn main() {
     rui::rui(rui::state(
         || Default::default(),
         |app_state, cx| {
             rui::vstack((
-                counter(cx, rui::bind(app_state, FstLens {})),
-                counter(cx, rui::bind(app_state, SndLens {})),
-                counter(cx, rui::bind(app_state, FstLens {})),
+                counter(cx, AppState::_1(app_state)),
+                counter(cx, AppState::_2(app_state)),
+                counter(cx, AppState::_1(app_state)),
 
-                rui::text_editor(rui::bind(app_state, TextLens {})),
+                rui::text_editor(AppState::text_input(app_state)),
                 rui::button("print", move |cx| {
                     let text = &cx[app_state].text_input;
                     eprintln!("{}", text);

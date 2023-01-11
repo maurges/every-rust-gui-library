@@ -1949,6 +1949,19 @@ Yeahhh text input is very rough. About as bad as gtk's unstyled one: no frame,
 no nothing. But also you can't really customize this one. It's not a lot of
 code, so you can maybe reimplement one for your needs.
 
+I'm disappointed with rust's macro_rules. The identifier manipulation is
+abysmal, I can't create a new unique identifier, or at least prefix an existing
+one with a string. Everything is done through proc macros, which I don't want
+to use for this small thing. I just wanted to have more ergonomic lenses like
+in druid.
+
+Also in rust there are problems with qualified identifiers in macros. In
+haskell when you pass an identifier to template-haskell, you can use it in the
+generated code and everything would work as if it's the same identifier as in
+the usage place. In rust, however, the lexeme is just substituted as-is, so you
+can find yourself referring to a thing with the same name in another scope, or
+more commonly, having an error with identifier not found.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
