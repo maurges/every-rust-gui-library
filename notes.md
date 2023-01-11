@@ -1980,6 +1980,35 @@ application.
 Fuuuck, it broke immediately. No wait, it didn't, I just have to rename the
 traits on input, which is not hard. Alrighty, this works for now.
 
+Allright, I'm on the train, so let's try finishing this one without using
+internet! Only that it won't work probably, since I need to add rfd and serde
+and I don't think I can. But let's do at least everything else. So, the biggest
+problem is that I can't get examples. Orr, can I? Can I just go to the
+directory where cargo check-outed the rui repo and grab them from there? Yep,
+here they are:
+/home/morj/.local/share/cargo/registry/src/github.com-1ecc6299db9ec823/rui-0.4.0/examples/action.rs
+
+I like the code I'm writing here. It could be better, but the general ideas and
+the combinators given are cool. I would like it even more if it fucking worked,
+because my todo_item is invisible. Also it's slow as hell. Someone didn't
+follow the egui's phylosophy of every working in 60 fps in debug.
+
+> Oh wow, 
+I wrote, and then the border control guys came, and I forgot what was I
+thinking about.
+
+I think I was surprised that my widget was not rendering because of the choice,
+and when I remove it it sort of works. Ugh-huh, ok, it's not the choice widget
+fucking it up, it's the text. The choice just takes the size from both, and
+since one is fucked up, the sum is also fucked up. Now the question is why is
+it fucked up in the first place.
+
+Ugh-huh, it gets fucked up by and empty string. This is a huge oversight, do
+they not test on critical values? Yep, as soon as I delete the string from
+input and press done - it's fucky. Also, input is really bad, no shortcuts, no
+mouse. Well ok, let's write it off as a temporary development problem and
+continue.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's

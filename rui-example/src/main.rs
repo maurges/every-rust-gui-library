@@ -1,4 +1,5 @@
 pub mod lens;
+mod todo_item;
 
 use rui::Modifiers;
 
@@ -44,11 +45,16 @@ fn main() {
                 counter(cx, app_state._2()),
                 counter(cx, app_state._1()),
 
+                rui::state(
+                    || todo_item::TodoState { text: "kekus".into(), done: true },
+                    |local_state, cx| todo_item::todo_item(cx, local_state),
+                ),
+
                 rui::text_editor(app_state.text_input()),
                 rui::button("print", move |cx| {
                     let text = &cx[app_state].text_input;
                     eprintln!("{}", text);
-                })
+                }),
             ))
         },
     ));
