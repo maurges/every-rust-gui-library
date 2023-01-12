@@ -97,3 +97,35 @@ macro_rules! make_bind {
     }
 }
 pub use make_bind;
+
+pub struct Ix<T> {
+    index: usize,
+    phantom: PhantomData<T>,
+}
+impl<T> Ix<T> {
+    pub fn new(index: usize) -> Self {
+        Self {
+            index,
+            phantom: PhantomData,
+        }
+    }
+}
+impl<T> Clone for Ix<T> {
+    fn clone(&self) -> Self {
+        Self {
+            index: self.index,
+            phantom: PhantomData,
+        }
+    }
+}
+impl<T> Copy for Ix<T> {}
+
+impl<T: 'static> Lens<Vec<T>, T> for Ix<T> {
+    fn focus<'a>(&self, data: &'a Vec<T>) -> &'a T {
+        &data[self.index]
+    }
+
+    fn focus_mut<'a>(&self, data: &'a mut Vec<T>) -> &'a mut T {
+        &mut data[self.index]
+    }
+}

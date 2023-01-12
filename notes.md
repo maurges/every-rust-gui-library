@@ -2009,6 +2009,16 @@ input and press done - it's fucky. Also, input is really bad, no shortcuts, no
 mouse. Well ok, let's write it off as a temporary development problem and
 continue.
 
+List operates on a vec of items, not bindings. Fucking hell. They aren't even
+mutable bindings, so it's shit and doesn't work.
+
+I can't make a binding from a mutable reference, because I need to be able to
+copy binding, but mut ref doesn't allow that. That means I must now think of
+how to make a vec of bindings from something.  
+Yeahh, I made a vec of bindings alright, but I can't use them since they are
+not instance of Hash. Fuck me, is this possible at all? I mean, it might be
+possible with a lot of rc-refcell and manual updating, but I don't wanna.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's

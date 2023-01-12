@@ -2,16 +2,25 @@ use rui::{Modifiers, Binding};
 
 use crate::lens;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Hash)]
 pub struct TodoState {
     pub text: String,
     pub done: bool,
 }
 
+impl TodoState {
+    pub fn new(text: String) -> Self {
+        Self {
+            text,
+            done: false,
+        }
+    }
+}
+
 lens::make_bind!(crate::todo_item::TodoState, String, text);
 lens::make_bind!(crate::todo_item::TodoState, bool, done);
 
-pub fn todo_item(_cx: &rui::Context, state: impl rui::Binding<TodoState>) -> impl rui::View {
+pub fn todo_item(state: impl rui::Binding<TodoState>) -> impl rui::View {
     use text::Bind as text_Bind;
     use done::Bind as done_Bind;
     rui::state(

@@ -1,60 +1,41 @@
 pub mod lens;
 mod todo_item;
 
+use todo_item::TodoState;
+
 use rui::Modifiers;
 
-#[derive(Default)]
-struct CounterState(isize);
-
-fn counter(cx: &rui::Context, count: impl rui::Binding<CounterState>) -> impl rui::View {
-    rui::hstack((
-        rui::button("decrement", move |cx| {
-            count.get_mut(cx).0 -= 1;
-        })
-        .padding(rui::Auto),
-
-        count.get(cx).0,
-
-        rui::button("increment", move |cx| {
-            count.get_mut(cx).0 += 1;
-        })
-        .padding(rui::Auto),
-    ))
-}
+use crate::lens::{Ix, LensExt};
 
 #[derive(Default)]
 struct AppState {
-    _1: CounterState,
-    _2: CounterState,
-    text_input: String,
+    new_item: String,
+    items: Vec<TodoState>,
 }
 
-lens::make_bind!(crate::AppState, crate::CounterState, _1);
-lens::make_bind!(crate::AppState, crate::CounterState, _2);
-lens::make_bind!(crate::AppState, String, text_input);
+lens::make_bind!(crate::AppState, String, new_item);
+lens::make_lens!(crate::AppState, Vec<crate::todo_item::TodoState>, items);
 
 fn main() {
-    use _1::Bind as _1_Bind;
-    use _2::Bind as _2_Bind;
-    use text_input::Bind as text_input_Bind;
+    use new_item::Bind as Bind_new_item;
     rui::rui(rui::state(
         || Default::default(),
         |app_state, cx| {
             rui::vstack((
-                counter(cx, app_state._1()),
-                counter(cx, app_state._2()),
-                counter(cx, app_state._1()),
+                rui::hstack((
+                    rui::text_editor(app_state.new_item()),
+                    rui::button("Add", |cx| {
+                        let mut state = cx[app_state];
+                        state.items.push(TodoState::new(state.new_item))
+                    })
+                )),
 
-                rui::state(
-                    || todo_item::TodoState { text: "kekus".into(), done: true },
-                    |local_state, cx| todo_item::todo_item(cx, local_state),
-                ),
-
-                rui::text_editor(app_state.text_input()),
-                rui::button("print", move |cx| {
-                    let text = &cx[app_state].text_input;
-                    eprintln!("{}", text);
-                }),
+                {
+                    let bindings = (0..(cx[app_state].items.len())).map(|i| {
+                        rui::bind(app_state, AppState::items().zoom(Ix::new(i)))
+                    }).collect();
+                    rui::list(bindings, |b| todo_item::todo_item(b))
+                }
             ))
         },
     ));
