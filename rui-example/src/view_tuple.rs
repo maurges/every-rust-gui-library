@@ -1,24 +1,24 @@
-pub struct ViewSlice<'a, V> {
-    slice: &'a [V],
+pub struct ViewVec<V> {
+    vec: Vec<V>,
 }
 
-impl<'a, V> ViewSlice<'a, V> {
-    pub fn new(slice: &'a [V]) -> Self {
-        ViewSlice { slice }
+impl<V> ViewVec<V> {
+    pub fn new(vec: Vec<V>) -> Self {
+        ViewVec { vec }
     }
 }
 
-impl<'a, V> rui::ViewTuple for ViewSlice<'a, V>
+impl<V> rui::ViewTuple for ViewVec<V>
 where
     V: rui::View,
 {
     fn foreach_view<F: FnMut(&dyn rui::View)>(&self, f: &mut F) {
-        for v in self.slice {
+        for v in &self.vec {
             f(v)
         }
     }
 
     fn len(&self) -> usize {
-        self.slice.len()
+        self.vec.len()
     }
 }

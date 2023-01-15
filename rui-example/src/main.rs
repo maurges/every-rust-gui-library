@@ -34,7 +34,7 @@ fn main() {
                         let binding = rui::bind(app_state, lens);
                         todo_item::todo_item(binding)
                     }).collect::<Vec<_>>();
-                    let view = view_tuple::ViewSlice::new(&items);
+                    let view = view_tuple::ViewVec::new(items);
                     rui::vstack(view)
                 }
             ))

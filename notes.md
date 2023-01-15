@@ -2038,6 +2038,10 @@ Ok, I remember, and partly it's not my fault, but the library for being so
 obtuse with binding and lens. Not "so" obtuse, but a little confusing how you
 transform between them.
 
+It works, it fucking works! But the layout has gone to shit. So I see now that
+the library is really not yet ready. Let's finish it since there isn't much
+left.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
