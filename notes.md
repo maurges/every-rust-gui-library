@@ -2019,6 +2019,16 @@ Yeahh, I made a vec of bindings alright, but I can't use them since they are
 not instance of Hash. Fuck me, is this possible at all? I mean, it might be
 possible with a lot of rc-refcell and manual updating, but I don't wanna.
 
+So here are my choices now. Do I want to go with the shitty approach, or do I
+want to make my own List? Hah, obviously the second one and then regret it.
+
+FUCK! I can't make my views! Well I'm regretting earlier than I expected, and I
+am very disappointed. How do I implement my own widgets? Is there any process
+at all?
+
+And making a binding from Rc is also a pain and I'm not sure if it's possible
+without bugs. Fuck, so only callbacks remain?
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
