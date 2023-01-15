@@ -36,8 +36,48 @@ fn main() {
                     }).collect::<Vec<_>>();
                     let view = view_tuple::ViewVec::new(items);
                     rui::vstack(view)
-                }
+                },
+
+                rui::hstack((
+                    rui::button("Save", move |cx| {
+                        save(&cx[app_state].items);
+                    }),
+                    rui::button("Load", move |cx| {
+                        if let Some(items) = load() {
+                            cx[app_state].items = items;
+                        }
+                    }),
+                )),
             ))
         },
     ));
+}
+
+fn save(items: &[TodoState]) {
+    if let Some(path) = rfd::FileDialog::new().save_file() {
+        match std::fs::File::create(&path) {
+            Ok(file) => match ron::ser::to_writer(file, items) {
+                Ok(()) => (),
+                Err(e) => eprintln!("{}", e),
+            },
+            Err(e) => eprintln!("{}", e),
+        }
+    }
+}
+
+fn load() -> Option<Vec<TodoState>> {
+    let path = rfd::FileDialog::new().pick_file()?;
+    match std::fs::File::open(path) {
+        Err(e) => {
+            eprintln!("{}", e);
+            None
+        }
+        Ok(file) => match ron::de::from_reader(file) {
+            Ok(items) => Some(items),
+            Err(e) => {
+                eprintln!("{}", e);
+                None
+            }
+        },
+    }
 }

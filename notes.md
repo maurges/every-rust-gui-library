@@ -2042,6 +2042,31 @@ It works, it fucking works! But the layout has gone to shit. So I see now that
 the library is really not yet ready. Let's finish it since there isn't much
 left.
 
+No cyrillic support, well to be expected honestly.
+
+Ok, adding saving and loading really was a piece of cake at this point. My
+impression with this library is that it builds on great foundational concepts,
+but implements them half-assedly at this point. Like, why would you not make a
+list for bindings? Why are half the lens routines written by me? Also there are
+just plain bugs and unfinished stuff. And for some reason I can't also write my
+own basic widgets, the typeclass is closed for no good reason. In the end, I
+have high hopes for this library in the future. The api can be made really
+nice, and also you can reject your ideas of imgui with this api; you can make
+better widgets and better support for custom widgets, and it will become like
+druid, but more compact and simple.
+
+- Default widgets: ugly, buggy, few
+- Creating simple widgets: impossible
+- Creating compound widgets: very simple
+- Layouting: rows and columns, buggy
+- Custom layouts: impossible
+- Reactivity: great
+- Setting up: easy
+- Documentation: very basic, sometimes missing
+- Tutorial: none
+- Diving into source: simple source
+- Overall: can't recommend now, but looks interesting
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's

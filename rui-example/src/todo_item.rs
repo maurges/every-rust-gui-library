@@ -2,7 +2,7 @@ use rui::{Modifiers, Binding};
 
 use crate::lens;
 
-#[derive(Debug, Default, Hash)]
+#[derive(Debug, Default, Hash, serde::Serialize, serde::Deserialize)]
 pub struct TodoState {
     pub text: String,
     pub done: bool,
