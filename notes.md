@@ -2029,6 +2029,15 @@ at all?
 And making a binding from Rc is also a pain and I'm not sure if it's possible
 without bugs. Fuck, so only callbacks remain?
 
+Made one last attempt to use Rc at least, and I can't since RefCell is not
+Hash. Shit.
+
+I made something complicated with lenses and now I can't remember it. God damn
+my excitement.  
+Ok, I remember, and partly it's not my fault, but the library for being so
+obtuse with binding and lens. Not "so" obtuse, but a little confusing how you
+transform between them.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
