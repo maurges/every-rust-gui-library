@@ -1129,6 +1129,32 @@ null-terminated strings and weirdness, you just don't want to use this.
 
 Abandoned, based on abandoned C library, which was in mid-alpha, as author says.
 
+So I found a mention of this library again recently. I was rereading the
+article about gui crates from that person I reference above, and they said iui
+is a good library with ok vibes, so now I have to try it again. I checked the
+repos more thoroughly, and turns out there's libui-ng, which is still pre-alpha
+they say, but at least not abandoned. And to accompany it there's a rust crate
+that's also not abandoned, last changes being 2 weeks ago! Also it might be
+that they revived after I started working on this project, would be funny if
+true.
+
+But now the problem is, again, that they are using fucking gtk3 on linux. Argh.
+I have access to my mac now, so I'm still willing to try.  
+Another fun part is that, from the description, it's an abstraction layer for
+platform widgets! That's what KAS was going to do, and they abandoned that! I
+have very low expectations from this project, so let's dive into it!
+
+Chronologically this is after rui. Funny thought: how many /.ui/ names are
+there in rust crates? Iui, fui and rui already taken.
+
+No tutorial, yay. Can't even access docs because they are not on crates-io.
+Diving straight into the examples, 30 minutes before going to bed.  
+There are some apidocs from an old version, browsing them right now. Looks not
+bad, typical controls and row-column layouts. Also as typical for library
+bindings, creating new controls from rust seems impossible. Ehh, although, you
+can use layout itself as a control, so at least you can create compound widgets
+that way.
+
 ## KAS
 Time spent: a couple of hours (so far) + a day + half a day
 
@@ -1904,6 +1930,7 @@ mindful of that.
 - Overall: ok if really want to do gtk, otherwise ehh
 
 ## rui
+Time spent: 3.5 days of playing with lenses, including one day of cursing rui::list
 
 Found it in merge requests for the AWGY website: https://lib.rs/crates/rui.
 Cool coincidence how it's alphabetically next, not cool how I'm so tired of gtk
