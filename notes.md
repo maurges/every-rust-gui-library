@@ -964,7 +964,12 @@ This seems to be part of gtk-rs now, so it's coming right up!
 
 Next in line, but there are problems installing it so I'm postponing.
 
-TODO
+This part is being written after iui. While on a long call. I'm tired, aaand
+suddenly it's over. Alright, so what I'm saying is that I googled a gtk 3 to 4
+migration guide, and it's kind of big, but not groundbreaking. The biggest
+changes I noticed were to events and to "prefer embedding over subclassing". I
+can approve of the second one, I don't know how convenient subclassing is in C
+(predict it's fuckingnot), but it must be a pain in rust.
 
 ## iced
 Time spent: a couple of hours
