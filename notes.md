@@ -1155,6 +1155,28 @@ bindings, creating new controls from rust seems impossible. Ehh, although, you
 can use layout itself as a control, so at least you can create compound widgets
 that way.
 
+Oh it doesn't just build on mac, it needs cmake. Or not cmake? It complains
+both that it hasn't found a git repo, and about cmake not installed. Fucking
+hell, getting cmake on mac is not easy.  
+Oh fuck, still doesn't work. Got cmake (and libiconv) from nix, and it's
+complaining about I have no idea what about. Argh.  
+Oh ok, because the one published on crates-io is the outdated one, it's also
+broken. So if I just use the git dependecy, everything builds nice. Alright,
+let's continue.  
+Ah no, after all it's not working:
+
+    = note: Undefined symbols for architecture arm64:
+                "_uiprivSendKeyboardEditEvents", referenced from:
+                    -[uiprivApplicationClass sendEvent:] in libui_sys-e454295f6e21675e.rlib(main.o)
+              ld: symbol(s) not found for architecture arm64
+              clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+This is an error in symbols from libui itself. I can find this symbol defined
+in sources. So it seems their build is just broken for mac, argh.
+
+Looking through issues in github repo, it seems it's somewhat broken on windows
+as well. Well ok. It seems I am skipping this after all!
+
 ## KAS
 Time spent: a couple of hours (so far) + a day + half a day
 

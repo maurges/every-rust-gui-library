@@ -1,0 +1,10 @@
+[package]
+name = "iui-example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+iui = { git = "https://github.com/rust-native-ui/libui-rs", version = "0.3" }
+#ui-sys = { version = "0.2.1", default-features = false, features = [] }
