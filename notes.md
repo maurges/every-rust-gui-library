@@ -971,6 +971,21 @@ changes I noticed were to events and to "prefer embedding over subclassing". I
 can approve of the second one, I don't know how convenient subclassing is in C
 (predict it's fuckingnot), but it must be a pain in rust.
 
+Their website is nice. It's a whole project, not just a single person sitting
+and making a library. I hate companies, I love single people. But at least here
+they used the resources to make a book, but not to make proper apidocs instead
+of autogenerating.
+
+I wonder why their hello world example shows an empty window instead of
+showcasing some widgets. There's a second example with a button, but still no
+complex widets. Alrighty, let me try to wing it with my experience from relm
+and write a counter.
+
+Yep, I made it. God it sucks to set stuff by hand, when I can't even reference
+it from closure directly and have to make RCs for it. The problem here is that
+it complains about lifetimes, which sucks: the label isn't going anywhere. I
+hope the tutorial teaches some techniques how to avoid that.
+
 ## iced
 Time spent: a couple of hours
 
