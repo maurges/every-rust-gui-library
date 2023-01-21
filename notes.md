@@ -986,6 +986,27 @@ it from closure directly and have to make RCs for it. The problem here is that
 it complains about lifetimes, which sucks: the label isn't going anywhere. I
 hope the tutorial teaches some techniques how to avoid that.
 
+Starting to read the tutorial and trying to apply the lessons to my example.
+Fucking classic: I try to copy the example wondering how in hell it will work,
+only to scroll down and find that it doesn't work. Let's see how they get out
+of that, I hope it's not the same solution I made myself.  
+Yep, it is just my solution, but here they introduce me to a macro for cloning.
+It's a nice macro, I'm still surprised rust doesn't have something like this by
+default. The only problem is that it's syntax is, again, undocumented. What is
+it with gtk libs and not documenting your macros? And with creating your new
+custom syntaxes?  
+So what's the difference between strong and weak? I made one clone strong, the
+other weak, and they both work. Fucking hell. Uh-huh, but if I make both clones
+weak, then it breaks. Okey-dokey.  
+So in gtk widgets are reference counted by default, and cloning a widget gives
+me a reference to an already created one. Ok, my feelings of unsafety of
+mutating widgets through non-mutable reference have increased even more. But it
+is convenient to use with closures.  
+Oh crap, reference cycles. Wow, how good would it be to have a garbage
+collector now. The reference cycles arise from referring to another widget in a
+callback for example. So I guess since my widgets are always in a tree, I can
+just weakly reference them in callbacks and stuff.
+
 ## iced
 Time spent: a couple of hours
 
