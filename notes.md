@@ -1113,6 +1113,10 @@ Next step was to make internal state a property, and it only took me four
 panics to achieve that. Fucking type erasure. I really can't recommend gtk for
 rust development, unless you really want gtk.
 
+Playing around with binding properties, looks nice. Not much to say, works as
+expected. Now I think it's stupid that qt doens't have bidirectional bindings,
+or I do remember seeng them and them being obscure.
+
 ## iced
 Time spent: a couple of hours
 

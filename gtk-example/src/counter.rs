@@ -23,6 +23,7 @@ mod imp {
     #[derive(Default)]
     pub struct Counter {
         value: std::cell::Cell<i64>,
+        label: std::cell::RefCell<Option<gtk::Label>>,
     }
 
     #[glib::object_subclass]
@@ -45,6 +46,10 @@ mod imp {
                     let input_number =
                         value.get::<i64>().expect("The value needs to be of type `i64`.");
                     self.value.replace(input_number);
+                    match *self.label.borrow() {
+                        None => (),
+                        Some(ref label) => label.set_label(&format!("{}", input_number)),
+                    }
                 }
                 _ => unimplemented!(),
             }
@@ -62,24 +67,21 @@ mod imp {
             let layout = obj.upcast_ref::<gtk::Box>();
 
             let label = gtk::Label::new(Some("0"));
+            *self.label.borrow_mut() = Some(label.clone());
 
             let button_minus = gtk::Button::with_label("-");
-            button_minus.connect_clicked(glib::clone!(@strong obj, @weak label => move |_| {
-                let mut s = obj.property::<i64>("value");
-                s -= 1;
-                obj.set_property("value", s);
-                label.set_label(&format!("{}", s));
+            button_minus.connect_clicked(glib::clone!(@strong obj => move |_| {
+                let s = obj.property::<i64>("value");
+                obj.set_property("value", s - 1);
             }));
             layout.append(&button_minus);
 
             layout.append(&label);
 
             let button_plus = gtk::Button::with_label("+");
-            button_plus.connect_clicked(glib::clone!(@strong obj, @weak label => move |_| {
-                let mut s = obj.property::<i64>("value");
-                s += 1;
-                obj.set_property("value", s);
-                label.set_label(&format!("{}", s));
+            button_plus.connect_clicked(glib::clone!(@strong obj => move |_| {
+                let s = obj.property::<i64>("value");
+                obj.set_property("value", s + 1);
             }));
             layout.append(&button_plus);
         }

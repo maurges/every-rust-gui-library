@@ -40,7 +40,13 @@ fn build_ui(application: &Application) {
     }));
     layout.append(&button_plus);
 
-    layout.append(&counter::Counter::new());
+    let counter1 = counter::Counter::new();
+    let counter2 = counter::Counter::new();
+    counter1.bind_property("value", &counter2, "value")
+        .flags(glib::BindingFlags::BIDIRECTIONAL)
+        .build();
+    layout.append(&counter1);
+    layout.append(&counter2);
 
     window.show();
 }
