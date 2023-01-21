@@ -1,4 +1,5 @@
 mod custom_button;
+mod counter;
 
 use custom_button::CustomButton;
 
@@ -38,6 +39,8 @@ fn build_ui(application: &Application) {
         label.set_label(&format!("{}", *s));
     }));
     layout.append(&button_plus);
+
+    layout.append(&counter::Counter::new());
 
     window.show();
 }

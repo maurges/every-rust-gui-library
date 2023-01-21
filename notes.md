@@ -1089,6 +1089,26 @@ achive by other means. There are neat things with bindings here I guess, which
 I would need to implement by hand otherwise. A useful thing if you're writing
 an app, alright.
 
+List widgets, ahhh. And here I thought this needs to be done with creating
+children by hand. First, let's try to create a counter as a widget, then I'll
+use it inside a list.
+
+Wow, here's a hard question: how do I access non-type erased parent in
+constructor? Or anywhere? For now I just set type erased properties, but I
+can't add widgets this way! So I guess this means in my ratings creating simple
+widgets is simple (or at least managable), but creating complex widgets is
+impossible. At least until I find out how to do it..
+
+I found an example implementing a custom orientable. They use some layout
+tricks, and finally, downcasting. But this downcast doesn't work for Box,
+because Box is not a LayoutManager, fuck. The tutorial said nothing about
+downcasting, so now I go on exploration.  
+Finally, apidocs were useful; or not, in the end it was just trying shit and
+succeeding. They aren't even making sense, the downcast is called upcast in its
+own docstring! But in the end I can upcast a child to its parent, which is what
+I need. And thus building complex widgets is as easy as building simple
+widgets, although really not documented.
+
 ## iced
 Time spent: a couple of hours
 
