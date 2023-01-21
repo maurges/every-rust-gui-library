@@ -1109,6 +1109,10 @@ own docstring! But in the end I can upcast a child to its parent, which is what
 I need. And thus building complex widgets is as easy as building simple
 widgets, although really not documented.
 
+Next step was to make internal state a property, and it only took me four
+panics to achieve that. Fucking type erasure. I really can't recommend gtk for
+rust development, unless you really want gtk.
+
 ## iced
 Time spent: a couple of hours
 

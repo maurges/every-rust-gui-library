@@ -15,12 +15,15 @@ impl Counter {
 
 mod imp {
     use gtk::glib;
+    use gtk::glib::once_cell::sync::Lazy;
     use gtk::prelude::*;
     use gtk::subclass::prelude::*;
     use gtk4 as gtk;
 
     #[derive(Default)]
-    pub struct Counter;
+    pub struct Counter {
+        value: std::cell::Cell<i64>,
+    }
 
     #[glib::object_subclass]
     impl ObjectSubclass for Counter {
@@ -30,29 +33,53 @@ mod imp {
     }
 
     impl ObjectImpl for Counter {
+        fn properties() -> &'static [glib::ParamSpec] {
+            static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
+                Lazy::new(|| vec![glib::ParamSpecInt64::builder("value").build()]);
+            PROPERTIES.as_ref()
+        }
+
+        fn set_property(&self, _obj: &Self::Type, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+            match pspec.name() {
+                "value" => {
+                    let input_number =
+                        value.get::<i64>().expect("The value needs to be of type `i64`.");
+                    self.value.replace(input_number);
+                }
+                _ => unimplemented!(),
+            }
+        }
+
+        fn property(&self, _obj: &Self::Type, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
+            match pspec.name() {
+                "value" => self.value.get().to_value(),
+                _ => unimplemented!(),
+            }
+        }
+
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(&obj);
-            let state = std::rc::Rc::new(std::cell::RefCell::new(0isize));
-
             let layout = obj.upcast_ref::<gtk::Box>();
 
             let label = gtk::Label::new(Some("0"));
 
             let button_minus = gtk::Button::with_label("-");
-            button_minus.connect_clicked(glib::clone!(@strong state, @weak label => move |_| {
-                let mut s = state.borrow_mut();
-                *s -= 1;
-                label.set_label(&format!("{}", *s));
+            button_minus.connect_clicked(glib::clone!(@strong obj, @weak label => move |_| {
+                let mut s = obj.property::<i64>("value");
+                s -= 1;
+                obj.set_property("value", s);
+                label.set_label(&format!("{}", s));
             }));
             layout.append(&button_minus);
 
             layout.append(&label);
 
             let button_plus = gtk::Button::with_label("+");
-            button_plus.connect_clicked(glib::clone!(@strong state, @weak label => move |_| {
-                let mut s = state.borrow_mut();
-                *s += 1;
-                label.set_label(&format!("{}", *s));
+            button_plus.connect_clicked(glib::clone!(@strong obj, @weak label => move |_| {
+                let mut s = obj.property::<i64>("value");
+                s += 1;
+                obj.set_property("value", s);
+                label.set_label(&format!("{}", s));
             }));
             layout.append(&button_plus);
         }
