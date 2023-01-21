@@ -1007,6 +1007,45 @@ collector now. The reference cycles arise from referring to another widget in a
 callback for example. So I guess since my widgets are always in a tree, I can
 just weakly reference them in callbacks and stuff.
 
+Wow, tutorial for subclassing is outdated. Seems they changed stuff about
+modules, and about required superclasses. Also fucking hell, again the problem
+with qualifying types, I wonder if it's possible to fix in rust.  
+The examples in repo use the same subclassing method, also broken. Ughh, what
+now?  
+It seems this is because it's using 4.8. Should I also downgrade? Nope, doesn't
+help; also it's not a downgrade.
+
+In any case, why are apidocs for subclassing so shit? There's zero info on what
+is necessary to implement, and what is provided by macro. Again, gtk devs, gib
+better macro docs for god's sake!
+
+Downgrading the crate itself to 4.8 doesn't work as well. Well fuck, I'm stuck.
+
+There is no cargo-lock in the listings repo! And gtk is pinned as "\*"! The
+shit is this, no regard for the future, and the future is now!
+
+So what, is this the end of gtk for me? Let me try finding some more solutions,
+reading some more apidocs, maybe I find how it works.  
+Macro sources gives me no clue. They don't use the Type in any specific way
+unlike ParentType. I am also very unsure why the examples qualify it as super,
+since the macro creates no submodules. Hmmmm, maybe I need to define another
+type in the supermodule myself? And add some impls there? This is stupid, but
+let's look at other examples if they do that.
+
+Let's try to implement those FromGlibPtr\* by hand. Again, the docs tell me
+jack shit on how to do it, and give zero pointers to related macros.
+
+Fuuuck, I figured it out. Alright, turns out it was explained in tutorial: you
+need create another type which will be a glib type, and use a wrapper macro to
+tie them together. I did find the references to the wrapper macro when looking
+through sources, but from the macro's docs I had zero idea how to use this. So
+the big question is: why does the book use such asinine module structure? Why
+not define the glib object nearby? Ugh-huh, the strange module hierarchy is
+because of some rustc rules about visibility in instances. So ok, this is like
+a pimpl idiom, but in rust, and with sort of a language separation: impl is a
+c-behaving gobject, pointer-bearer is a regular rust struct with some instances
+connecting them together.
+
 ## iced
 Time spent: a couple of hours
 

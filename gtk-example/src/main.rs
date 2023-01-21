@@ -1,3 +1,7 @@
+mod custom_button;
+
+use custom_button::CustomButton;
+
 use gtk4 as gtk;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button, glib};
@@ -17,7 +21,7 @@ fn build_ui(application: &Application) {
 
     let label = gtk::Label::new(Some("0"));
 
-    let button_minus = Button::with_label("-");
+    let button_minus = CustomButton::with_label("-");
     button_minus.connect_clicked(glib::clone!(@strong state, @weak label => move |_| {
         let mut s = state.borrow_mut();
         *s -= 1;
