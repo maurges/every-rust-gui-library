@@ -1046,6 +1046,49 @@ a pimpl idiom, but in rust, and with sort of a language separation: impl is a
 c-behaving gobject, pointer-bearer is a regular rust struct with some instances
 connecting them together.
 
+Aw shit, property setting for gobjects. Again the api differs from the book,
+even though I was sure now I'm using the same version. And what else, it's
+stringly typed, although what else to expect from a cross-language library.  
+The api differing was easy to fix. The property setting is easy to accept. So
+it seems now I know how it works, yay.
+
+Next chapter is on variants, which is like qvariant, alright.  
+Next is on properties, which is like qt properties, but with no safe way to set
+them at all. Qt is a c++ library, and in c++ for every property there were well
+typed c++ functions for it; when using qt from rust with qmetaobject, they
+faithfully translated the property code to rust so you can still safely use
+them. The only unsafe place was javascript, for obvoius reasons. Here every
+property access is unsafe and can panic, which sucks; but I guess for your own
+types you can create safe wrappers, and for library types they already exist;
+the only place they don't exist is in type erased context like here when
+subclassing a button: it doesn't know that it's a button, and for some reason
+we don't cast it.
+
+Oh, you can bind properties. Like qt. Like qt after qt6, so gtk was pretty
+early with this, cool. It's strange how binding doesn't sync initial state by
+default, but you need to use a custom flag to do it. Also I wonder how do I do
+custom expressions in binding, and can I bind multiple inputs into single
+output. Yep, I can transform them, but it's a type erased pain in the ass. I
+don't see how can I bind multiple though, so qt is ahead here.
+
+Ok, I thought I could just update my property in rust and emit a change signal;
+but instead I need to update the type-erased property on gobject as well. This
+means that in this case I don't need a rust value at all, and can just keep it
+in the gobject. If I only create properties for bindings, I don't need any
+private properties at all; but bindings are a huge pain, so I probably want
+properties and updates by hand.
+
+Oh, I do can emit a signla by hand. So alright, signals are type erased signals
+from qt5, no slot bullshit. I wonder how painful they are in C.
+
+Next is a tutorial on main loop and how you need to not block it. They provide
+sender-receiver idiom and recommend spawning stuff. Makes sense.
+
+gio::Settings, I don't care. This is just a form of persistence, which I could
+achive by other means. There are neat things with bindings here I guess, which
+I would need to implement by hand otherwise. A useful thing if you're writing
+an app, alright.
+
 ## iced
 Time spent: a couple of hours
 
