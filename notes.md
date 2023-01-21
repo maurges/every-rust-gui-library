@@ -1117,6 +1117,18 @@ Playing around with binding properties, looks nice. Not much to say, works as
 expected. Now I think it's stupid that qt doens't have bidirectional bindings,
 or I do remember seeng them and them being obscure.
 
+Looking at list factory, and fuuuck, it looks so boilerplatey, even worse than
+relm. So it seems that relm authors were working with what they were dealt, and
+that's why it's so bad.
+
+Read a section on css. I still don't understand why does it have to be css. I
+think the qml approach is better: create your custom controls for different
+situations and use them. I guess part of the problem is the difficulty of
+creating custom controls. Like, right now css is used by third parties as a
+customization mechanism, and the adwaita devs are telling them not to do it;
+but you could have used a completely self-contained solution from the
+beginning! I don't know.
+
 ## iced
 Time spent: a couple of hours
 
