@@ -1168,6 +1168,34 @@ is strongly typed internally, it's just that these bindings are kind of
 low-level, and badly documented. But at least everything works well and I can
 access the model multiple ways. Now time to create the todo example!
 
+Actually, I like how I can just create an rc-refcell for private view of the
+view, like editing state. Just convenient to use. I also really like
+two-directional bindings.
+
+What's inconvenient about rust is that I can't reference locals defined in the
+future. Lazyness would be nice here, but since I'm actually working with local
+monadic bindings, what I need is MonadTardis. Or a better layout language.
+
+All those untyped bindings caused a bug that when I add an item, the text is
+not set for some reason. Fucking hell.  
+Hmm, so it seems that sync_create just doesn't fucking work for a string
+property? Brilliant. Well, I just set it manually on creation, why not. Wait, I
+think the reason might be that syncing is done one way and not in the one I
+expected, let me check. Yep, that was it, my bad I guess.
+
+Ok, it works on the first try. Nice.
+
+So, my overall thoughts on gtk? Wow it's been a long time and I kind of forgot
+my initial impressions already. What I wrote today was pretty nice and
+predictable. Not nearly as bad as I was dreading from relm and initial
+documentation lookthrough. The tutorial is good enough, but not up to date at
+places and sometimes ambiguous. The worst part of gtk is the untyped properties
+and other stuff. The rust library could have made them well-typed, but they
+didn't, which is a big miss. Compared to qmetaobject, this has better tutorial,
+but even worse apidocs. This one requires a lot more code and is about as
+unsafe as javascript in qml. So, idk, evenly matched. I will still prefer qml
+in the future, also because of qmlscene and figma-to-qml.
+
 ## iced
 Time spent: a couple of hours
 
