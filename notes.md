@@ -1129,6 +1129,45 @@ customization mechanism, and the adwaita devs are telling them not to do it;
 but you could have used a completely self-contained solution from the
 beginning! I don't know.
 
+So, it's been a week, let's do it again. Last time I stopped at list view,
+let's try and power through it.
+
+So, the whole thing with list-items in relm seems to have come directly from
+gtk. Only here it seems different, as you don't need to inherit/implement it
+explicitly? At least it seems so in the tutorial, but doesn't work when I try
+to compile it. Fucking downcasts again.  
+Ah ok, the downcasts don't work because I need to downcast not the item itself,
+but it's properties item and chlid. Makes a lot of sense!
+
+Well, honestly not that much boilerplate. Less than relm. So now I really think
+relm is stupid and you shouldn't use it.
+
+Oh-ho-ho, it hangs when I access a widget other than the first. Stupid shit.
+Wait, not the first, the problem is with transferring focus. I misclicked on
+the label instead of a button, thus transferring the focus, and now every
+button click other than on focused widget hang the application. Ha, stupid gtk
+bugs.  
+Umm, I thought I could fix it by not setting the selection model at all, but
+instead the list view doesn't create now! Genius api. Oh wait, it's me who's
+stupid, since the selection model is the thing that manages my model. So, since
+it has to be some selection model, I guess I need to choose another one.  
+Right, with NoSelection it works and doesn't hang, great. Now let's see, can I
+access the model from rust code as well..
+
+It's annoying how the docs are split between gtk, glib and gio. I guess it's
+similar to how qt structures their docs, but in gtk they are more separate, and
+what's worse is that cargo docs are separated and I can't search them together.
+
+So, when I have a glib::wrapper, what can I do with it except construct it?
+When I try to access inner, I get ObjectRef, which doesn't have any methods at
+all.
+
+And so I did everything through the untyped api. Alright, I have to applaud
+relm for making this bullshit well-typed. Mmm, honestly it's not bullshit, it
+is strongly typed internally, it's just that these bindings are kind of
+low-level, and badly documented. But at least everything works well and I can
+access the model multiple ways. Now time to create the todo example!
+
 ## iced
 Time spent: a couple of hours
 
