@@ -2364,6 +2364,20 @@ druid, but more compact and simple.
 - Diving into source: simple source
 - Overall: can't recommend now, but looks interesting
 
+## rust-qt-binding-generator
+
+This is an interesting thing. It can generate qt bindings to you rust code,
+which you describe with some json definitions. You can than use this code from
+qml or qt widgets. So this is like cxx-qt or flutter-rust-bridge, but unlike
+the first, uses a separate json definition instead of rust macros. Hmm, but
+using rust macros is kind of better in principle! Since you don't need to keep
+your definitions up to date. The upside of this library is that they allow you
+to subclass QAbstractItemModel, which is a fucking blessing. But I think I
+already made my opinion about such binding generators where the `main` is not
+inside rust, sooo. I mean, having the main be in c++ is simpler for porting to
+android, the qt will just take care of stuff for you, bless qt and their
+handling of corner cases. But yeah, don't think I will do this.
+
 ## sciter-rs
 
 Sciter is a stripped-down browser, with html and css and js engines. It's
@@ -2378,6 +2392,51 @@ Hypocrisy? Qml is a similar concept: a markdown language with js scripting.
 Welllll, again, I never said I'm not biased towards qt, but also I am biased
 against web and that's the point of this article, to say that you don't need
 fucking electron.
+
+## Slint
+
+Ohhhhhhhhhh yeaahhhhhhh babyyyyyyyyyyy let's do this. It only took me 29 other
+libraries to get to this one, which I thought of as the best one in advance. I
+mean, qml is great, but with a lot of areas of improvement. And this promised
+an improved qml, so this has the potential to be so great. Let's see. But
+first, some more procrastination writing thoughts on vgtk.
+
+## vgtk
+
+Another elm + gtk project. Again gtk3. I have googled why people would choose 3
+over 4, and it seems the reason is gtk4 only had a release very recently, like
+2022 or 2021. And this library hasn't seen updates since 2020! So I'm not doing
+it. But I did read a tutorial over two long procrastination sessions.
+
+So, unlike relms, this one seems to have a real vdom, which is cool. But the
+author is stupid: it's modelled after web DOM, not gtk widget tree! And below
+they complain that gtk widget tree was created long ago so they didn't see the
+light of uniform children with no distinction! A-ha-ha, wow. Like they give the
+example that window has children :: List Widget, but also has title :: Widget.
+And, like, that's bad in their opinion? Because it's not uniform? So what, it
+should be (Window (Header) (Child1) (Child2))? Oh my god. I'm writing this in
+sexps because I think in lisps it would be (Window (Header) ((Child1)
+(Child2))), which is also utilizing different slots, but with a uniform
+representation, that is also well-typed. And also, web DOM has special slots!
+The properties! That are very much not uniform since they can't contain
+subtrees, and that's why xml people have been dealing with referencing subtrees
+from properties, and of that approach being shit.
+
+So anyway, aside from the author being stupid about DOM, this seems cool. It
+has autoupdates unlike relm4, and unlike relm3 it seems one can also mutate the
+widgets and stuff. I forgot how it was in relm3, but I remember the author
+saying that it's a very simple algorithm, so no tree diffing and no rust
+expressions in the tree.
+
+The turorial doesn't mention subcomponents, so that's a bad sign. But also
+since it's vdom with rust interpolation, I guess one could use rust functions
+returning the subtree. And now you get the typical elm problem with needing to
+handle all the messages in the global handler, and keeping all the subcomponent
+state together. So far all the libraries gave a way around this, so this one
+might as well, but not mentioned here.
+
+So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
+vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 # About accessiblity
 
