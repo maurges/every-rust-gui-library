@@ -961,6 +961,7 @@ libraries, and this one clearly isn't.
 This seems to be part of gtk-rs now, so it's coming right up!
 
 ## GTK
+Time spent: 3 full days
 
 Next in line, but there are problems installing it so I'm postponing.
 
@@ -1195,6 +1196,23 @@ didn't, which is a big miss. Compared to qmetaobject, this has better tutorial,
 but even worse apidocs. This one requires a lot more code and is about as
 unsafe as javascript in qml. So, idk, evenly matched. I will still prefer qml
 in the future, also because of qmlscene and figma-to-qml.
+
+Reading my thoughts on relm now. Yeah, if I knew gtk that one would be easier,
+with all those IsA constraints and with properties. Relm would be a lot better
+if properties were proper rust values, but noo. Like how I couldn't find
+ToggleButton::active, because the name is stupid.
+
+- Default widgets: enough, good looking
+- Creating simple widgets: no idea
+- Creating compound widgets: boilerplatey; they are first-class gtk but second-class rust
+- Layouting: simple, but sizing is obscure
+- Reactivity: qt-style
+- Custom layouts: manipulate coordinates
+- Setting up: simple, requires gtk4
+- Documentation: meh apidocs, alright gtk docs
+- Tutorial: alright
+- Diving into source: didn't do
+- Overall: better than relm4
 
 ## iced
 Time spent: a couple of hours
@@ -1982,7 +2000,7 @@ bullshit. Like, with macros it's almost that, except I need to send handle
 signals first.
 
 I've been ildly reading the turorial and looking forward to implementing the
-examples. And I've kind of liked what I've read about components, factoriesand
+examples. And I've kind of liked what I've read about components, factories and
 grids. Gtk did get some things right.
 
 Component and FactoryComponent are different. This is stupid, I wonder if it's
@@ -2052,7 +2070,7 @@ this is a good question for all those frameworks, can I send gui signals
 asynchronously.
 
 Trying to create a component again. This time I'm not getting weird root
-errors. This time I'm wondering why the hell does my input need to be private.
+errors. This time I'm wondering why the hell does my input need to be public.
 I don't want to receive input from outsiders.
 
 gtk4 doesn't have api docs. Ughhh. I'm just looking for a spinner or something.
@@ -2146,7 +2164,7 @@ which is a common problem for binding libraries.
 
 Let's also look at the tutorial for relm4 v0.3. Not going to write any code,
 but just have a look at the api and how it's changed.  
-the biggest thing is that ll of the trait in SimpleComponent are split into
+the biggest thing is that all of the traits in SimpleComponent are split into
 Model, Update and Widget, so ironically v0.5 is closer to relm-the-original;
 and it thus it's a good thing I started with that since I can now look at
 tutorial for every version and understand it. Also, funnyly, it shows that
