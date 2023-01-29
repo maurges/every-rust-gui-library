@@ -2469,6 +2469,11 @@ model in slint. I still don't like globals, but I guess if you control all the
 application they are not so bad. I wonder how will slint handle third-party
 components in the future.
 
+Bindings are required to be pure, argh. But the reason stated is not because of
+multiple evaluation, but because of undefined order, which is not bad, as long
+as everything is evaluated at the end. So I guess I need to lie about being
+pure.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

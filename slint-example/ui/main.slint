@@ -4,8 +4,13 @@ export struct OneInt {
     value: int,
 }
 
+export struct ModelImpurity {
+    foo: int,
+}
+
 export global Globals := {
-    pure callback make_model() -> [OneInt];
+    pure callback initialize_model() -> ModelImpurity;
+    pure callback make_model(ModelImpurity) -> [OneInt];
 }
 
 component Counter {
@@ -44,7 +49,8 @@ export component UiMain inherits Window {
                 text.color = #ff0000;
             }
         }
-        for val in Globals.make_model(): Counter {
+        property<ModelImpurity> impurity: Globals.initialize_model();
+        for val in Globals.make_model(self.impurity): Counter {
             value: val.value;
         }
     }
