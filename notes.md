@@ -2401,6 +2401,40 @@ mean, qml is great, but with a lot of areas of improvement. And this promised
 an improved qml, so this has the potential to be so great. Let's see. But
 first, some more procrastination writing thoughts on vgtk.
 
+Alrighty, there are a lot of backends available: qt or winit with different
+renderer. Let's do this with winit because rust rulez, yo.
+
+Immediately there's a problem in hello world example that element is rendered
+in a weird location, as if halfway outside the window. If I set explicit
+coordinates like 0;0 it works well, but if I set the coordinates to center it,
+I get the same thing. So I remember reading a blogpost that they have recently
+changed default behaviour that a single child gets centered in its parent, so
+it seems it calculates centering the same way I did, and it fails. Hmm. Let's
+try and debug this.
+
+Slint language reference is not great. I expected slint types to be rust types,
+but instead they are their own thing. Which is not bad, but now the problem is
+that the docs are in a new format, and there's no search, no anything. Button
+only lists own properties, not inherited.
+
+Another problem is that my button doesn't draw for some reason? Where's the
+fucking button?
+
+Ok, it seems the problem with button was that it had window's size, and me
+repositioning it moved the label out of the screen, so it seemed invisible.
+Setting the width and height also did fix the problem. And the problem with
+label was that positioning works weird when Window is not the toplevel
+component? Idk, but making my example component inherit from window fixed
+stuff, and that's what I would want to do anyway. The docs need some updating
+though.
+
+Hmm, layouts are builtin types, unlike qml. They read special inherent
+properties, and the language forbids me from setting other properties when item
+is inside a layout. So it's not as much of a qt's situation where anyone can
+create a layout. I think you still can, but you won't have them be the same as
+inbuilt ones. But alsoo, from reading a tutorial, I don't think custom
+components can have children? This would make creating layouts harder.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3
