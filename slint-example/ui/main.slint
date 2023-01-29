@@ -1,0 +1,52 @@
+import {Button} from "std-widgets.slint";
+
+export struct OneInt {
+    value: int,
+}
+
+export global Globals := {
+    pure callback make_model() -> [OneInt];
+}
+
+component Counter {
+    in-out property <int> value: 0;
+    HorizontalLayout {
+
+        Button {
+            text: "-";
+            max-width: self.height;
+            clicked => { root.value -= 1; }
+        }
+        Rectangle {
+            Text {
+                text: root.value;
+            }
+        }
+        Button {
+            text: "+";
+            max-width: self.height;
+            clicked => { root.value += 1; }
+        }
+    }
+}
+
+export component UiMain inherits Window {
+    VerticalLayout {
+        text := Text {
+            text: "hello world";
+        }
+        Button {
+            text: "debug";
+            preferred-width: 100px;
+            preferred-height: 50px;
+
+            clicked => {
+                text.color = #ff0000;
+            }
+        }
+        for val in Globals.make_model(): Counter {
+            value: val.value;
+        }
+    }
+}
+

@@ -2435,6 +2435,40 @@ create a layout. I think you still can, but you won't have them be the same as
 inbuilt ones. But alsoo, from reading a tutorial, I don't think custom
 components can have children? This would make creating layouts harder.
 
+So, there's an lsp-server for slint. I'm not going to install it for now, let's
+do it the classic way, and try to remember how it was to program with relm. Ha!
+
+Ohhh I found a builtin 'init' callback, just what I was looking for earlier
+this day. Fucking builtins and crap reference.
+
+Barely found ListView, it was among std-widgets. Now two more questions: what
+does a type have to implement to be a model, and can I register rust types for
+use in slint like qml?
+
+> The model can be of the following type: ... a model declared natively
+
+So there seems to be a way. Let's check the recipies I guess.
+
+Conditional element? How did I miss that, that's kind of cool.
+
+Found nothing in recipies, but found trait Model which is exactly what I want.
+
+Well, it seems there's no way to register rust code. So slint is the other way
+around from qml: you register your slint types in rust, and can instantiate and
+manipulate them however you want, while in qml you instantiate c++ types from
+qml. So what I have to do is create a global and put my model there? This is
+really not ideal for namespacing and stuff.
+
+I have no idea what horizontal-stretch does. I tried to use it to disable
+stretching and it didn't work.
+
+So, a model is anything that implements Model. You can name any model in slint
+with `[]`, which is counter-intuitive, since a model is not necessarily a list.
+You can assign a model factory to a global from rust, and then instantiate this
+model in slint. I still don't like globals, but I guess if you control all the
+application they are not so bad. I wonder how will slint handle third-party
+components in the future.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

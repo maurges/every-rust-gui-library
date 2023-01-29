@@ -1,23 +1,14 @@
-slint::slint!{
-    import {Button} from "std-widgets.slint";
-    export component HelloWorld inherits Window {
-        VerticalLayout {
-            text := Text {
-                text: "hello world";
-            }
-            Button {
-                text: "debug";
-                width: 100px;
-                height: 50px;
-
-                clicked => {
-                    text.color = #ff0000;
-                }
-            }
-        }
-    }
-}
+slint::include_modules!();
 
 fn main() {
-    HelloWorld::new().run();
+    let window = UiMain::new();
+    window.global::<Globals>().on_make_model(|| {
+        let model = slint::VecModel::from_slice(&[
+            OneInt { value: 10 },
+            OneInt { value: 15 },
+            OneInt { value: -1 },
+        ]);
+        slint::ModelRc::new(model)
+    });
+    window.run()
 }

@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 slint = { version = "0.3.4", default-features = false, features = ["std", "compat-0-3-0", "backend-winit", "renderer-winit-femtovg", "renderer-winit-skia"] }
+
+[build-dependencies]
+slint-build = { version = "0.3.4" }
