@@ -8,5 +8,9 @@ edition = "2021"
 [dependencies]
 slint = { version = "0.3.4", default-features = false, features = ["std", "compat-0-3-0", "backend-winit", "renderer-winit-femtovg", "renderer-winit-skia"] }
 
+rfd = { version = "0.10.0", default-features = false, features = ["xdg-portal"] }
+ron = { version = "0.8" }
+serde = { version = "1", features = ["derive"] }
+
 [build-dependencies]
 slint-build = { version = "0.3.4" }

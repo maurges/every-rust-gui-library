@@ -2394,6 +2394,7 @@ against web and that's the point of this article, to say that you don't need
 fucking electron.
 
 ## Slint
+Time spent: 2 whole days
 
 Ohhhhhhhhhh yeaahhhhhhh babyyyyyyyyyyy let's do this. It only took me 29 other
 libraries to get to this one, which I thought of as the best one in advance. I
@@ -2576,6 +2577,68 @@ So in the worst case I would have to cast the model to and from Any, but this
 time I could just slightly abuse set_row_data which is present on any model to
 get what I want. But I think I will still cast any for saving and loading,
 which is coming right up.
+
+Oh, and the most important thing: making models is soooooooo much easier than
+in qml. Partly it's because they don't support tree access, but partly it's
+because algebraic datatypes make it a lot better. Also there's no fuckery with
+roles, which I still don't get.
+
+Making models is more convenient, but using them from rust is about as bad as
+using qt types. Well, partially: the conversion with Any is a great tool
+actually and served me well, the problem was with strings and the fact that I
+can't derive rust typeclasses in slint. So I have to clone and convert, convert
+and clone. At least in the lazy approach! A better approach would be to define
+serde shit by hand here? I mean, I know everything about the struct and can
+define whatever I want for it, it's just inconvenient.
+
+So with this, slint is done. This was very fast, even faster than qml it seems?
+But that's partly because I was fucking around with qmetaobject's models, buut
+also because slint models are a lot easier I guess.  
+The worst part is, I still can't decide for myself, is slint better than qml?
+It's certainly a lot easier to get started with, and has saner defaults mostly.
+They both have some weird weirdness with layouting, but in different places.
+With qml I have experience and got used to it, but with slint - still not. I
+like qml's object system better, the fact that components are first class, and
+the fact that it uses a more expressive language. I would love to be able to
+define slint types in rust like with qml, but I don't want to trade
+analysability of slint code for it, so the current state is fine. Bidirectional
+bindings are the tits, except they are buggy.
+
+Looking at langref, a lot of qml features are really tamed down here, but I
+think there would be value in returning them to the original power without
+sacrificing much. I'm talking about: first-class components, first-class
+functions, custom layouts, custom animations, better scripting language. Also
+parametric polymorphism. Maybe first-class modules a-la ocaml? That would be a
+dream. I mean, basic ocaml/sml is pretty easy to implement, why don't people
+use them as a basis of their language more.
+
+So this will be the last library I try here, unless I will want to use the
+third qt crate, the one from KDE guys. I did find out that indeed, slint is the
+best of pure rust libraries, but now I'm left with a choice between slint and
+qt. And I feel like I will decide on something very arbitrary; for example, qt
+already exists for android, need to investigate slint situation; qml for
+haskell sucked, but slint for haskell doesn't exist, but it might be very easy
+and fun to do; slint devs are cool people and seem to listen close to community
+feedback; slint is still not a monster so I could fork it and make SML the
+internal scripting language. Well, those are dreams for the future to come, for
+now the next step will be to trim down all the above 2500 lines of garbage from
+my head.
+
+Written down the points below, and ha, slint aced this test which I
+specifically made for qml to look good. Now I need to come up with some more
+criterias to show that qml is better in some other places.
+
+- Default widgets: enough, nice design
+- Creating simple widgets: simple, qml-like but with simpler paths and gradients
+- Creating compound widgets: very simple
+- Layouting: rows and columns even simpler than qml
+- Custom layouts: impossible?
+- Reactivity: great, simpler than qml
+- Setting up: very simple
+- Documentation: alright, missing widget and property search
+- Tutorial: good
+- Diving into source: didn't need
+- Overall: great, can recommend to all
 
 ## vgtk
 

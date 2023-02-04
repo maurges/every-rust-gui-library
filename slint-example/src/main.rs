@@ -1,8 +1,33 @@
 use std::cell::RefCell;
 
-use slint::Model;
+use slint::{Model, ComponentHandle};
 
-slint::include_modules!();
+mod ui {
+    slint::include_modules!();
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct TodoState {
+    text: String,
+    done: bool,
+}
+
+impl From<ui::TodoState> for TodoState {
+    fn from(x: ui::TodoState) -> Self {
+        Self {
+            text: x.text.into(),
+            done: x.done,
+        }
+    }
+}
+impl Into<ui::TodoState> for TodoState {
+    fn into(self) -> ui::TodoState {
+        ui::TodoState {
+            text: self.text.into(),
+            done: self.done,
+        }
+    }
+}
 
 struct VecModel<T> {
     items: RefCell<Vec<T>>,
@@ -51,24 +76,28 @@ impl<T: Clone + 'static> VecModel<T> {
         };
         slint::ModelRc::new(model)
     }
+
+    fn unerase(model: &slint::ModelRc<T>) -> Option<&Self> {
+        model.as_any().downcast_ref()
+    }
 }
 
 fn main() {
-    let window = UiMain::new();
-    let globals = window.global::<Globals>();
+    let window = ui::UiMain::new();
+    let globals = window.global::<ui::Globals>();
 
     globals.on_empty_items(|| {
         VecModel::rc_from_vec(Vec::new())
     });
 
     globals.on_init_world(|| {
-        RealWorld {
+        ui::RealWorld {
             use_count: 0,
         }
     });
 
     globals.on_push_item(|text, items, mut rw| {
-        let x = TodoState {
+        let x = ui::TodoState {
             text,
             done: false,
         };
@@ -79,16 +108,53 @@ fn main() {
 
     globals.on_load_items(|mut rw| {
         rw.use_count += 1;
-        LoadType {
+        let value = match load() {
+            Some(items) => items.into_iter().map(|x| x.into()).collect(),
+            None => Vec::new(),
+        };
+        ui::LoadType {
             rw,
-            value: VecModel::rc_from_vec(Vec::new()),
+            value: VecModel::rc_from_vec(value),
         }
     });
 
     globals.on_save_items(|model| {
-        let items = model.iter().collect::<Vec<_>>();
-        eprintln!("saving: {:?}", items);
+        if let Some(items) = VecModel::unerase(&model) {
+            let items: Vec<TodoState> = items.iter().map(|x| x.into()).collect();
+            save(&items);
+        } else {
+            eprintln!("Incorrect model!");
+        }
     });
 
     window.run()
+}
+
+fn save(items: &[TodoState]) {
+    if let Some(path) = rfd::FileDialog::new().save_file() {
+        match std::fs::File::create(&path) {
+            Ok(file) => match ron::ser::to_writer(file, items) {
+                Ok(()) => (),
+                Err(e) => eprintln!("{}", e),
+            },
+            Err(e) => eprintln!("{}", e),
+        }
+    }
+}
+
+fn load() -> Option<Vec<TodoState>> {
+    let path = rfd::FileDialog::new().pick_file()?;
+    match std::fs::File::open(path) {
+        Err(e) => {
+            eprintln!("{}", e);
+            None
+        }
+        Ok(file) => match ron::de::from_reader(file) {
+            Ok(items) => Some(items),
+            Err(e) => {
+                eprintln!("{}", e);
+                None
+            }
+        },
+    }
 }
