@@ -21,10 +21,14 @@ export component TodoItem inherits HorizontalLayout {
     in-out property <bool> done: false;
     property <bool> is_editing: false;
 
+    callback done-changed;
+    callback text-changed;
+
     spacing: 5px;
 
     CheckBox {
         checked <=> root.done;
+        toggled => { root.done-changed() }
         horizontal-stretch: 0;
     }
 
@@ -36,7 +40,12 @@ export component TodoItem inherits HorizontalLayout {
 
     Button {
         text: root.is_editing ? "Done" : "Edit";
-        clicked => { root.is_editing = !root.is_editing; }
+        clicked => {
+            if (root.is_editing) {
+                root.text-changed();
+            }
+            root.is_editing = !root.is_editing;
+        }
         horizontal-stretch: 0;
     }
 }

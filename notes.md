@@ -2557,6 +2557,21 @@ Speaking of niceness, I fucked up vertical stretch, ha.
 Now this almost works, but I come back to the problem of bindings. How do I
 update the model from the delegate?
 
+I think I understand the problem now. Struct fields are not properties, so you
+can't bind to them. Kind of like qgadget situation. This sucks a lot. I wonder
+if a component can be a model member.  
+Nope, it can't, not a valid type. Fuckkkkkkkkkk.
+
+In the end I did it the same way I did in qml: by resetting the model value on
+changed callback. Except here those callbacks are not created by default, so I
+had to make them and risk being wrong. Shit. I mean, bidirectional bindings are
+really great, so not having them at this critical junction is a strike right in
+the vagina and/or balls.
+
+Now I want to optimize it slightly, to not have to recreate the item slice on
+every addition. Also a nice practice of writing my own model and comparing that
+to qml.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

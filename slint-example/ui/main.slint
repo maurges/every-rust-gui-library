@@ -59,6 +59,8 @@ export component UiMain inherits Window {
             vertical-stretch: 0;
             done: val.done;
             text: val.text;
+            done-changed => { val.done = self.done }
+            text-changed => { val.text = self.text }
         }
 
         Rectangle {
