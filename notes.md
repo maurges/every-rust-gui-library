@@ -2474,6 +2474,35 @@ multiple evaluation, but because of undefined order, which is not bad, as long
 as everything is evaluated at the end. So I guess I need to lie about being
 pure.
 
+Hello /u/madnirua. It is a hard work, but it's a hard work I'm having fun with.
+So let's get back to it.
+
+Today I want to figure out how to import slint from slint. Let's see what I
+find in the references.  
+And I didn't even need to read anything. Just drop the counter into a separate
+file, import it, and it's done. Cool.
+
+So what else don't I know how to do? Complex layouting as usual, but we'll
+figure it out on the way, let's just make the todo app and see what I miss on
+the way.
+
+I know what I miss: can I have a rust's derive macro for a slint type? Since I
+have to use types defined in slint in rust. I could just write conversions, but
+I don't wanna. It seems rust doesn't have ghc's standalone deriving
+declarations, which is inconvenient. I wonder if it's possible to write such a
+macro by hand, for non-standard deriving things at least.
+
+Um, where is that conditional component gone? The one I was excited about a
+couple of paragraphs ago.
+
+Don't know what I was not understanding about stretch. Here I put 0, 1, 0 and
+it works just as written in the docs.
+
+Oh wow, it segfaults on impurity itself, with a very simple code! Let me save
+commit now and I'll put a commit hash here so you, the slint authors reading
+this, can easily see the problem =). It's inconsistent, but it happens when I
+press "edit" and try editing the text: upon the first keypress the app aborts.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

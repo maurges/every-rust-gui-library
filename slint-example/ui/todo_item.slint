@@ -1,0 +1,28 @@
+import {CheckBox, Button, LineEdit} from "std-widgets.slint";
+
+export component TodoItem {
+    in-out property <string> text: "";
+    in-out property <bool> done: false;
+    property <bool> is_editing: false;
+
+    HorizontalLayout {
+        CheckBox {
+            checked <=> root.done;
+            horizontal-stretch: 0;
+        }
+
+        if !root.is_editing : Text {
+            text: root.text;
+            horizontal-stretch: 1;
+        }
+        if root.is_editing : LineEdit {
+            text <=> root.text;
+        }
+
+        Button {
+            text: root.is_editing ? "Done" : "Edit";
+            horizontal-stretch: 0;
+            clicked => { root.is_editing = !root.is_editing; }
+        }
+    }
+}

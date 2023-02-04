@@ -1,4 +1,6 @@
 import {Button} from "std-widgets.slint";
+import {Counter} from "counter.slint";
+import {TodoItem} from "todo_item.slint";
 
 export struct OneInt {
     value: int,
@@ -11,28 +13,6 @@ export struct ModelImpurity {
 export global Globals := {
     pure callback initialize_model() -> ModelImpurity;
     pure callback make_model(ModelImpurity) -> [OneInt];
-}
-
-component Counter {
-    in-out property <int> value: 0;
-    HorizontalLayout {
-
-        Button {
-            text: "-";
-            max-width: self.height;
-            clicked => { root.value -= 1; }
-        }
-        Rectangle {
-            Text {
-                text: root.value;
-            }
-        }
-        Button {
-            text: "+";
-            max-width: self.height;
-            clicked => { root.value += 1; }
-        }
-    }
 }
 
 export component UiMain inherits Window {
@@ -52,6 +32,11 @@ export component UiMain inherits Window {
         property<ModelImpurity> impurity: Globals.initialize_model();
         for val in Globals.make_model(self.impurity): Counter {
             value: val.value;
+        }
+
+        TodoItem {
+            done: true;
+            text: "kek";
         }
     }
 }

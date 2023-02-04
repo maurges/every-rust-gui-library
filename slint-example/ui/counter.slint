@@ -1,0 +1,23 @@
+import {Button} from "std-widgets.slint";
+
+export component Counter {
+    in-out property <int> value: 0;
+    HorizontalLayout {
+
+        Button {
+            text: "-";
+            max-width: self.height;
+            clicked => { root.value -= 1; }
+        }
+        Rectangle {
+            Text {
+                text: root.value;
+            }
+        }
+        Button {
+            text: "+";
+            max-width: self.height;
+            clicked => { root.value += 1; }
+        }
+    }
+}
