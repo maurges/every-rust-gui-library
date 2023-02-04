@@ -2493,7 +2493,8 @@ declarations, which is inconvenient. I wonder if it's possible to write such a
 macro by hand, for non-standard deriving things at least.
 
 Um, where is that conditional component gone? The one I was excited about a
-couple of paragraphs ago.
+couple of paragraphs ago.  
+Oh found it, it's not an element but a statement.
 
 Don't know what I was not understanding about stretch. Here I put 0, 1, 0 and
 it works just as written in the docs.
@@ -2501,7 +2502,32 @@ it works just as written in the docs.
 Oh wow, it segfaults on impurity itself, with a very simple code! Let me save
 commit now and I'll put a commit hash here so you, the slint authors reading
 this, can easily see the problem =). It's inconsistent, but it happens when I
-press "edit" and try editing the text: upon the first keypress the app aborts.
+press "edit" and try editing the text: upon the first keypress the app aborts.  
+Commit: `2909950f6204bf5c5edf0139431ab5395079dbe1`
+
+I guess I'll try to do it without conditional element then. Does 'visible' work
+the same as in qt and gtk here?
+
+Doesn't segfault now, but now there's a bug in line-edit: typing new letters
+decreases the width of the text box for some reason. Ohhhhh I know the reason,
+it's not a bug: it's because the visibility works not like in qt and gtk, and
+the label to the left doesn't disappear completely. Well shit. And there's also
+nothing like 'implicitWidth' so that I could reset and set the width of text or
+something. Crap. Although..  
+Welp, I thought I had a good idea with setting widths conditionally, but that
+did nothing, and it seems I will just have to get rid of the layout and lay
+them by hand.
+
+The problem with laying out by hand is that it's hard, and that the parent
+widget now reports an incorrect height (and probably width).
+
+Sooo, um, the problem currently is that widgets without width explicitly set
+report it as zero, which made my calculations about text size very wrong.
+Ummmm. But them button is in correct place still for some reason. This is
+weird. I think I can now fix it by using max of width and preferred width.
+
+Ok, this whole shebang with by-hand laying out led me to another idea: let's
+keep the rowlayout, and lay out only the two elements by hand.
 
 ## vgtk
 
