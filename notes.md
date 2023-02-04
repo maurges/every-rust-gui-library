@@ -2527,7 +2527,12 @@ Ummmm. But them button is in correct place still for some reason. This is
 weird. I think I can now fix it by using max of width and preferred width.
 
 Ok, this whole shebang with by-hand laying out led me to another idea: let's
-keep the rowlayout, and lay out only the two elements by hand.
+keep the rowlayout, and lay out only the two elements by hand.  
+This worked great. So my advice to slint users: never calculate width based on
+other elements, this is full of weird behaviour. Just rely on layouts and
+implicit filling by default. This can get you pretty far. But it's kind of shit
+that I can't rely on neighbors, because in my opinion the ease of relative
+computations was qml's killer feature.
 
 ## vgtk
 

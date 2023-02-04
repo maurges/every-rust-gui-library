@@ -1,62 +1,42 @@
 import {CheckBox, Button, LineEdit} from "std-widgets.slint";
 
+component EditableLabel inherits Rectangle {
+    in property <bool> editable;
+    in-out property <string> text: "";
+
+    text := Text {
+        visible: !root.editable;
+
+        text: root.text;
+    }
+    LineEdit {
+        visible: root.editable;
+
+        text <=> root.text;
+    }
+}
+
 export component TodoItem inherits Rectangle {
     in-out property <string> text: "";
     in-out property <bool> done: false;
     property <bool> is_editing: false;
 
-    preferred-height: checkbox.preferred-height;
-    preferred-width: checkbox.preferred-width + button.preferred-width;
-
-    checkbox := CheckBox {
-        x: 0;
-        y: 0;
-
-        init => {
-            debug(self.width);
-            debug(self.height);
-            debug(text.x);
-            debug(text.width);
-            debug(text.height);
+    HorizontalLayout{
+        CheckBox {
+            checked <=> root.done;
+            horizontal-stretch: 0;
         }
 
-        checked <=> root.done;
-    }
+        EditableLabel {
+            editable: root.is_editing;
+            text <=> root.text;
+            horizontal-stretch: 1;
+        }
 
-    Rectangle {
-        background: #ff0000;
-        x: text.x;
-        y: text.y;
-        width: text.width;
-        height: text.height;
-    }
-
-    text := Text {
-        x: checkbox.x + Math.max(checkbox.width, checkbox.preferred-width);
-        y: 0;
-        width: Math.max(root.width, root.preferred-width) - Math.max(checkbox.width, checkbox.preferred-width) - button.width;
-        //visible: !root.is_editing;
-        visible: true;
-
-        text: root.text;
-    }
-    LineEdit {
-        x: text.x;
-        y: text.y;
-        width: text.width;
-        height: text.height;
-        visible: root.is_editing;
-
-        text <=> root.text;
-    }
-
-    button := Button {
-        //x: parent.width - self.width;
-        x: text.x + text.width;
-        y: 0;
-        width: 50px;
-
-        text: root.is_editing ? "Done" : "Edit";
-        clicked => { root.is_editing = !root.is_editing; }
+        Button {
+            text: root.is_editing ? "Done" : "Edit";
+            clicked => { root.is_editing = !root.is_editing; }
+            horizontal-stretch: 0;
+        }
     }
 }
