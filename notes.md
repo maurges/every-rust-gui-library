@@ -2572,6 +2572,11 @@ Now I want to optimize it slightly, to not have to recreate the item slice on
 every addition. Also a nice practice of writing my own model and comparing that
 to qml.
 
+So in the worst case I would have to cast the model to and from Any, but this
+time I could just slightly abuse set_row_data which is present on any model to
+get what I want. But I think I will still cast any for saving and loading,
+which is coming right up.
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

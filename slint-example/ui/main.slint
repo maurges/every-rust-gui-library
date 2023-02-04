@@ -20,14 +20,15 @@ export struct LoadType {
 export global Globals := {
     pure callback init_world() -> RealWorld;
 
-    pure callback push_item(string, [TodoState]) -> [TodoState];
+    pure callback empty_items() -> [TodoState];
+    pure callback push_item(string, [TodoState], RealWorld) -> RealWorld;
     pure callback load_items(RealWorld) -> LoadType;
     pure callback save_items([TodoState]);
 }
 
 export component UiMain inherits Window {
     property<RealWorld> real_world: Globals.init_world();
-    property<[TodoState]> todo_items: [];
+    property<[TodoState]> todo_items: Globals.empty_items();
 
     width: 600px;
     height: 800px;
@@ -50,7 +51,11 @@ export component UiMain inherits Window {
                 text: "Add";
 
                 clicked => {
-                    root.todo_items = Globals.push_item(edit.text, root.todo_items)
+                    root.real_world = Globals.push_item(
+                        edit.text,
+                        root.todo_items,
+                        root.real_world,
+                    )
                 }
             }
         }
