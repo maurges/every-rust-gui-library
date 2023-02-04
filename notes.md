@@ -2534,6 +2534,29 @@ implicit filling by default. This can get you pretty far. But it's kind of shit
 that I can't rely on neighbors, because in my opinion the ease of relative
 computations was qml's killer feature.
 
+Are there tuples? I can't return multiple values from a callback, fuuuck.
+
+I'm having a hard time modelling how will reloading the state work. In qml
+reloading was just a method on a component which I could call from js, but here
+there are no methods. Oh wait, I can make a freestanding function that will
+consume old model and make a new one from arguments, nice. But there are no
+tuples so real-world passing becomes inconvenient.
+
+Ummmmmm, can I have local bindings in callbacks? I can't find it in reference,
+and I nothing I tried worked. Shit, so dumb.
+
+"Cannot access field 'done' of 'error'". Thanks, nice error messages. What is
+not well typed here? I can't see the problem. Or it's just a bad message
+signalling the fact that I can't use bidirectional bindings here. Which would
+suck a lot.
+
+Damn, the widgets sure look nice, even though antialiasing is slightly fucked
+up. Just goes to show how a little bit of padding makes all the difference.  
+Speaking of niceness, I fucked up vertical stretch, ha.
+
+Now this almost works, but I come back to the problem of bindings. How do I
+update the model from the delegate?
+
 ## vgtk
 
 Another elm + gtk project. Again gtk3. I have googled why people would choose 3

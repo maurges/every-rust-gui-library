@@ -1,42 +1,88 @@
-import {Button} from "std-widgets.slint";
-import {Counter} from "counter.slint";
+import {Button, LineEdit} from "std-widgets.slint";
 import {TodoItem} from "todo_item.slint";
 
-export struct OneInt {
-    value: int,
+export struct TodoState {
+    text: string,
+    done: bool,
 }
 
-export struct ModelImpurity {
-    foo: int,
+export struct RealWorld {
+    /// Incremented on every change in real world
+    use_count: int,
+}
+
+
+export struct LoadType {
+    value: [TodoState],
+    rw: RealWorld,
 }
 
 export global Globals := {
-    pure callback initialize_model() -> ModelImpurity;
-    pure callback make_model(ModelImpurity) -> [OneInt];
+    pure callback init_world() -> RealWorld;
+
+    pure callback push_item(string, [TodoState]) -> [TodoState];
+    pure callback load_items(RealWorld) -> LoadType;
+    pure callback save_items([TodoState]);
 }
 
 export component UiMain inherits Window {
-    VerticalLayout {
-        text := Text {
-            text: "hello world";
-        }
-        Button {
-            text: "debug";
-            preferred-width: 100px;
-            preferred-height: 50px;
+    property<RealWorld> real_world: Globals.init_world();
+    property<[TodoState]> todo_items: [];
 
-            clicked => {
-                text.color = #ff0000;
+    width: 600px;
+    height: 800px;
+
+    VerticalLayout {
+        spacing: 10px;
+        padding: 5px;
+
+        HorizontalLayout {
+            spacing: 5px;
+            vertical-stretch: 0;
+
+            edit := LineEdit {
+                horizontal-stretch: 1;
+                placeholder-text: "Add item";
+            }
+
+            Button {
+                horizontal-stretch: 0;
+                text: "Add";
+
+                clicked => {
+                    root.todo_items = Globals.push_item(edit.text, root.todo_items)
+                }
             }
         }
-        property<ModelImpurity> impurity: Globals.initialize_model();
-        for val in Globals.make_model(self.impurity): Counter {
-            value: val.value;
+
+        for val in root.todo_items : TodoItem {
+            vertical-stretch: 0;
+            done: val.done;
+            text: val.text;
         }
 
-        TodoItem {
-            done: true;
-            text: "kekus kekus kekus kekus kekus kekus kekus kekus kekus kekus kekus ";
+        Rectangle {
+            vertical-stretch: 1;
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            vertical-stretch: 0;
+            alignment: center;
+
+            Button {
+                text: "Save";
+                clicked => { Globals.save_items(root.todo_items) }
+            }
+            Button {
+                property<LoadType> temp;
+                text: "Load";
+                clicked => {
+                    temp = Globals.load_items(root.real_world);
+                    root.real_world = temp.rw;
+                    root.todo_items = temp.value;
+                }
+            }
         }
     }
 }

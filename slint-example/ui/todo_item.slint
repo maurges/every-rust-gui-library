@@ -16,27 +16,27 @@ component EditableLabel inherits Rectangle {
     }
 }
 
-export component TodoItem inherits Rectangle {
+export component TodoItem inherits HorizontalLayout {
     in-out property <string> text: "";
     in-out property <bool> done: false;
     property <bool> is_editing: false;
 
-    HorizontalLayout{
-        CheckBox {
-            checked <=> root.done;
-            horizontal-stretch: 0;
-        }
+    spacing: 5px;
 
-        EditableLabel {
-            editable: root.is_editing;
-            text <=> root.text;
-            horizontal-stretch: 1;
-        }
+    CheckBox {
+        checked <=> root.done;
+        horizontal-stretch: 0;
+    }
 
-        Button {
-            text: root.is_editing ? "Done" : "Edit";
-            clicked => { root.is_editing = !root.is_editing; }
-            horizontal-stretch: 0;
-        }
+    EditableLabel {
+        editable: root.is_editing;
+        text <=> root.text;
+        horizontal-stretch: 1;
+    }
+
+    Button {
+        text: root.is_editing ? "Done" : "Edit";
+        clicked => { root.is_editing = !root.is_editing; }
+        horizontal-stretch: 0;
     }
 }
