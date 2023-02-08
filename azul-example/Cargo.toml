@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-azul = { git = "https://github.com/fschutt/azul", default-features = false }
+azul = { git = "https://github.com/fschutt/azul", default-features = false, features = ["link_static"] }

@@ -97,6 +97,25 @@ to do anything you have to buy a special expensive laptop, and because
 everything breaks between versions so easily. If I didn't have my work macbook,
 I would be hating on mac as much as on windows.
 
+Started writing the blogpost and I came back to read the docs again. So it
+seems it's possible to not have to fuck with shared library they say? But I try
+and it doesn't work because the features mentioned in the docs don't exist.
+
+I think I'll try it again to see if the problem has gone, but they changed all
+their fucking api and I can't recompile it. Also because cargo lock doesn't
+fucking lock at all when you set it to track a branch. Fucking piece of shit.
+
+Wait.. it does. I'm looking through the lock file and all the references are to
+the same commit. What the hell happened then? Is the api different because it's
+not a dll anymore?
+
+Alrighty, since it's just their own helloworld, how about I delete everything
+here and copy it again.  
+What, it doesn't work? What the fuck is up here? Wow, ok. So what is there to
+do? I guess I'll revert back and try to remember what I did at first to get the
+screenshots and verify that it still segfaults, and also notice how everything
+is really out of date and sync.
+
 ## cacao
 Macos. I do have a mac, but nah. And it doesn't align with my future goals.
 
