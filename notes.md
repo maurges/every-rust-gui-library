@@ -116,6 +116,9 @@ do? I guess I'll revert back and try to remember what I did at first to get the
 screenshots and verify that it still segfaults, and also notice how everything
 is really out of date and sync.
 
+Alrighty, I figured out how to make it work, just had to remove an into() call,
+and it still panics on exit and doesn't handle my clicks.
+
 ## cacao
 Macos. I do have a mac, but nah. And it doesn't align with my future goals.
 

@@ -16,7 +16,7 @@ extern "C" fn myLayoutFunc(
         None => return StyledDom::default(),
     };
 
-    let mut label = Dom::text(counter.into());
+    let mut label = Dom::text(counter);
     label.set_inline_style("font-size: 50px");
 
     let mut button = Button::new("Update counter".into());
@@ -25,9 +25,9 @@ extern "C" fn myLayoutFunc(
     button.set_inline_style("flex-grow: 1");
 
     Dom::body()
-    .with_child(label)
-    .with_child(button)
-    .style(Css::empty())
+        .with_child(label)
+        .with_child(button)
+        .style(Css::empty())
 }
 
 extern "C"
