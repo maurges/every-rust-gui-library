@@ -2699,6 +2699,86 @@ might as well, but not mentioned here.
 So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
+## ribir
+
+Written on 2024-02-17
+
+Mesdames et messieurs, bienvenue à nouveau! Couple of weeks ago I found a new
+GUI library which, contrary to some others (like masonry and ousia), seems
+alive. Last commit was 4 days ago, so it hasn't died since I found it, which
+not every library can accomplish. Today I have a couple of hours to kill, so
+why not try to dive into this one.
+
+They have a cute website. "Trusted by polestar chat" - some AI startup finances
+them it seems? Why them though, why not my favourite boys slint? Is it because
+this one supports rich text? I sure hope so. Need to make a second round where
+I dock points from fucking everyone for not having rich text, video, and
+generic opengl/vulkan widgets, and wacom input (everyone except qt and gtk).
+
+They have a tutorial which I just clicked on. Let's go.  
+D'abord it looks like another virtual DOM thing, "mapping your data to a lazily
+updated tree". Not bad in principle. Further below it seems that widgets are
+classes not functions, but with composition instead of inheritance. At least
+that's how they describe it.  
+Also there it seems it's using FUCKING macros for a gui language again. God
+damn it, I need to publish this blog asap or people are going to keep making
+the same fucking mistake again and again and again. (I'm listening to
+known/learned right now)  
+An interesting idea: button isn't a real widget, it's a composition of several
+widgets: Text, Icon, Box, TouchArea I guess. So similar to qt quick controls,
+but without the button, only the collection, maybe. Cool idea.  
+Some notes on stateful/stateless which I don't get. Maybe this gets important
+later.
+
+Oh hey, the tutorial uses 0.1.0-beta.7 version. Which is the latest non-alpha
+one.
+
+Turns out I have a very outdated rust version on this computer. And it's not
+from rustup. Wtf happens here. rustc is in /usr/bin, but is still managed by
+rustup. Well, whatever.
+
+Да ёбаный в рот, "Currently Ribir only supports Rust nightly channel". Ok,
+let's add a toolchains file.
+
+Ебать, шрифты мыльные, а ведь я даже не на ретине. Что здесь произошло? Это
+всего лишь хеловорлд, а уже сложности.  
+As usual, I tried to use qualified/explicit imports instead of prelude. Well,
+this doesn't work, because the macro uses way too much bullshit. When you're
+making a macro, at least try to fucking make it hygienic! Oh my god.
+
+The tutorial then tells me to have a look at examples. I look into counter, and
+it's really hard to grasp what's happening there. A lot of symbols and new
+concepts. Not a gripe against library, but against the tutorial. Also it uses
+ribir_dev_helper, wtf is that.  
+Then the next chapter gives me another way to write hello world with less
+arrobas symbols. I'm eagerly awaiting explainations on them all. The promise of
+explaination is given here.
+
+Holy shit, FilledButton is purple. And antialiasing is fucked for it as well.
+
+One symbol got explained: $ means use a variable and set properties to it,
+instead of creating a new instance of a widget. And then @ is used to not write
+rdl! all the time. Ok.
+
+Why doesn't button show some effect when I press on it? Makes it seem liveless.
+
+So turns out ampersand was not just for reading variables, it's more magick. It
+also consumes the method call following it and expands dependent on that, or
+lack of that. Also it gives you autocloning of arcs in closures, which is
+really nice.
+
+This library is built on RxRust they say. Cool, just recently I was discussing
+rx things with my web friends, and here I can see it in action, and for gui.
+
+"no method named clone_reader found for struct MapPipe". Thanks for the awesome
+macros guys. What happened was I was trying to make a variable from
+subexpression, but that didn't work out as expected. I guess it's because of
+those expansions of ampersand; and I guess right.
+
+Oh hey, it's not actually a pure VDOM thing, because I can mutate widget data
+by hand. Cool. This looks kind of similar to qml I guess? Reactive engine plus
+properties.
+
 # About accessiblity
 
 I have a good friend of mine telling me that accessibility in modern web is
