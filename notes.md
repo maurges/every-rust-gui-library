@@ -2779,6 +2779,26 @@ Oh hey, it's not actually a pure VDOM thing, because I can mutate widget data
 by hand. Cool. This looks kind of similar to qml I guess? Reactive engine plus
 properties.
 
+Describes some built-in widgets that are treated differently: when you set a
+special property on your widget, a built-in is automatically created as a
+parent and this property is transferred to it. Seems like a weird choice, and a
+demonstration with margins of all things is unconvincing. I thought everyone
+agreed with Tonsky that margins are a stupid concept.
+
+Describes lenses for state, here built upon rust references. No prisms or
+traversals for now, so no lists yet. "You have mastered all the syntax and
+basic concepts needed to develop a Ribir application" - no I haven't, tell me
+about lists!
+
+Shit, the next chapter is a todo app with a design similar to mine, with
+replacing widgets with one another. Should have chosen something else.
+
+Alrighty, if it says I know everything, then so be it. I only very briefly
+looked at the chapter, and found that they just take the whole list and use it
+as a property. To create a list of widgets, you map from the property to
+widgets. Very react-style, not bad. Time to stop here and try to draw the rest
+of the fucking owl.
+
 # About accessiblity
 
 I have a good friend of mine telling me that accessibility in modern web is

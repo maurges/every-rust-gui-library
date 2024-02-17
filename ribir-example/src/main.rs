@@ -1,22 +1,27 @@
 use ribir::prelude::*;
 
-fn main() {
-  let counter = fn_widget! {
-    let row = @Row{};
-    let count1 = State::value(0);
-    let count2 = State::value(0);
-    let total = pipe!(*$count1 + *$count2);
-    @$row {
-      @FilledButton {
-        on_tap: move |_| *$count1.write() += 1,
-        @{ Label::new("Increment") }
-      }
-      @H1{ text: total.map(|x| x.to_string()) }
-      @FilledButton {
-        on_tap: move |_| *$count2.write() -= 1,
-        @{ Label::new("Decrement") }
+struct Counter(usize);
+
+impl Compose for Counter {
+  fn compose(this: impl StateWriter<Value = Self>) -> impl WidgetBuilder {
+    fn_widget! {
+      @Row {
+        @FilledButton {
+          on_tap: move |_| $this.write().0 += 1,
+          @{Label::new("Increment")}
+        }
+        @H1 {
+          text: pipe!((*$this).0.to_string()),
+          margin: EdgeInsets::all(10.0),
+        }
       }
     }
+  }
+}
+
+fn main() {
+  let counter = fn_widget! {
+    Counter(0)
   };
   App::run(counter);
 }
