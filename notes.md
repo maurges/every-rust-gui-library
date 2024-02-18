@@ -2799,6 +2799,54 @@ as a property. To create a list of widgets, you map from the property to
 widgets. Very react-style, not bad. Time to stop here and try to draw the rest
 of the fucking owl.
 
+The next day, and I realize there are more things I don't know. How do I get
+data from the view? The models give me write-lenses, but how do I actually use
+them - no idea. Let's look at more examples I guess. In the todo-example which
+I read diagonally, they use an explicit write call, which is shit, but ok. I
+think in the end I had to do a similar thing in slint even.
+
+Open the apidocs, and they are very lacking. The example uses EditableText
+methods for input, but they are not documented. Come on now, what does writer()
+do? I have zero idea.
+
+Ok, ok, I remember the original idea was to have the TodoItem be a separate
+widget and explore how I can encapsulate and retrieve data with those. So far,
+again, tutorial didn't teach me that, but also the todolist example doesn't do
+that as well. And, good news, the tutorial after this is not written. Oh golly,
+it seems it's time to read the examples and try to understand them. Again, lack
+of tutorial is not a killer, it's just something to complain about. Lacking
+apidocs is stupid though. They are so easy to write, like come on.
+
+Naively I tried to create a counter widget and retrieve state from it. At first
+I didn't understand how do I bind a widget to a name, but that was actually
+straightforward: a let binding, followed by using this binding in a widget
+context and wherever else I want. What I can't do is use it where I want, in a
+callback in a button, because that might outlive the widget, somehow. Fuckity
+fuck. How did it work in their example with the text label? It seems it worked
+because the handler was referencing self. Or not? More likely, they are
+returning some Rc or something, because the closure is moving shit. Yeah,
+that's it. Now the problem is that my widget is not created inside this
+container. What's the fucking difference? I declare it the same way Input is
+used in the example, but there it's contained, and for me it's a raw struct.
+
+Oh yeah, another stupid thing with macros: it's hard to nest them. Here I can't
+just use $ inside println, because it parses tokens in its own way, before
+giving them back to ribirs macros to handle them too. So I have to create
+temporaries. All because you connards want to use macros and "real rust code",
+which is not even real and impossible to guess where I can use it.
+
+Haha, adapting their example doesn't work as well. Input is moved when creating
+a widget, and then I can't access it from closure, or something. Aannnnd I
+figured it out. It gets moved when used in a layout, so I have to use it in
+closure before that.
+
+I tried to implement StateReader for Counter, and it broke reactivity. But
+anyway, it compiles and retrieving data from the subwidget works. Now I need to
+fix the widget itself, and the fucking macros don't make it easy. Thanks to the
+tutorial actually, I figured it out. There was an example on adding state,
+though not as a member. But it almost worked, except that I need to use two $
+and they are too magical to just be used as a prefix.
+
 # About accessiblity
 
 I have a good friend of mine telling me that accessibility in modern web is
