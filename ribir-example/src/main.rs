@@ -99,10 +99,21 @@ fn main() {
       on_tap: move |_| { let x = *$counter; eprintln!("counter: {}", x)},
       @{Label::new("get")}
     };
-    @Column {
-      @{ counter }
-      @$input {}
-      @$button {}
+    @SizedBox {
+      size: Size::new(1000.0, 1000.0),
+      @Flex {
+        align_items: Align::Center,
+        justify_content: JustifyContent::Center,
+        @Column {
+          @{ counter }
+          @$input {}
+          @$button {}
+          @Container {
+            size: Size::new(400.0, 400.0),
+            background: Color::RED,
+          }
+        }
+      }
     }
   };
   App::run(app);

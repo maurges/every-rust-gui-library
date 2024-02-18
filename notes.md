@@ -2700,7 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
-Time spent: two hours on saturday + one hour on sunday
+Time spent: two hours on saturday + two hours on sunday
 
 Written on 2024-02-17
 
@@ -2878,6 +2878,51 @@ seems not. Alrighty, Let's do the bullshit with callbacks I guess.
 Played around with the text field, it doesn't support ctrl+backspace, but
 supports ctrl-movement at least. Some other behaviours are weird. I wonder how
 it works on mac.
+
+And now, a giant question: how do I do sizes and layouts? A really fucking
+important thing the tutorial didn't touch on at all. It just used default sizes
+and rows and columns. This is not nearly enough! How do I center a div inside a
+div?? From searching through the docs, it seems for sizes I use Size default
+widget wrapper. For centering there are options of Flex widget it seems. Though
+in examples flex is not declared explicitly, so I wonder how it works. Does
+Column inherit flex properties somehow? Yes it does, Column and Row are just
+aliases for Flex.  
+Ughhh no, doesn't fucking work. What? Is it because it's sized to the size of
+its child and not its parent? This is the second sane option. How do I fucking
+make it occupy the whole window?
+
+Really failing to resize anything. Width and height are not summoning some
+default widget wrapper, and Size is not a widget I can create, so I'm stumped.
+
+Ah-hah, it seems I found it! Container is a widget with fixed size for its
+child. But! Size is a fixed property, I can't set it from a pipe. Are you
+fucking kidding me, qml didn't teach you anything. I need to add another test:
+how easy is it to create a red rectangle, whose width you control by a
+scrollbar.
+
+Looking through all widgets right now in hopes of finding FillWidth or
+something. Why do H1-H6 even exist? Can't I just set font size for a label?
+Because it doesn't have that? What's the big problem with sizes in this
+library, oh my god.
+
+Ah-ha, I found SizedBox! Still doesn't allow me to set relative to parent size,
+but it's at least something. Setting infinite size doesn't help, it just made
+everything dissappear. I also found TextArea, which can accept text size and
+other styling properties, with hyperlinks to CSS docs on what they mean.
+Welllll, CSS does have good text options I guess, so sure. Humble UI is better
+though (tonsky please notice me).
+
+I have no idea what UnconstrainedBox does, but it's not child size clamped by
+parent size, which I read to be `width = min(inherent-width, parent.width)`.
+By searching for "fill" I found FittedBox, but it doesn't do what I want: from
+the description it says that it scales content texture to fill the layout box,
+which is, who would want that at all? And when I tried it, my content just
+disappeared, so хз. With that, I've glanced through all built in widgets, and I
+haven't found how to make a widget with the same size as its parent. So this is
+the exact opposite of KAS, where I could create widgets only of equal size to
+parent. Ha-ha.
+
+Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 
 # About accessiblity
 
