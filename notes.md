@@ -1513,7 +1513,7 @@ options, so I'm now getting lost in choice, and what's worse in my stage, a
 paranoia of how my choice will fail down the line. Let's try the most stupid
 approach first I guess.
 
-I though it would be a good idea to make my TodoItem a view into todo state,
+I thought it would be a good idea to make my TodoItem a view into todo state,
 then create a list of states and a list view with TodoItem as a delegate. But I
 can't figure out how can I do state projections, and without that it's
 impossible/a pain in the ass with callback. I guess I already do this as a
@@ -2700,6 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
+Time spent: two hours on saturday + one hour on sunday
 
 Written on 2024-02-17
 
@@ -2846,6 +2847,37 @@ fix the widget itself, and the fucking macros don't make it easy. Thanks to the
 tutorial actually, I figured it out. There was an example on adding state,
 though not as a member. But it almost worked, except that I need to use two $
 and they are too magical to just be used as a prefix.
+
+A question still remains on can I pipe the data out of a widget with rx? Like a
+feed a state to it, it feeds state back, I react to it somehow. Let's try a
+simple example.
+
+Holy shit, the trait errors upon not satisfying StateWriter are horrendous.
+It's partly my fault, by I'd say it's mostly the macros. The problem seems to
+be that pipe gives you not a new state reader, but a pipe, which is a whole
+separate thing. God damn it, there are too many new concepts and objects. What
+exactly is the difference between a pipe and a state? Both have a value, both
+allow to watch for updates. From the tutorial, they want pipes to be the
+obvious marker of reactivity, but I don't get the difference. From this goal,
+it might mean that I a counter with a state and a counter with a pipe must
+necessarily be different. Not ideal. I also don't get if a pipe can be
+writeable.  
+This problem with distinguishing pipes and states reminds me of KAS, but I
+don't remember if they solved it or not. Went to read my notes, and I see that
+the distinction exists in standard widgets, but I can write my own ones without
+it. Here I can't write my own widgets in two styles either, so it's consistent,
+if fucking inconvenient. Go and look at qml and slint, people! (and gtk afair)
+
+It took me a bit to figure out how H1 is initialized with a pipe. From H1 go to
+H1Declarer, its text is DeclareInit which might be a const or a pipe. I wonder
+why can't one use a constant pipe, but whatever. Now, can I make my own
+declarers, and how? Actually, this might just be a red herring if bidirectional
+pipes don't exist. Does RxRust even support that? Looking at the methods, it
+seems not. Alrighty, Let's do the bullshit with callbacks I guess.
+
+Played around with the text field, it doesn't support ctrl+backspace, but
+supports ctrl-movement at least. Some other behaviours are weird. I wonder how
+it works on mac.
 
 # About accessiblity
 
