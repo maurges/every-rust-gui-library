@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 ribir = { version = "0.1.0-beta.7" }
+serde = "1"

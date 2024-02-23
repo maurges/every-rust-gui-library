@@ -1759,6 +1759,7 @@ name = "ribir-example"
 version = "0.1.0"
 dependencies = [
  "ribir",
+ "serde",
 ]
 
 [[package]]

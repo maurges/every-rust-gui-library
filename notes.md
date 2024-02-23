@@ -2700,7 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
-Time spent: two hours on saturday + two hours on sunday
+Time spent: two hours on saturday + two hours on sunday + an hour on friday
 
 Written on 2024-02-17
 
@@ -2940,6 +2940,41 @@ I'm kind of happy with what I made here because it's qml-like: it can hold
 either own state, or be a view for a model. The types are different for
 different uses, which is also not actually a problem; except for codegen I
 guess, because damn that's a lot of distinct instantiations.
+
+How do I fucking get an event on checkbox toggle? No methods in it exist. Let's
+go and check the example again? The example doesn't have a checkbox. Fucking
+brilliant. This is the similar to slint, where they don't have callbacks on
+generic property change, so if it doesn't exist you just have to fucking poll.
+This is stupid. Am I going to bypass it? I don't see a smart option. Mmm I
+mean, on save button pressed I can go and poll every checkbox and set the
+state. Ughh this is stupid, but should work.
+
+"If and else have incompatible types", hahahaha fuck. Can I box? In the example
+they use widget_build, which seems to box, because now it works.
+
+Can I make a label with dynamic text? No, same for other properties. So I'll
+try creating two labels and setting them conditionally I guess.
+
+I was going to say that writing this thing is kind of easy, especially now that
+I'm familiar with react-like approach. There are some stupid papercuts with the
+fucking macros, that having state inside state requires you to double deref.  
+But then I finish, try to run it, and it fucking panics! Holy shit. Inside
+state.rs, try_borrow_mut fails. The backtrace points at line 45 in todo_item,
+which is accessing editing state. It's not even the first time in that file
+when I access the state, and also it's inside a callback of a button, so it
+shouldn't have been called at all at this point? Yepp, commenting it out and it
+just works. WTF? Who called the callback? And it's not even failing at a line
+where I assign the thing, which would be logical because it's using the same
+state twice, but it fails in just reading the editing state. Am I not allowed
+to touch some state inside callbacks?
+
+I bypassed that by getting editing as State just outside of lambda and moving
+it in. Problem number two million: the callback does nothing! It gets called,
+probably updates the state, but the widget doesn't change! The state also gets
+toggled really. I guess it's just the fucking change propagation doesn't notice
+the state change and doesn't update the view? FUCKING typical react, I had the
+same in dioxus. And here there aren't even any primitives to force update,
+because those додики were so sure of themselves.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 

@@ -1,3 +1,5 @@
+mod todo_item;
+
 use ribir::prelude::*;
 
 struct Counter<S> {
@@ -120,6 +122,9 @@ fn main() {
       @{Label::new("get two")}
     };
 
+    let todo_state = State::value(todo_item::TodoItem {text: "kek".to_owned(), done: false});
+    let todo_item = todo_item::TodoWidget::new(todo_state);
+
     let counter = Counter::new();
     let input = @Input {};
     let button = @FilledButton {
@@ -129,6 +134,7 @@ fn main() {
     @VScrollBar {
       @Column {
         @$counter_l {}
+        @$todo_item {}
         @$counter_r {}
         @$button_print_full {}
         @{
