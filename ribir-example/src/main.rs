@@ -12,6 +12,14 @@ impl Counter {
   }
 }
 
+impl Clone for Counter {
+  fn clone(&self) -> Self {
+    Counter {
+      state: State::value(self.state.get())
+    }
+  }
+}
+
 impl Compose for Counter {
   fn compose(this: impl StateWriter<Value = Self>) -> impl WidgetBuilder {
     fn_widget! {
@@ -99,19 +107,16 @@ fn main() {
       on_tap: move |_| { let x = *$counter; eprintln!("counter: {}", x)},
       @{Label::new("get")}
     };
-    @SizedBox {
-      size: Size::new(1000.0, 1000.0),
-      @Flex {
-        align_items: Align::Center,
-        justify_content: JustifyContent::Center,
-        @Column {
-          @{ counter }
-          @$input {}
-          @$button {}
-          @Container {
-            size: Size::new(400.0, 400.0),
-            background: Color::RED,
-          }
+    @VScrollBar {
+      @Column {
+        @{
+          (0..10).map(|_| @{counter.clone()})
+        }
+        @$input {}
+        @$button {}
+        @Container {
+          size: Size::new(400.0, 400.0),
+          background: Color::RED,
         }
       }
     }

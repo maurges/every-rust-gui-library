@@ -2922,7 +2922,24 @@ haven't found how to make a widget with the same size as its parent. So this is
 the exact opposite of KAS, where I could create widgets only of equal size to
 parent. Ha-ha.
 
+So VScrollBar resizes to fill the parent. Ugh. This is impossible.  
+Using `for` in a straightforward way doesn't work as well. Ah, but using a
+value of an iterator does, so that's ok.
+
+Ok, so I probably don't want to collect data on button press, I'd much rather
+use a projection. But wait, I think it can't be bidirectional? Wait, there are
+StateWriter and there are pipes, what's the difference again? Right, pipe is
+not even StateReader. Я вполглаза смотрю на пример, and they do a very weird
+thing where they pipe `this`, and then also reference it as a StateWriter. This
+seems wildly uncomposable. Or does it, can I do writer projections? Huhhh,
+there are methods map_reader and map_writer. I could try using those. So let's
+try and rewrite the example with them?
+
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
+
+## floem
+
+Lapce's thing, how recently was it opensourced? https://github.com/lapce/floem
 
 # About accessiblity
 
