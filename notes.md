@@ -2933,7 +2933,13 @@ not even StateReader. Я вполглаза смотрю на пример, and 
 thing where they pipe `this`, and then also reference it as a StateWriter. This
 seems wildly uncomposable. Or does it, can I do writer projections? Huhhh,
 there are methods map_reader and map_writer. I could try using those. So let's
-try and rewrite the example with them?
+try and rewrite the example with them? It works pretty straightforwardly. Then
+what are pipes? Is it just to simplify creating reader projections? No, because
+it doesn't even create a reader. Tha fuk is happening there.  
+I'm kind of happy with what I made here because it's qml-like: it can hold
+either own state, or be a view for a model. The types are different for
+different uses, which is also not actually a problem; except for codegen I
+guess, because damn that's a lot of distinct instantiations.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 

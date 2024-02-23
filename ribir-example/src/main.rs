@@ -1,10 +1,10 @@
 use ribir::prelude::*;
 
-struct Counter {
-  state: State<usize>,
+struct Counter<S> {
+  state: S,
 }
 
-impl Counter {
+impl Counter<State<usize>> {
   pub fn new() -> Self {
     Self {
       state: State::value(0),
@@ -12,7 +12,13 @@ impl Counter {
   }
 }
 
-impl Clone for Counter {
+impl<S> Counter<S> {
+  pub fn new_from(state: S) -> Self {
+    Self {state}
+  }
+}
+
+impl Clone for Counter<State<usize>> {
   fn clone(&self) -> Self {
     Counter {
       state: State::value(self.state.get())
@@ -20,7 +26,10 @@ impl Clone for Counter {
   }
 }
 
-impl Compose for Counter {
+impl<S> Compose for Counter<S>
+where
+    S: StateWriter<Value = usize>,
+{
   fn compose(this: impl StateWriter<Value = Self>) -> impl WidgetBuilder {
     fn_widget! {
       @Row {
@@ -40,10 +49,10 @@ impl Compose for Counter {
   }
 }
 
-impl StateReader for Counter {
-  type Value = usize;
-  type OriginReader = <State<usize> as StateReader>::OriginReader;
-  type Reader = <State<usize> as StateReader>::Reader;
+impl<S: StateReader> StateReader for Counter<S> {
+  type Value = S::Value;
+  type OriginReader = S::OriginReader;
+  type Reader = S::Reader;
 
   fn read(&self) -> ReadRef<Self::Value> {
     self.state.read()
@@ -74,9 +83,9 @@ impl StateReader for Counter {
   }
 }
 
-impl StateWriter for Counter {
-  type Writer = <State<usize> as StateWriter>::Writer;
-  type OriginWriter = <State<usize> as StateWriter>::OriginWriter;
+impl<S: StateWriter> StateWriter for Counter<S> {
+  type Writer = S::Writer;
+  type OriginWriter = S::OriginWriter;
 
   fn write(&self) -> WriteRef<Self::Value> {
     self.state.write()
@@ -101,7 +110,17 @@ impl StateWriter for Counter {
 
 fn main() {
   let app = fn_widget! {
-    let counter = @{ Counter::new() };
+    let full_state = State::value((0usize, 0usize));
+    let proj_l = full_state.map_writer(|t| &t.0, |t| &mut t.0);
+    let proj_r = full_state.map_writer(|t| &t.1, |t| &mut t.1);
+    let counter_l = Counter::new_from(proj_l);
+    let counter_r = Counter::new_from(proj_r);
+    let button_print_full = @FilledButton {
+      on_tap: move |_| { let x = *$full_state; eprintln!("full value: {:?}", x) },
+      @{Label::new("get two")}
+    };
+
+    let counter = Counter::new();
     let input = @Input {};
     let button = @FilledButton {
       on_tap: move |_| { let x = *$counter; eprintln!("counter: {}", x)},
@@ -109,6 +128,9 @@ fn main() {
     };
     @VScrollBar {
       @Column {
+        @$counter_l {}
+        @$counter_r {}
+        @$button_print_full {}
         @{
           (0..10).map(|_| @{counter.clone()})
         }
