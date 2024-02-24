@@ -24,30 +24,32 @@ impl<S: StateWriter<Value = TodoItem>> Compose for TodoWidget<S> {
     fn compose(this: impl StateWriter<Value = Self>) -> impl WidgetBuilder {
         fn_widget! {
             let todo_item = &$this.todo_item;
+            let editing = &$this.editing;
             @Row {
                 @Checkbox {
-                    checked: $todo_item.done,
+                    checked: pipe!($todo_item.done),
                 }
                 @{
-                    let editing = &$this.editing;
-                    if *$editing {
-                        let input = @Input {};
-                        $input.write().set_text(&$todo_item.text);
-                        @$input {}.widget_build(ctx!())
-                    } else {
-                        @Text {
-                            text: pipe!($todo_item.text.clone())
-                        }.widget_build(ctx!())
-                    }
+                    pipe!(*$editing).map(move |x| {
+                        if x {
+                            pipe!(&$todo_item.text).map(|text| {
+                                let input = @Input {};
+                                $input.write().set_text(text); @$input {}
+                            }).widget_build(ctx!())
+                        } else {
+                            @Text {
+                                text: pipe!($todo_item.text.clone())
+                            }.widget_build(ctx!())
+                        }
+                    })
                 }
                 @FilledButton {
-                    on_tap: { let editing = &$this.editing; move |_| {
+                    on_tap: { move |_| {
                         let val: bool = *$editing;
-                        eprintln!("callback: {}", val);
                         *$editing.write() = !val;
                     } },
                     @{
-                        let editing = &$this.editing;
+                        // FIXME: doesn't work
                         let text = if *$editing { "done" } else { "edit" };
                         Label::new(text)
                     }

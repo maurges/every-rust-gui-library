@@ -2700,7 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
-Time spent: two hours on saturday + two hours on sunday + an hour on friday
+Time spent: two hours on saturday + two hours on sunday + two hours on friday + an hour on saturday
 
 Written on 2024-02-17
 
@@ -2975,6 +2975,39 @@ toggled really. I guess it's just the fucking change propagation doesn't notice
 the state change and doesn't update the view? FUCKING typical react, I had the
 same in dioxus. And here there aren't even any primitives to force update,
 because those додики were so sure of themselves.
+
+I'm pretty sure this is somehow related to that panic from earlier. But first
+of all, what about "if it compiles it works", and second, I have to clue how
+else to do this.
+
+Looking at the example again. Do I have to put the pipe thing everywhere? Let's
+try. Also there is a checkbox in example, I was just a retard. And they get
+it's property as any other reactive value, which is cool.
+
+Trying to put more pipes, it seems a label can't have a pipe as its value. But
+I think I can still create two labels. And I also can't compose a button with a
+label pipe. Fucking magic macros again, obscuring the possible. I try to put
+pipes on the if between two widgets, and get the same meaningless panic again.
+Fucks's sake. Seems I'm done for today.
+
+Another idea I got: what if I move getting inner state out of all those uses,
+so only do it once at the top? And it fucking worked! Even switching between
+two by a press of a button works. Brilliant! And I guess this is what authors
+meant that reactivity only happens at places where pipe is applied. What they
+forgot to tell you is that it's possible to write a code that looks reactive
+but actually fucking isn't. And I still can't figure out how can I dynamically
+set the label on a button. The error messages are also very unhelpful with
+nothing concrete and a lot of substitution failures.
+
+I see that Pipe provides a method widget_build, but I can never build it.
+And I'm failing to make a label with todo text properly reactive. I need to
+somehow set_text from a pipe, but that never works because variables have to be
+moved into pipe's closure. A solution would be to return a widget from it with
+widget_build, but that doesn't work. In the example they just return a widget
+from a pipe? Then push it into a vector and return that vector from another
+pipe? Why does it work in that case?
+
+Another day trying, another question of if I want to continue this tomorrow.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 
