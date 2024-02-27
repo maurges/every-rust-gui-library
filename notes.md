@@ -2700,7 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
-Time spent: two hours on saturday + two hours on sunday + two hours on friday + an hour on saturday
+Time spent: two hours on saturday + two hours on sunday + two hours on friday + an hour on saturday + an hour on tuesday
 
 Written on 2024-02-17
 
@@ -3007,6 +3007,8 @@ widget_build, but that doesn't work. In the example they just return a widget
 from a pipe? Then push it into a vector and return that vector from another
 pipe? Why does it work in that case?
 
+Another day trying, another question of if I want to continue this tomorrow.
+
 I figured out how to change the text on a button: by creating two different
 buttons depending on value.
 
@@ -3017,7 +3019,20 @@ itself turns into a boxed widget. I'm fucked! I think there is a solution: the
 button has to be created inside the same closure as well. Это уже ебануться
 какая гимнастика, но что поделать.
 
-Another day trying, another question of if I want to continue this tomorrow.
+The error message when a button is missing a label are horrible.
+
+The gymnastics worked! I can now update the model. Well this took a long time,
+a lot of thought, and a layouting compromise, but at least I made it work.
+Though I forsee the same problem in a more complicated layout leading it to not
+working at all. Without giant duplication I mean. But also, I guess you can
+just make factories for this duplication? But then the layout becomes even more
+complex and your factories become layouts themselves and this library can just
+go out of the window. Aaaanyway, I like the details of this library less and
+less. Also the fucking macros, ruining my life again (by ruining rust
+analyzer).
+
+HUHHHHH, I just realized this has the same problem as iced: checkbox has no
+callback on change! Ahaha how stupid.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 

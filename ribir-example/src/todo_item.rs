@@ -30,39 +30,40 @@ impl<S: StateWriter<Value = TodoItem>> Compose for TodoWidget<S> {
                     checked: pipe!($todo_item.done),
                 }
                 @{
-                    pipe!(*$editing).map(move |x| {
-                        if x {
+                    pipe!(*$editing).map(move |is_editing| {
+                        if is_editing {
                             let input = @Input {};
                             $input.write().set_text(&$todo_item.text);
                             watch!($todo_item.text.clone()).subscribe(move |text| $input.write().set_text(&text));
-                            @{ input }.widget_build(ctx!())
-                        } else {
-                            @Text {
-                                text: pipe!($todo_item.text.clone())
-                            }.widget_build(ctx!())
-                        }
-                    })
-                }
-                @{
-                    pipe!(*$editing).map(move |e| {
-                        let button = @FilledButton {
-                            on_tap: { move |_| {
-                                let val = *$editing;
-                                *$editing.write() = !val;
-                                // if we were editing, write the text to model
-                                if val {
 
-                                }
-                            } },
-                        };
-                        if e {
-                            @$button {
+                            let button = @FilledButton {
+                                on_tap: { move |_| {
+                                    *$editing.write() = false;
+                                    let text = std::borrow::Borrow::<str>::borrow($input.text()).to_owned();
+                                    $todo_item.write().text = text;
+                                } },
                                 @{ Label::new("done") }
-                            }
+                            };
+
+                            @Row {
+                                @$input {}
+                                @$button {}
+                            }.widget_build(ctx!())
+
                         } else {
-                            @$button {
+                            let button = @FilledButton {
+                                on_tap: { move |_| {
+                                    *$editing.write() = true;
+                                } },
                                 @{ Label::new("edit") }
-                            }
+                            };
+
+                            @Row {
+                                @Text {
+                                    text: pipe!($todo_item.text.clone())
+                                }
+                                @$button {}
+                            }.widget_build(ctx!())
                         }
                     })
                 }
