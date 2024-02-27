@@ -32,10 +32,10 @@ impl<S: StateWriter<Value = TodoItem>> Compose for TodoWidget<S> {
                 @{
                     pipe!(*$editing).map(move |x| {
                         if x {
-                            pipe!(&$todo_item.text).map(|text| {
-                                let input = @Input {};
-                                $input.write().set_text(text); @$input {}
-                            }).widget_build(ctx!())
+                            let input = @Input {};
+                            $input.write().set_text(&$todo_item.text);
+                            watch!($todo_item.text.clone()).subscribe(move |text| $input.write().set_text(&text));
+                            @{ input }.widget_build(ctx!())
                         } else {
                             @Text {
                                 text: pipe!($todo_item.text.clone())
@@ -43,16 +43,28 @@ impl<S: StateWriter<Value = TodoItem>> Compose for TodoWidget<S> {
                         }
                     })
                 }
-                @FilledButton {
-                    on_tap: { move |_| {
-                        let val: bool = *$editing;
-                        *$editing.write() = !val;
-                    } },
-                    @{
-                        // FIXME: doesn't work
-                        let text = if *$editing { "done" } else { "edit" };
-                        Label::new(text)
-                    }
+                @{
+                    pipe!(*$editing).map(move |e| {
+                        let button = @FilledButton {
+                            on_tap: { move |_| {
+                                let val = *$editing;
+                                *$editing.write() = !val;
+                                // if we were editing, write the text to model
+                                if val {
+
+                                }
+                            } },
+                        };
+                        if e {
+                            @$button {
+                                @{ Label::new("done") }
+                            }
+                        } else {
+                            @$button {
+                                @{ Label::new("edit") }
+                            }
+                        }
+                    })
                 }
             }
         }

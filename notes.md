@@ -3007,6 +3007,16 @@ widget_build, but that doesn't work. In the example they just return a widget
 from a pipe? Then push it into a vector and return that vector from another
 pipe? Why does it work in that case?
 
+I figured out how to change the text on a button: by creating two different
+buttons depending on value.
+
+And I just found out that it's impossible to update my data from a press of a
+button! Because input is created inside a closure, so I can't access it in
+button callback. And it has to be created inside a closure because the closure
+itself turns into a boxed widget. I'm fucked! I think there is a solution: the
+button has to be created inside the same closure as well. Это уже ебануться
+какая гимнастика, но что поделать.
+
 Another day trying, another question of if I want to continue this tomorrow.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
