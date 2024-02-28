@@ -2700,7 +2700,7 @@ So I guess I wanted to write this out to diss people. Relm4 devs are stupid,
 vgtk dev is stupid, and they both show each other's by the opponent's library.
 
 ## ribir
-Time spent: two hours on saturday + two hours on sunday + two hours on friday + an hour on saturday + an hour on tuesday
+Time spent: two hours on saturday + two hours on sunday + two hours on friday + an hour on saturday + an hour on tuesday + 1.5 hours on wednesday
 
 Written on 2024-02-17
 
@@ -3033,6 +3033,23 @@ analyzer).
 
 HUHHHHH, I just realized this has the same problem as iced: checkbox has no
 callback on change! Ahaha how stupid.
+
+Ok! I figured out a trick! State is not clonable, but you can map a state with
+identity to get the same state! And it doesn't even seem to break! Ohhh it's
+genius. I just had a look at todoWidget to rewrite it, and actually fuck this
+mess.
+
+I wanted to say that after I discovered this trick my life became very easy and
+I finished quickly, but no. There is a problem with reactivity: after I reset
+the vector, first a change to mini-views is propagated, and only then are the
+mini-views redone themselves on change of len. That means that if len
+decreases, I access a vector out of bounds and fail. But anyway, why am I doing
+this by index? Let's try iterating directly. Although I already forsee borrow
+errors.
+
+Didn't even get to borrow errors because this approach just doesn't work at
+all: I need to map a state, not an element of something. Well, seems like an
+unsolvable problem. No idea what to do here.
 
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
 
