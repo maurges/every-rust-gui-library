@@ -3051,7 +3051,37 @@ Didn't even get to borrow errors because this approach just doesn't work at
 all: I need to map a state, not an element of something. Well, seems like an
 unsolvable problem. No idea what to do here.
 
+I thought about it for a day, and yeah, unsolvable. Aaaaanyway, new problem
+today: checkboxes don't change state. I смутно remember complaining that they
+are similar to iced in this, so let's see. Right, they are. Don' wanna fix it.
+So let's just say ribir is done.
+
+How do those summaries go I forget. Alright, ribir was not bad, but very
+dissapointing. It has good foundations and shit implementation. The macros are
+just garbage, man, who thought that was a good idea. By the end I understood
+the phylosophy that `pipe` is the only thing creating reactivity, and it makes
+sense, but I don't like it. The worst parts about reactivity are QOI with
+closures and moving, asinine types which macros make even worse. On the other
+hand, layouting is also trash. It took me a long time to find out how to do
+sizes, and it's very inconvenient, and there's also no way to do relative
+sizes. They also managed to bring here the problem of centering a widget within
+a container (impossible (unless you're qt)). Did I even like anything? Ughhh it
+mostly worked and almost didn't panic or segfault? I guess it didn't take a
+long time to finish, so this is a good sign. Anyway, not recommended to anyone.
+
 Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
+
+- Default widgets: enough, good looking
+- Creating simple widgets: no primitive input
+- Creating compound widgets: simple and first-class
+- Layouting: flexbox primitives with impossible sizing
+- Custom layouts: nope
+- Reactivity: is built around it, но с подводными айсбергами из динамита
+- Setting up: simple
+- Documentation: apidocs are very lacking
+- Tutorial: very incomplete, but somewhat enough. You need to read it thrice
+- Diving into source: didn't do
+- Overall: only use if you're the author
 
 ## floem
 

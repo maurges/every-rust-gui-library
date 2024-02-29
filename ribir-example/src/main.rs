@@ -4,10 +4,7 @@ use ribir::prelude::*;
 
 fn main() {
     let app = fn_widget! {
-        let todos = vec![
-            todo_item::TodoItem {text: "kek".to_owned(), done: false},
-            todo_item::TodoItem {text: "cheburek".to_owned(), done: false},
-        ];
+        let todos = Vec::new();
         let todos = State::value(todos);
 
         @VScrollBar {
@@ -29,16 +26,9 @@ fn main() {
                     let todos = clone_state(&todos);
                     pipe!($todos.len()).map(move |len| {
                         @Column { @{
-                            (0..len).filter_map(|i| {
-                                // I have to use write() here otherwise macro
-                                // does some bullshit and I can't do map_writer
-                                // below
-                                if i >= $todos.write().len() {
-                                    None
-                                } else {
-                                    let proj = todos.map_writer(move |xs| &xs[i], move |xs| &mut xs[i]);
-                                    Some(todo_item::TodoWidget::new(proj))
-                                }
+                            (0..len).map(|i| {
+                                let proj = todos.map_writer(move |xs| &xs[i], move |xs| &mut xs[i]);
+                                todo_item::TodoWidget::new(proj)
                             }) }
                         }.widget_build(ctx!())
                     })
@@ -47,8 +37,7 @@ fn main() {
                     let todos1 = clone_state(&todos);
                     let save_button = @FilledButton {
                         on_tap: move |_| {
-                            let val = $todos1.len();
-                            eprintln!("todos: {:?}", val);
+                            save(&$todos1);
                         },
                         @{ Label::new("save") }
                     };
@@ -56,7 +45,8 @@ fn main() {
                     let todos2 = clone_state(&todos);
                     let load_button = @FilledButton {
                         on_tap: move |_| {
-                            *$todos2.write() = Vec::new();
+                            let items = load().unwrap();
+                            *$todos2.write() = items;
                         },
                         @{ Label::new("load") }
                     };
@@ -71,4 +61,27 @@ fn main() {
 
 fn clone_state<T, S: StateWriter<Value = T>>(s: &S) -> impl StateWriter<Value = T> {
     s.map_writer(|t| t, |t| t)
+}
+
+fn save(items: &[todo_item::TodoItem]) {
+    if let Some(path) = rfd::FileDialog::new().save_file() {
+        match std::fs::File::create(&path) {
+            Ok(file) => match ron::ser::to_writer(file, items) {
+                Ok(()) => (),
+                Err(e) => eprintln!("{}", e),
+            }
+            Err(e) => eprintln!("{}", e),
+        }
+    }
+}
+
+fn load() -> Option<Vec<todo_item::TodoItem>> {
+    let path = rfd::FileDialog::new().pick_file()?;
+    match std::fs::File::open(path) {
+        Err(e) => { eprintln!("{}", e); None }
+        Ok(file) => match ron::de::from_reader(file) {
+            Ok(items) => Some(items),
+            Err(e) => { eprintln!("{}", e); None }
+        }
+    }
 }
