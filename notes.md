@@ -3069,7 +3069,8 @@ a container (impossible (unless you're qt)). Did I even like anything? Ughhh it
 mostly worked and almost didn't panic or segfault? I guess it didn't take a
 long time to finish, so this is a good sign. Anyway, not recommended to anyone.
 
-Creating simple widgets: drawing primitives are there, input are not. Plus the sizes and layouting are crazy.
+Перечитал это спустя день, и мне смешно, что я каждый сука день забывал про
+чекбоксы.
 
 - Default widgets: enough, good looking
 - Creating simple widgets: no primitive input
